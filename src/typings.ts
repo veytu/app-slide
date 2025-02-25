@@ -11,6 +11,7 @@ export interface Attributes {
   state: SlideState | null;
   resourceList: string[];
   previewList: string[];
+  note?: string;
 }
 
 export type MagixPayload = {

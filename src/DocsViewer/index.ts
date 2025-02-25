@@ -7,7 +7,11 @@ import { arrowRightSVG } from "./icons/arrow-right";
 import type { ILazyLoadInstance } from "vanilla-lazyload";
 import LazyLoad from "vanilla-lazyload";
 import { SideEffectManager } from "side-effect-manager";
-import type { ReadonlyTeleBox } from "@netless/window-manager";
+import type { AppContext, ReadonlyTeleBox } from "@netless/window-manager";
+import type { Attributes, MagixEvents } from "../typings";
+import type { AppOptions } from "..";
+import type { Paragraph } from "./utils/convertToHTML";
+import { convertToHTML } from "./utils/convertToHTML";
 
 export interface DocsViewerPage {
   src: string;
@@ -23,6 +27,7 @@ export interface DocsViewerConfig {
   onPlay?: () => void;
   urlInterrupter?: (url: string) => Promise<string>;
   onPagesReady?: (pages: DocsViewerPage[]) => void;
+  context?: AppContext<Attributes, MagixEvents, AppOptions>;
 }
 
 export class DocsViewer {
@@ -33,6 +38,7 @@ export class DocsViewer {
     onPagesReady,
     urlInterrupter,
     box,
+    context,
   }: DocsViewerConfig) {
     this.readonly = readonly;
     this.onNewPageIndex = onNewPageIndex;
@@ -40,6 +46,7 @@ export class DocsViewer {
     this.onPagesReady = onPagesReady;
     this.urlInterrupter = urlInterrupter || (url => url);
     this.box = box;
+    this.context = context;
     this.render();
   }
 
@@ -76,6 +83,10 @@ export class DocsViewer {
   private $btnPageNext!: HTMLElement;
   private $btnPageBack!: HTMLElement;
 
+  private notes?: Record<string, Paragraph[]>;
+
+  readonly context?: AppContext<Attributes, MagixEvents, AppOptions>;
+
   public pageIndex = 0;
 
   public unmount(): void {
@@ -106,6 +117,8 @@ export class DocsViewer {
         this.wrapClassName("footer-btn-disable"),
         pageIndex == this.pages.length - 1
       );
+
+      this.renderNoteContent();
     }
   }
 
@@ -170,11 +183,67 @@ export class DocsViewer {
 
       $content.appendChild(this.renderPreviewMask());
       $content.appendChild(this.renderPreview());
+      $content.appendChild(this.renderNote());
     }
     return this.$content;
   }
 
   private previewLazyLoad?: ILazyLoadInstance;
+
+  private note$?: HTMLDivElement;
+
+  protected renderNote(): HTMLDivElement {
+    const note$ = document.createElement("div");
+
+    note$.className = this.wrapClassName("note") + " tele-fancy-scrollbar";
+
+    this.note$ = note$;
+    if (this.context?.storage.state.note) {
+      fetch(this.context?.storage.state.note)
+        .then(data => data.json())
+        .then(res => {
+          this.notes = res;
+          this.renderNoteContent();
+        });
+    }
+
+    this.sideEffect.addEventListener(note$, "click", ev => {
+      if (this.readonly) {
+        return;
+      }
+      const target = ev.target as HTMLElement;
+      if (target.tagName.toLocaleLowerCase() == "a") {
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+        const link = target as HTMLAnchorElement;
+        const href = link.href;
+        this.context?.dispatchAppEvent("open-note-link", href);
+      }
+    });
+    return note$;
+  }
+
+  protected renderNoteContent(): void {
+    const noteContent$ = document.createElement("div");
+
+    noteContent$.className = this.wrapClassName("note-content");
+
+    const notes = this.notes?.[this.pageIndex + 1];
+
+    this.note$?.classList.toggle(this.wrapClassName("note-hide"), !notes);
+    if (!notes) return;
+
+    const content = convertToHTML(notes);
+
+    noteContent$.innerHTML = content;
+
+    if (this.note$?.firstElementChild) {
+      this.note$?.replaceChild(noteContent$, this.note$.firstElementChild);
+    } else {
+      this.note$?.appendChild(noteContent$);
+    }
+  }
 
   protected renderPreview(): HTMLElement {
     if (!this.$preview) {

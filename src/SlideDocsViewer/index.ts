@@ -79,6 +79,7 @@ export class SlideDocsViewer {
       urlInterrupter,
       onPagesReady,
       box: box,
+      context,
     });
 
     this.sideEffect.add(() => {

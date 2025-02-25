@@ -12,6 +12,7 @@ interface Attributes {
     state: SlideState | null;
     resourceList: string[];
     previewList: string[];
+    note?: string;
 }
 declare type MagixPayload = {
     type: typeof SLIDE_EVENTS.syncDispatch;
@@ -135,9 +136,10 @@ interface DocsViewerConfig {
     onPlay?: () => void;
     urlInterrupter?: (url: string) => Promise<string>;
     onPagesReady?: (pages: DocsViewerPage[]) => void;
+    context?: AppContext<Attributes, MagixEvents, AppOptions>;
 }
 declare class DocsViewer {
-    constructor({ readonly, onNewPageIndex, onPlay, onPagesReady, urlInterrupter, box, }: DocsViewerConfig);
+    constructor({ readonly, onNewPageIndex, onPlay, onPagesReady, urlInterrupter, box, context, }: DocsViewerConfig);
     protected readonly: boolean;
     protected box: ReadonlyTeleBox;
     protected onNewPageIndex: (index: number, origin?: string) => void;
@@ -157,6 +159,8 @@ declare class DocsViewer {
     $btnSidebar: HTMLButtonElement;
     private $btnPageNext;
     private $btnPageBack;
+    private notes?;
+    readonly context?: AppContext<Attributes, MagixEvents, AppOptions>;
     pageIndex: number;
     unmount(): void;
     setReadonly(readonly: boolean): void;
@@ -168,6 +172,9 @@ declare class DocsViewer {
     render(): HTMLElement;
     protected renderContent(): HTMLElement;
     private previewLazyLoad?;
+    private note$?;
+    protected renderNote(): HTMLDivElement;
+    protected renderNoteContent(): void;
     protected renderPreview(): HTMLElement;
     private refreshPreview;
     protected renderPreviewMask(): HTMLElement;
