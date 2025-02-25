@@ -289,11 +289,7 @@ export class SlideDocsViewer {
 
   protected onPlay = () => {
     if (this.slideController) {
-      if (this.slideController.slide.hasNextStep()) {
-        this.slideController.slide.nextStep();
-      } else {
-        this.onNewPageIndex(this.slideController.page + 1);
-      }
+      this.slideController.slide.nextStep();
     }
   };
 

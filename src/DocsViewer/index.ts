@@ -122,8 +122,11 @@ export class DocsViewer {
     const imgNode = Array.prototype.slice
       .call(previews)
       .find(node => node.querySelector("img").className.includes(this.wrapClassName("active")));
+    if (!imgNode) {
+      return;
+    }
     const parentRect = this.$preview.getBoundingClientRect();
-    const elementRect = imgNode.getBoundingClientRect();
+    const elementRect = imgNode?.getBoundingClientRect();
     const isInView = elementRect.top >= parentRect.top && elementRect.bottom <= parentRect.bottom;
 
     if (!isInView) {

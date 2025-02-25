@@ -38481,8 +38481,11 @@ class DocsViewer {
       (_a2 = node.querySelector("img")) == null ? void 0 : _a2.classList.toggle(this.wrapClassName("active"), Number(pageIndex) == i);
     });
     const imgNode = Array.prototype.slice.call(previews).find((node) => node.querySelector("img").className.includes(this.wrapClassName("active")));
+    if (!imgNode) {
+      return;
+    }
     const parentRect = this.$preview.getBoundingClientRect();
-    const elementRect = imgNode.getBoundingClientRect();
+    const elementRect = imgNode == null ? void 0 : imgNode.getBoundingClientRect();
     const isInView = elementRect.top >= parentRect.top && elementRect.bottom <= parentRect.bottom;
     if (!isInView) {
       this.$preview.scrollTo({
@@ -38771,11 +38774,7 @@ class SlideDocsViewer {
     };
     this.onPlay = () => {
       if (this.slideController) {
-        if (this.slideController.slide.hasNextStep()) {
-          this.slideController.slide.nextStep();
-        } else {
-          this.onNewPageIndex(this.slideController.page + 1);
-        }
+        this.slideController.slide.nextStep();
       }
     };
     this.onNewPageIndex = (index, origin) => {
