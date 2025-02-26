@@ -15,8 +15,15 @@ export type Paragraph = {
   runs: Run[];
 };
 
-export function convertToHTML(paragraphs: Paragraph[]): string {
-  return paragraphs
+export function convertToHTML(paragraphs: Paragraph[]): {
+  html: string;
+  hasLink: boolean;
+  link?: string;
+} {
+  let hasLink = false;
+  let link = undefined;
+
+  const res = paragraphs
     .map(paragraph => {
       // Set up styles based on paragraph properties
       const style = `
@@ -27,6 +34,20 @@ export function convertToHTML(paragraphs: Paragraph[]): string {
       margin-left: ${paragraph.marginLeft}px;
       margin-right: ${paragraph.marginRight}px;
     `;
+
+      // Check if the paragraph has a link
+      const paragraphHasLink = paragraph.runs.some(run =>
+        /@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/.test(run.text)
+      );
+      hasLink = hasLink || paragraphHasLink;
+
+      // Get link from the runs
+      const linkRun = paragraph.runs.find(run =>
+        /@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/.test(run.text)
+      );
+      if (linkRun) {
+        link = linkRun?.text?.match?.(/@@@(https?:\/\/[^\s@]+)@@@/)?.[1] || undefined;
+      }
 
       const runsHTML = paragraph.runs
         .map(run => {
@@ -55,4 +76,10 @@ export function convertToHTML(paragraphs: Paragraph[]): string {
       return `<div style="${style}">${runsHTML}</div>`;
     })
     .join("");
+
+  return {
+    html: res,
+    hasLink,
+    link,
+  };
 }

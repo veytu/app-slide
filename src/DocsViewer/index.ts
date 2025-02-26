@@ -243,9 +243,11 @@ export class DocsViewer {
     this.context?.dispatchAppEvent("toggleNoteVisible", !!notes);
     if (!notes) return;
 
-    const content = convertToHTML(notes);
+    const { html, hasLink, link } = convertToHTML(notes);
 
-    noteContent$.innerHTML = content;
+    noteContent$.innerHTML = html;
+
+    this.context?.dispatchAppEvent("noteHasLink", { hasLink, link });
 
     if (this.note$?.firstElementChild) {
       this.note$?.replaceChild(noteContent$, this.note$.firstElementChild);
