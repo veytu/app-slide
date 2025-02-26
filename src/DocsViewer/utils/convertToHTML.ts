@@ -20,7 +20,9 @@ export function convertToHTML(paragraphs: Paragraph[]): string {
     .map(paragraph => {
       // Set up styles based on paragraph properties
       const style = `
-      text-align: ${paragraph.align === "l" ? "left" : paragraph.align};
+      text-align: ${
+        paragraph.align === "l" ? "left" : paragraph.align == "r" ? "right" : paragraph.align
+      };
       text-indent: ${paragraph.indent}px;
       margin-left: ${paragraph.marginLeft}px;
       margin-right: ${paragraph.marginRight}px;
@@ -30,16 +32,11 @@ export function convertToHTML(paragraphs: Paragraph[]): string {
         .map(run => {
           const runStyle = `word-spacing: ${run.wordSpace}px; baseline-shift: ${run.baseline}px;`;
 
-          // Split text to recognize HTTP/HTTPS links within the text
-          const processedText = run.text
-            .split(/(https?:\/\/[^\s]+)/g)
-            .map(part => {
-              if (/^https?:\/\/[^\s]+$/.test(part)) {
-                return `<a href="${part}" onclick="return false;">${part}</a>`;
-              }
-              return part; // return non-link parts as is, including `@@@`
-            })
-            .join("");
+          // Use regular expression to find links wrapped with @@@ and replace
+          const processedText = run.text.replace(
+            /@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/g,
+            '<a href="$1" onclick="return false">$2</a>'
+          );
 
           // Apply bold and italic styles if needed
           let finalText = processedText;

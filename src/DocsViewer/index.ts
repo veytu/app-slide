@@ -183,7 +183,7 @@ export class DocsViewer {
 
       $content.appendChild(this.renderPreviewMask());
       $content.appendChild(this.renderPreview());
-      $content.appendChild(this.renderNote());
+      this.renderNote();
     }
     return this.$content;
   }
@@ -192,7 +192,10 @@ export class DocsViewer {
 
   private note$?: HTMLDivElement;
 
-  protected renderNote(): HTMLDivElement {
+  protected renderNote(): HTMLDivElement | undefined {
+    if (this.readonly) {
+      return;
+    }
     const note$ = document.createElement("div");
 
     note$.className = this.wrapClassName("note") + " tele-fancy-scrollbar";
@@ -221,10 +224,15 @@ export class DocsViewer {
         this.context?.dispatchAppEvent("open-note-link", href);
       }
     });
+
+    this.$content?.appendChild(note$);
     return note$;
   }
 
   protected renderNoteContent(): void {
+    if (this.readonly) {
+      return;
+    }
     const noteContent$ = document.createElement("div");
 
     noteContent$.className = this.wrapClassName("note-content");
@@ -232,6 +240,7 @@ export class DocsViewer {
     const notes = this.notes?.[this.pageIndex + 1];
 
     this.note$?.classList.toggle(this.wrapClassName("note-hide"), !notes);
+    this.context?.dispatchAppEvent("toggleNoteVisible", !!notes);
     if (!notes) return;
 
     const content = convertToHTML(notes);

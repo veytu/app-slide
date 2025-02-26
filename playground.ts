@@ -24,7 +24,12 @@ const options: PlaygroundConfigs<Attributes> = [
     "https://convertcdn.netless.link/dynamicConvert",
     "https://convertcdn.netless.link/dynamicConvert/c734c7e353614685916be03569cd6ed9/jsonOutput/note.json"
   ),
-  definePPT("星空2", "9abed6605bbc11ec88a83b917638a00c"),
+  definePPT(
+    "星空2",
+    "051c49a7b2da4a2dacc019a10e3a0ca4",
+    "https://convertcdn.netless.link/dynamicConvert",
+    "https://convertcdn.netless.link/dynamicConvert/051c49a7b2da4a2dacc019a10e3a0ca4/jsonOutput/note.json"
+  ),
   definePPT("星空3", "9abed6605bbc11ec88a83b917638a00c"),
 ];
 

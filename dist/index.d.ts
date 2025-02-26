@@ -173,7 +173,7 @@ declare class DocsViewer {
     protected renderContent(): HTMLElement;
     private previewLazyLoad?;
     private note$?;
-    protected renderNote(): HTMLDivElement;
+    protected renderNote(): HTMLDivElement | undefined;
     protected renderNoteContent(): void;
     protected renderPreview(): HTMLElement;
     private refreshPreview;

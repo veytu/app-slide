@@ -38414,19 +38414,14 @@ if (runningOnBrowser) {
 function convertToHTML(paragraphs) {
   return paragraphs.map((paragraph) => {
     const style = `
-      text-align: ${paragraph.align === "l" ? "left" : paragraph.align};
+      text-align: ${paragraph.align === "l" ? "left" : paragraph.align == "r" ? "right" : paragraph.align};
       text-indent: ${paragraph.indent}px;
       margin-left: ${paragraph.marginLeft}px;
       margin-right: ${paragraph.marginRight}px;
     `;
     const runsHTML = paragraph.runs.map((run) => {
       const runStyle = `word-spacing: ${run.wordSpace}px; baseline-shift: ${run.baseline}px;`;
-      const processedText = run.text.split(/(https?:\/\/[^\s]+)/g).map((part) => {
-        if (/^https?:\/\/[^\s]+$/.test(part)) {
-          return `<a href="${part}" onclick="return false;">${part}</a>`;
-        }
-        return part;
-      }).join("");
+      const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/g, '<a href="$1" onclick="return false">$2</a>');
       let finalText = processedText;
       if (run.bold) {
         finalText = `<strong>${finalText}</strong>`;
@@ -38553,12 +38548,15 @@ class DocsViewer {
       }
       $content.appendChild(this.renderPreviewMask());
       $content.appendChild(this.renderPreview());
-      $content.appendChild(this.renderNote());
+      this.renderNote();
     }
     return this.$content;
   }
   renderNote() {
-    var _a, _b;
+    var _a, _b, _c;
+    if (this.readonly) {
+      return;
+    }
     const note$ = document.createElement("div");
     note$.className = this.wrapClassName("note") + " tele-fancy-scrollbar";
     this.note$ = note$;
@@ -38583,22 +38581,27 @@ class DocsViewer {
         (_a2 = this.context) == null ? void 0 : _a2.dispatchAppEvent("open-note-link", href);
       }
     });
+    (_c = this.$content) == null ? void 0 : _c.appendChild(note$);
     return note$;
   }
   renderNoteContent() {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f;
+    if (this.readonly) {
+      return;
+    }
     const noteContent$ = document.createElement("div");
     noteContent$.className = this.wrapClassName("note-content");
     const notes = (_a = this.notes) == null ? void 0 : _a[this.pageIndex + 1];
     (_b = this.note$) == null ? void 0 : _b.classList.toggle(this.wrapClassName("note-hide"), !notes);
+    (_c = this.context) == null ? void 0 : _c.dispatchAppEvent("toggleNoteVisible", !!notes);
     if (!notes)
       return;
     const content = convertToHTML(notes);
     noteContent$.innerHTML = content;
-    if ((_c = this.note$) == null ? void 0 : _c.firstElementChild) {
-      (_d = this.note$) == null ? void 0 : _d.replaceChild(noteContent$, this.note$.firstElementChild);
+    if ((_d = this.note$) == null ? void 0 : _d.firstElementChild) {
+      (_e = this.note$) == null ? void 0 : _e.replaceChild(noteContent$, this.note$.firstElementChild);
     } else {
-      (_e = this.note$) == null ? void 0 : _e.appendChild(noteContent$);
+      (_f = this.note$) == null ? void 0 : _f.appendChild(noteContent$);
     }
   }
   renderPreview() {
