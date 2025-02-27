@@ -192,6 +192,16 @@ export class DocsViewer {
 
   private note$?: HTMLDivElement;
 
+  private noteHasLink?: boolean;
+  private noteLink?: string;
+
+  public getNoteHasLink() {
+    return this.noteHasLink;
+  }
+
+  public getNoteLink() {
+    return this.noteLink;
+  }
   protected renderNote(): HTMLDivElement | undefined {
     if (this.readonly) {
       return;
@@ -231,6 +241,8 @@ export class DocsViewer {
 
   protected renderNoteContent(): void {
     if (this.readonly) {
+      this.noteHasLink = false;
+      this.noteLink = undefined;
       return;
     }
     const noteContent$ = document.createElement("div");
@@ -246,6 +258,8 @@ export class DocsViewer {
     const { html, hasLink, link } = convertToHTML(notes);
 
     noteContent$.innerHTML = html;
+    this.noteHasLink = hasLink;
+    this.noteLink = link;
 
     this.context?.dispatchAppEvent("noteHasLink", { hasLink, link });
 

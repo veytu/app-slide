@@ -108,6 +108,14 @@ export class SlideDocsViewer {
   public $whiteboardView!: HTMLDivElement;
   public $overlay!: HTMLDivElement;
 
+  public getNoteHasLink() {
+    return this.viewer?.getNoteHasLink();
+  }
+
+  public getNoteLink() {
+    return this.viewer?.getNoteLink();
+  }
+
   public render() {
     this.viewer.$content.appendChild(this.renderSlideContainer());
     this.viewer.$content.appendChild(this.renderWhiteboardView());

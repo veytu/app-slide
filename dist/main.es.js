@@ -38566,6 +38566,12 @@ class DocsViewer {
     }
     return this.$content;
   }
+  getNoteHasLink() {
+    return this.noteHasLink;
+  }
+  getNoteLink() {
+    return this.noteLink;
+  }
   renderNote() {
     var _a, _b, _c;
     if (this.readonly) {
@@ -38601,6 +38607,8 @@ class DocsViewer {
   renderNoteContent() {
     var _a, _b, _c, _d, _e, _f, _g;
     if (this.readonly) {
+      this.noteHasLink = false;
+      this.noteLink = void 0;
       return;
     }
     const noteContent$ = document.createElement("div");
@@ -38612,6 +38620,8 @@ class DocsViewer {
       return;
     const { html, hasLink, link } = convertToHTML(notes);
     noteContent$.innerHTML = html;
+    this.noteHasLink = hasLink;
+    this.noteLink = link;
     (_d = this.context) == null ? void 0 : _d.dispatchAppEvent("noteHasLink", { hasLink, link });
     if ((_e = this.note$) == null ? void 0 : _e.firstElementChild) {
       (_f = this.note$) == null ? void 0 : _f.replaceChild(noteContent$, this.note$.firstElementChild);
@@ -38988,6 +38998,14 @@ class SlideDocsViewer {
       };
     });
     this.render();
+  }
+  getNoteHasLink() {
+    var _a;
+    return (_a = this.viewer) == null ? void 0 : _a.getNoteHasLink();
+  }
+  getNoteLink() {
+    var _a;
+    return (_a = this.viewer) == null ? void 0 : _a.getNoteLink();
   }
   render() {
     this.viewer.$content.appendChild(this.renderSlideContainer());

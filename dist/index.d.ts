@@ -173,6 +173,10 @@ declare class DocsViewer {
     protected renderContent(): HTMLElement;
     private previewLazyLoad?;
     private note$?;
+    private noteHasLink?;
+    private noteLink?;
+    getNoteHasLink(): boolean | undefined;
+    getNoteLink(): string | undefined;
     protected renderNote(): HTMLDivElement | undefined;
     protected renderNoteContent(): void;
     protected renderPreview(): HTMLElement;
@@ -287,6 +291,8 @@ declare class SlideDocsViewer {
     $slide: HTMLDivElement;
     $whiteboardView: HTMLDivElement;
     $overlay: HTMLDivElement;
+    getNoteHasLink(): boolean | undefined;
+    getNoteLink(): string | undefined;
     render(): void;
     protected renderOverlay(): HTMLDivElement;
     protected renderSlideContainer(): HTMLDivElement;
