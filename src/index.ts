@@ -90,6 +90,8 @@ export interface AppResult {
   prevPage: () => boolean;
   jumpToPage: (page: number) => boolean;
   togglePreview: (visible?: boolean) => void;
+  getNoteHasLink: () => boolean;
+  getNoteLink: () => string | undefined;
 }
 
 const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
@@ -308,6 +310,12 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
       },
       togglePreview: visible => {
         docsViewer?.viewer.togglePreview(visible);
+      },
+      getNoteHasLink: () => {
+        return docsViewer?.viewer.getNoteHasLink() ?? false;
+      },
+      getNoteLink: () => {
+        return docsViewer?.viewer.getNoteLink();
       },
     };
   },

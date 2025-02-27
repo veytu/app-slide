@@ -426,6 +426,8 @@ interface AppResult {
     prevPage: () => boolean;
     jumpToPage: (page: number) => boolean;
     togglePreview: (visible?: boolean) => void;
+    getNoteHasLink: () => boolean;
+    getNoteLink: () => string | undefined;
 }
 declare const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult>;
 

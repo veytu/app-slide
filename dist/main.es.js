@@ -39567,6 +39567,13 @@ const SlideApp = {
       },
       togglePreview: (visible) => {
         docsViewer == null ? void 0 : docsViewer.viewer.togglePreview(visible);
+      },
+      getNoteHasLink: () => {
+        var _a2;
+        return (_a2 = docsViewer == null ? void 0 : docsViewer.viewer.getNoteHasLink()) != null ? _a2 : false;
+      },
+      getNoteLink: () => {
+        return docsViewer == null ? void 0 : docsViewer.viewer.getNoteLink();
       }
     };
   }
