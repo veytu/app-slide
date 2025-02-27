@@ -38728,9 +38728,11 @@ class DocsViewer {
       $pageJumps.className = this.wrapClassName("page-jumps");
       const $btnPageBack = this.renderFooterBtn("btn-page-back", arrowLeftSVG(this.namespace));
       this.sideEffect.addEventListener($btnPageBack, "click", () => {
+        var _a;
         if (this.readonly) {
           return;
         }
+        (_a = this.context) == null ? void 0 : _a.dispatchAppEvent("pageBtnClick");
         this.onNewPageIndex(this.pageIndex - 1, "navigation");
       });
       $pageJumps.appendChild($btnPageBack);
@@ -38748,6 +38750,7 @@ class DocsViewer {
       $pageJumps.appendChild($pageNumber);
       const $btnPageNext = this.renderFooterBtn("btn-page-next", arrowRightSVG(this.namespace));
       this.sideEffect.addEventListener($btnPageNext, "click", () => {
+        var _a;
         if (this.readonly) {
           return;
         }
@@ -38757,6 +38760,7 @@ class DocsViewer {
         } else {
           this.onNewPageIndex(this.pageIndex + 1, "navigation");
         }
+        (_a = this.context) == null ? void 0 : _a.dispatchAppEvent("pageBtnClick");
       });
       $pageJumps.appendChild($btnPageNext);
       this.$btnPageNext = $btnPageNext;

@@ -411,6 +411,7 @@ export class DocsViewer {
         if (this.readonly) {
           return;
         }
+        this.context?.dispatchAppEvent("pageBtnClick");
         this.onNewPageIndex(this.pageIndex - 1, "navigation");
       });
       $pageJumps.appendChild($btnPageBack);
@@ -479,6 +480,7 @@ export class DocsViewer {
         } else {
           this.onNewPageIndex(this.pageIndex + 1, "navigation");
         }
+        this.context?.dispatchAppEvent("pageBtnClick");
       });
       $pageJumps.appendChild($btnPageNext);
       this.$btnPageNext = $btnPageNext;
