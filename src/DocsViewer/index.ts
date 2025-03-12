@@ -7,7 +7,7 @@ import { arrowRightSVG } from "./icons/arrow-right";
 import type { ILazyLoadInstance } from "vanilla-lazyload";
 import LazyLoad from "vanilla-lazyload";
 import { SideEffectManager } from "side-effect-manager";
-import type { AppContext, ReadonlyTeleBox } from "@netless/window-manager";
+import { type AppContext, type ReadonlyTeleBox } from "@netless/window-manager";
 import type { Attributes, MagixEvents } from "../typings";
 import type { AppOptions } from "..";
 import type { Paragraph } from "./utils/convertToHTML";
@@ -132,6 +132,7 @@ export class DocsViewer {
         .querySelector("img")
         ?.classList.toggle(this.wrapClassName("active"), Number(pageIndex) == i);
     });
+    if (!previews) return;
     const imgNode = Array.prototype.slice
       .call(previews)
       .find(node => node.querySelector("img").className.includes(this.wrapClassName("active")));
@@ -181,8 +182,8 @@ export class DocsViewer {
         $content.classList.add(this.wrapClassName("readonly"));
       }
 
-      $content.appendChild(this.renderPreviewMask());
-      $content.appendChild(this.renderPreview());
+      // $content.appendChild(this.renderPreviewMask());
+      // $content.appendChild(this.renderPreview());
       this.renderNote();
     }
     return this.$content;
@@ -300,6 +301,7 @@ export class DocsViewer {
     const { $preview } = this;
     const pageClassName = this.wrapClassName("preview-page");
     const pageNameClassName = this.wrapClassName("preview-page-name");
+    if (!$preview) return;
     while ($preview.firstChild) {
       $preview.firstChild.remove();
     }
@@ -392,17 +394,6 @@ export class DocsViewer {
         $footer.classList.add(this.wrapClassName("float-footer"));
       }
 
-      // const $btnSidebar = this.renderFooterBtn("btn-sidebar", sidebarSVG(this.namespace));
-      // this.sideEffect.addEventListener($btnSidebar, "click", () => {
-      //   if (this.readonly) {
-      //     return;
-      //   }
-      //   this.togglePreview();
-      // });
-      // this.$btnSidebar = $btnSidebar;
-      // this.$btnSidebar.style.display = "none";
-      // this.$footer.appendChild($btnSidebar);
-
       const $pageJumps = document.createElement("div");
       $pageJumps.className = this.wrapClassName("page-jumps");
 
@@ -417,47 +408,14 @@ export class DocsViewer {
       $pageJumps.appendChild($btnPageBack);
       this.$btnPageBack = $btnPageBack;
 
-      // if (this.onPlay) {
-      //   const $btnPlay = this.renderFooterBtn(
-      //     "btn-page-play",
-      //     playSVG(this.namespace),
-      //     pauseSVG(this.namespace)
-      //   );
-      //   this.$btnPlay = $btnPlay;
-      //   this.sideEffect.addEventListener($btnPlay, "click", () => {
-      //     if (this.readonly) {
-      //       return;
-      //     }
-      //     this.setPlaying();
-      //     if (this.onPlay) {
-      //       this.onPlay();
-      //     }
-      //   });
-
-      //   this.$footer.appendChild($btnPlay);
-      // }
-
       const $pageNumber = document.createElement("div");
       $pageNumber.className = this.wrapClassName("page-number");
 
       const $pageNumberInput = document.createElement("span");
       $pageNumberInput.className = this.wrapClassName("page-number-input");
       $pageNumberInput.textContent = String(this.pageIndex + 1);
-      // if (this.readonly) {
-      //   $pageNumberInput.disabled = true;
-      // }
+
       this.$pageNumberInput = $pageNumberInput;
-      // this.sideEffect.addEventListener($pageNumberInput, "focus", () => {
-      //   $pageNumberInput.select();
-      // });
-      // this.sideEffect.addEventListener($pageNumberInput, "change", () => {
-      //   if (this.readonly) {
-      //     return;
-      //   }
-      //   if ($pageNumberInput.value) {
-      //     this.onNewPageIndex(Number($pageNumberInput.value) - 1, "input");
-      //   }
-      // });
 
       const $totalPage = document.createElement("span");
       this.$totalPage = $totalPage;
@@ -472,8 +430,6 @@ export class DocsViewer {
         if (this.readonly) {
           return;
         }
-        // this.onNewPageIndex(this.pageIndex + 1, "navigation");
-        // this.onPlay?.()
         this.setPlaying();
         if (this.onPlay) {
           this.onPlay();
@@ -488,9 +444,7 @@ export class DocsViewer {
       this.$footer.appendChild($pageJumps);
       this.box.events.on("maximized", max => {
         this.$footer.classList.toggle(this.wrapClassName("hide"), max);
-        // this.togglePreview(max);
       });
-      // this.$footer.appendChild($pageNumber);
     }
     return this.$footer;
   }
@@ -515,18 +469,31 @@ export class DocsViewer {
   public togglePreview(isShowPreview?: boolean): void {
     this.isShowPreview = isShowPreview ?? !this.isShowPreview;
     this.$content.classList.toggle(this.wrapClassName("preview-active"), this.isShowPreview);
+
     if (this.isShowPreview) {
-      const $previewPage = this.$preview.querySelector<HTMLElement>(
-        "." + this.wrapClassName(`preview-page-${this.pageIndex}`)
-      );
-      if ($previewPage) {
-        this.previewLazyLoad ||= new LazyLoad({
-          container: this.$preview,
-          elements_selector: `.${this.wrapClassName("preview-page>img")}`,
-        });
-        this.$preview.scrollTo({
-          top: $previewPage.offsetTop - 16,
-        });
+      this.context?.extendWrapper?.appendChild(this.renderPreviewMask());
+      this.context?.extendWrapper?.appendChild(this.renderPreview());
+      if (this.context?.extendWrapper) {
+        this.context.extendWrapper.style.display = "block";
+      }
+      setTimeout(() => {
+        const $previewPage = this.$preview.querySelector<HTMLElement>(
+          "." + this.wrapClassName(`preview-page-${this.pageIndex}`)
+        );
+        if ($previewPage) {
+          this.previewLazyLoad ||= new LazyLoad({
+            container: this.$preview,
+            elements_selector: `.${this.wrapClassName("preview-page>img")}`,
+          });
+          this.$preview.scrollTo({
+            top: $previewPage.offsetTop - 16,
+          });
+        }
+      });
+    } else {
+      if (this.context?.extendWrapper) {
+        this.context.extendWrapper.style.display = "none";
+        this.context.extendWrapper.innerHTML = "";
       }
     }
   }

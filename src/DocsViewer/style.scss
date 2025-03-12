@@ -9,8 +9,8 @@ $namespace: $slide-namespace;
 }
 
 .#{$namespace}-preview-mask {
-  display: none;
-  position: absolute;
+  display: block;
+  position: fixed;
   z-index: 200;
   top: 0;
   left: 0;
@@ -29,7 +29,6 @@ $namespace: $slide-namespace;
   width: 23%;
   height: 100%;
   padding: 12px;
-  transform: translateX(100%);
   box-shadow: -4.8px -3.2px 20px rgba(32, 35, 56, 0.15);
   transition: transform 0.4s;
   background: #f5f5fc;
@@ -37,7 +36,6 @@ $namespace: $slide-namespace;
   -webkit-box-shadow: -4.8px -3.2px 20px rgba(32, 35, 56, 0.15);
   height: 100%;
   position: absolute;
-  opacity: 0;
 }
 
 .#{$namespace}-preview-active {
