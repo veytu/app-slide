@@ -38422,15 +38422,15 @@ function convertToHTML(paragraphs) {
       margin-left: ${paragraph.marginLeft}px;
       margin-right: ${paragraph.marginRight}px;
     `;
-    const paragraphHasLink = paragraph.runs.some((run) => /@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/.test(run.text));
+    const paragraphHasLink = paragraph.runs.some((run) => /@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/.test(run.text));
     hasLink = hasLink || paragraphHasLink;
-    const linkRun = paragraph.runs.find((run) => /@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/.test(run.text));
+    const linkRun = paragraph.runs.find((run) => /@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/.test(run.text));
     if (linkRun) {
       link = ((_c = (_b = (_a = linkRun == null ? void 0 : linkRun.text) == null ? void 0 : _a.match) == null ? void 0 : _b.call(_a, /@@@(https?:\/\/[^\s@]+)@@@/)) == null ? void 0 : _c[1]) || void 0;
     }
     const runsHTML = paragraph.runs.map((run) => {
       const runStyle = `word-spacing: ${run.wordSpace}px; baseline-shift: ${run.baseline}px;`;
-      const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/g, '<a href="$1" onclick="return false">$2</a>');
+      const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/g, '<a href="$1" onclick="return false">$2</a>');
       let finalText = processedText;
       if (run.bold) {
         finalText = `<strong>${finalText}</strong>`;
@@ -38689,7 +38689,11 @@ class DocsViewer {
       const $img = document.createElement("img");
       $img.width = page.width;
       $img.height = page.height;
-      $img.dataset.src = previewSRC;
+      if (i < 10) {
+        $img.src = previewSRC;
+      } else {
+        $img.dataset.src = previewSRC;
+      }
       $img.dataset.pageIndex = pageIndex;
       $img.classList.toggle(this.wrapClassName("active"), this.pageIndex == i);
       $page.appendChild($name);

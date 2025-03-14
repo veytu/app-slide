@@ -340,7 +340,11 @@ export class DocsViewer {
       const $img = document.createElement("img");
       $img.width = page.width;
       $img.height = page.height;
-      $img.dataset.src = previewSRC;
+      if (i < 10) {
+        $img.src = previewSRC;
+      } else {
+        $img.dataset.src = previewSRC;
+      }
       $img.dataset.pageIndex = pageIndex;
       $img.classList.toggle(this.wrapClassName("active"), this.pageIndex == i);
 

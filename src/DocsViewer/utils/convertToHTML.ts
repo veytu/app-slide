@@ -37,13 +37,13 @@ export function convertToHTML(paragraphs: Paragraph[]): {
 
       // Check if the paragraph has a link
       const paragraphHasLink = paragraph.runs.some(run =>
-        /@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/.test(run.text)
+        /@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/.test(run.text)
       );
       hasLink = hasLink || paragraphHasLink;
 
       // Get link from the runs
       const linkRun = paragraph.runs.find(run =>
-        /@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/.test(run.text)
+        /@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/.test(run.text)
       );
       if (linkRun) {
         link = linkRun?.text?.match?.(/@@@(https?:\/\/[^\s@]+)@@@/)?.[1] || undefined;
@@ -55,7 +55,7 @@ export function convertToHTML(paragraphs: Paragraph[]): {
 
           // Use regular expression to find links wrapped with @@@ and replace
           const processedText = run.text.replace(
-            /@@@(https?:\/\/[^\s@]+)@@@([^#]*)###/g,
+            /@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/g,
             '<a href="$1" onclick="return false">$2</a>'
           );
 
