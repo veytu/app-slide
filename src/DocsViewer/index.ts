@@ -12,6 +12,7 @@ import type { Attributes, MagixEvents } from "../typings";
 import type { AppOptions } from "..";
 import type { Paragraph } from "./utils/convertToHTML";
 import { convertToHTML } from "./utils/convertToHTML";
+import { isAndroid, isIOS } from "./utils/environment";
 
 export interface DocsViewerPage {
   src: string;
@@ -47,10 +48,12 @@ export class DocsViewer {
     this.urlInterrupter = urlInterrupter || (url => url);
     this.box = box;
     this.context = context;
+    this.appReadonly = context?.getIsAppReadonly();
     this.render();
   }
 
   protected readonly: boolean;
+  protected appReadonly?: boolean;
   protected box: ReadonlyTeleBox;
   protected onNewPageIndex: (index: number, origin?: string) => void;
   protected onPlay?: () => void;
@@ -99,6 +102,11 @@ export class DocsViewer {
     this.$content.classList.toggle(this.wrapClassName("readonly"), readonly);
     this.$footer.classList.toggle(this.wrapClassName("readonly"), readonly);
     // this.$pageNumberInput.disabled = readonly;
+  }
+
+  public setAppReadonly(readonly: boolean): void {
+    this.appReadonly = readonly;
+    this.note$?.classList.toggle(this.wrapClassName("note-hide"), readonly);
   }
 
   public destroy(): void {
@@ -207,6 +215,13 @@ export class DocsViewer {
     if (this.readonly) {
       return;
     }
+
+    if (this.appReadonly) {
+      return;
+    }
+
+    if (isIOS() || isAndroid()) return;
+
     const note$ = document.createElement("div");
 
     note$.className = this.wrapClassName("note") + " tele-fancy-scrollbar";

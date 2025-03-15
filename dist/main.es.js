@@ -17,6 +17,7 @@ var __spreadValues = (a, b) => {
   return a;
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
+var _a;
 var Slide = function(t) {
   var e = {};
   function i(n) {
@@ -21598,7 +21599,7 @@ var Slide = function(t) {
     }
   }).prototype.isImageBitmapLoader = true;
   let va;
-  const _a = function() {
+  const _a2 = function() {
     return va === void 0 && (va = new (window.AudioContext || window.webkitAudioContext)()), va;
   };
   class ya extends Fs {
@@ -21610,7 +21611,7 @@ var Slide = function(t) {
       o2.setResponseType("arraybuffer"), o2.setPath(this.path), o2.setRequestHeader(this.requestHeader), o2.setWithCredentials(this.withCredentials), o2.load(t2, function(i3) {
         try {
           const t3 = i3.slice(0);
-          _a().decodeAudioData(t3, function(t4) {
+          _a2().decodeAudioData(t3, function(t4) {
             e2(t4);
           });
         } catch (e3) {
@@ -37302,8 +37303,8 @@ class Logger {
           console.log(this);
         } else if (data.slide === "__debug") {
           Object.values(this.apps).forEach((app) => {
-            var _a, _b;
-            (_b = (_a = app.controller) == null ? void 0 : _a.slide) == null ? void 0 : _b.createController();
+            var _a2, _b;
+            (_b = (_a2 = app.controller) == null ? void 0 : _a2.slide) == null ? void 0 : _b.createController();
           });
         }
       }
@@ -37311,13 +37312,13 @@ class Logger {
     this.initialize();
   }
   setAppContext(appId, context) {
-    var _a;
-    ((_a = this.apps)[appId] || (_a[appId] = {})).context = context;
+    var _a2;
+    ((_a2 = this.apps)[appId] || (_a2[appId] = {})).context = context;
     this.log(`[Slide] new ${appId}`);
   }
   setAppController(appId, controller) {
-    var _a;
-    ((_a = this.apps)[appId] || (_a[appId] = {})).controller = controller;
+    var _a2;
+    ((_a2 = this.apps)[appId] || (_a2[appId] = {})).controller = controller;
   }
   deleteApp(appId) {
     delete this.apps[appId];
@@ -37407,7 +37408,7 @@ function createDocsViewerPages(slide, previewUrls = []) {
   return pages;
 }
 function syncSceneWithSlide(room, context, slide, baseScenePath) {
-  var _a;
+  var _a2;
   const page = slide.slideState.currentSlideIndex;
   if (!(page > 0) || !context.getIsWritable())
     return;
@@ -37424,7 +37425,7 @@ function syncSceneWithSlide(room, context, slide, baseScenePath) {
   if (context.getBox().focus) {
     currentScenePath = room.state.sceneState.scenePath;
   } else {
-    currentScenePath = ((_a = context.getView()) == null ? void 0 : _a.focusScenePath) || "";
+    currentScenePath = ((_a2 = context.getView()) == null ? void 0 : _a2.focusScenePath) || "";
   }
   if (currentScenePath !== scenePath) {
     context.setScenePath(scenePath);
@@ -37537,7 +37538,7 @@ class SlideController {
       }
     };
     this.unfreeze = async () => {
-      var _a;
+      var _a2;
       if (!this.visible)
         return;
       this.isFrozen = false;
@@ -37548,7 +37549,7 @@ class SlideController {
         } else {
           this.slide.resume();
         }
-        const currentSlideIndex = (_a = this.context.storage.state.state) == null ? void 0 : _a.currentSlideIndex;
+        const currentSlideIndex = (_a2 = this.context.storage.state.state) == null ? void 0 : _a2.currentSlideIndex;
         if (currentSlideIndex) {
           log("[Slide] sync storage", currentSlideIndex);
           this.slide.setSlideState({ currentSlideIndex });
@@ -37671,14 +37672,14 @@ class SlideController {
     return this.slide.slideState.currentSlideIndex;
   }
   createSlide(anchor, defaults = {}) {
-    var _a, _b, _c;
+    var _a2, _b, _c;
     const options = this.context.getAppOptions() || {};
     const slide = new Slide.Slide({
       anchor,
       interactive: true,
       mode: "interactive",
       controller: logger.enable,
-      enableGlobalClick: (_a = options.enableGlobalClick) != null ? _a : true,
+      enableGlobalClick: (_a2 = options.enableGlobalClick) != null ? _a2 : true,
       renderOptions: {
         minFPS: options.minFPS || 25,
         maxFPS: options.maxFPS || 30,
@@ -38415,7 +38416,7 @@ function convertToHTML(paragraphs) {
   let hasLink = false;
   let link = void 0;
   const res = paragraphs.map((paragraph) => {
-    var _a, _b, _c;
+    var _a2, _b, _c;
     const style = `
       text-align: ${paragraph.align === "l" ? "left" : paragraph.align == "r" ? "right" : paragraph.align};
       text-indent: ${paragraph.indent}px;
@@ -38426,7 +38427,7 @@ function convertToHTML(paragraphs) {
     hasLink = hasLink || paragraphHasLink;
     const linkRun = paragraph.runs.find((run) => /@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/.test(run.text));
     if (linkRun) {
-      link = ((_c = (_b = (_a = linkRun == null ? void 0 : linkRun.text) == null ? void 0 : _a.match) == null ? void 0 : _b.call(_a, /@@@(https?:\/\/[^\s@]+)@@@/)) == null ? void 0 : _c[1]) || void 0;
+      link = ((_c = (_b = (_a2 = linkRun == null ? void 0 : linkRun.text) == null ? void 0 : _a2.match) == null ? void 0 : _b.call(_a2, /@@@(https?:\/\/[^\s@]+)@@@/)) == null ? void 0 : _c[1]) || void 0;
     }
     const runsHTML = paragraph.runs.map((run) => {
       const runStyle = `word-spacing: ${run.wordSpace}px; baseline-shift: ${run.baseline}px;`;
@@ -38448,6 +38449,14 @@ function convertToHTML(paragraphs) {
     link
   };
 }
+const _ua = (_a = window.navigator) == null ? void 0 : _a.userAgent;
+_ua == null ? void 0 : _ua.match(/(Edge?)\/(\d+)/);
+const isIOS = () => {
+  return typeof navigator !== "undefined" && typeof window !== "undefined" && /iPad|iPhone|iPod/.test(_ua);
+};
+const isAndroid = () => {
+  return typeof navigator !== "undefined" && /Android/.test(_ua);
+};
 class DocsViewer {
   constructor({
     readonly,
@@ -38475,6 +38484,7 @@ class DocsViewer {
     this.urlInterrupter = urlInterrupter || ((url) => url);
     this.box = box;
     this.context = context;
+    this.appReadonly = context == null ? void 0 : context.getIsAppReadonly();
     this.render();
   }
   set pages(value) {
@@ -38497,9 +38507,14 @@ class DocsViewer {
     this.$content.classList.toggle(this.wrapClassName("readonly"), readonly);
     this.$footer.classList.toggle(this.wrapClassName("readonly"), readonly);
   }
+  setAppReadonly(readonly) {
+    var _a2;
+    this.appReadonly = readonly;
+    (_a2 = this.note$) == null ? void 0 : _a2.classList.toggle(this.wrapClassName("note-hide"), readonly);
+  }
   destroy() {
-    var _a;
-    (_a = this.previewLazyLoad) == null ? void 0 : _a.destroy();
+    var _a2;
+    (_a2 = this.previewLazyLoad) == null ? void 0 : _a2.destroy();
     this.sideEffect.flushAll();
     this.unmount();
   }
@@ -38514,11 +38529,11 @@ class DocsViewer {
     }
   }
   scrollPreview(pageIndex) {
-    var _a;
-    const previews = (_a = this.$preview) == null ? void 0 : _a.querySelectorAll("." + this.wrapClassName("preview-page"));
+    var _a2;
+    const previews = (_a2 = this.$preview) == null ? void 0 : _a2.querySelectorAll("." + this.wrapClassName("preview-page"));
     previews == null ? void 0 : previews.forEach((node, i) => {
-      var _a2;
-      (_a2 = node.querySelector("img")) == null ? void 0 : _a2.classList.toggle(this.wrapClassName("active"), Number(pageIndex) == i);
+      var _a3;
+      (_a3 = node.querySelector("img")) == null ? void 0 : _a3.classList.toggle(this.wrapClassName("active"), Number(pageIndex) == i);
     });
     if (!previews)
       return;
@@ -38573,21 +38588,26 @@ class DocsViewer {
     return this.noteLink;
   }
   renderNote() {
-    var _a, _b, _c;
+    var _a2, _b, _c;
     if (this.readonly) {
       return;
     }
+    if (this.appReadonly) {
+      return;
+    }
+    if (isIOS() || isAndroid())
+      return;
     const note$ = document.createElement("div");
     note$.className = this.wrapClassName("note") + " tele-fancy-scrollbar";
     this.note$ = note$;
-    if ((_a = this.context) == null ? void 0 : _a.storage.state.note) {
+    if ((_a2 = this.context) == null ? void 0 : _a2.storage.state.note) {
       fetch((_b = this.context) == null ? void 0 : _b.storage.state.note).then((data) => data.json()).then((res) => {
         this.notes = res;
         this.renderNoteContent();
       });
     }
     this.sideEffect.addEventListener(note$, "click", (ev) => {
-      var _a2;
+      var _a3;
       if (this.readonly) {
         return;
       }
@@ -38598,14 +38618,14 @@ class DocsViewer {
         ev.stopImmediatePropagation();
         const link = target;
         const href = link.href;
-        (_a2 = this.context) == null ? void 0 : _a2.dispatchAppEvent("open-note-link", href);
+        (_a3 = this.context) == null ? void 0 : _a3.dispatchAppEvent("open-note-link", href);
       }
     });
     (_c = this.$content) == null ? void 0 : _c.appendChild(note$);
     return note$;
   }
   renderNoteContent() {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a2, _b, _c, _d, _e, _f, _g;
     if (this.readonly) {
       this.noteHasLink = false;
       this.noteLink = void 0;
@@ -38613,7 +38633,7 @@ class DocsViewer {
     }
     const noteContent$ = document.createElement("div");
     noteContent$.className = this.wrapClassName("note-content");
-    const notes = (_a = this.notes) == null ? void 0 : _a[this.pageIndex + 1];
+    const notes = (_a2 = this.notes) == null ? void 0 : _a2[this.pageIndex + 1];
     (_b = this.note$) == null ? void 0 : _b.classList.toggle(this.wrapClassName("note-hide"), !notes);
     (_c = this.context) == null ? void 0 : _c.dispatchAppEvent("toggleNoteVisible", !!notes);
     if (!notes)
@@ -38636,11 +38656,11 @@ class DocsViewer {
       this.$preview = $preview;
       this.refreshPreview();
       this.sideEffect.addEventListener($preview, "click", (ev) => {
-        var _a;
+        var _a2;
         if (this.readonly) {
           return;
         }
-        const pageIndex = (_a = ev.target.dataset) == null ? void 0 : _a.pageIndex;
+        const pageIndex = (_a2 = ev.target.dataset) == null ? void 0 : _a2.pageIndex;
         if (pageIndex) {
           ev.preventDefault();
           ev.stopPropagation();
@@ -38652,7 +38672,7 @@ class DocsViewer {
     return this.$preview;
   }
   async refreshPreview() {
-    var _a, _b;
+    var _a2, _b;
     const { $preview } = this;
     const pageClassName = this.wrapClassName("preview-page");
     const pageNameClassName = this.wrapClassName("preview-page-name");
@@ -38664,7 +38684,7 @@ class DocsViewer {
     const previewSRCs = [];
     for (let i = 0, len = this.pages.length; i < len; i++) {
       const page = this.pages[i];
-      const src = (_a = page.thumbnail) != null ? _a : page.src.startsWith("ppt") ? void 0 : page.src;
+      const src = (_a2 = page.thumbnail) != null ? _a2 : page.src.startsWith("ppt") ? void 0 : page.src;
       if (src) {
         previewSRCs[i] = this.urlInterrupter(src);
       }
@@ -38734,11 +38754,11 @@ class DocsViewer {
       $pageJumps.className = this.wrapClassName("page-jumps");
       const $btnPageBack = this.renderFooterBtn("btn-page-back", arrowLeftSVG(this.namespace));
       this.sideEffect.addEventListener($btnPageBack, "click", () => {
-        var _a;
+        var _a2;
         if (this.readonly) {
           return;
         }
-        (_a = this.context) == null ? void 0 : _a.dispatchAppEvent("pageBtnClick");
+        (_a2 = this.context) == null ? void 0 : _a2.dispatchAppEvent("pageBtnClick");
         this.onNewPageIndex(this.pageIndex - 1, "navigation");
       });
       $pageJumps.appendChild($btnPageBack);
@@ -38756,7 +38776,7 @@ class DocsViewer {
       $pageJumps.appendChild($pageNumber);
       const $btnPageNext = this.renderFooterBtn("btn-page-next", arrowRightSVG(this.namespace));
       this.sideEffect.addEventListener($btnPageNext, "click", () => {
-        var _a;
+        var _a2;
         if (this.readonly) {
           return;
         }
@@ -38766,7 +38786,7 @@ class DocsViewer {
         } else {
           this.onNewPageIndex(this.pageIndex + 1, "navigation");
         }
-        (_a = this.context) == null ? void 0 : _a.dispatchAppEvent("pageBtnClick");
+        (_a2 = this.context) == null ? void 0 : _a2.dispatchAppEvent("pageBtnClick");
       });
       $pageJumps.appendChild($btnPageNext);
       this.$btnPageNext = $btnPageNext;
@@ -38787,11 +38807,11 @@ class DocsViewer {
     return $btn;
   }
   togglePreview(isShowPreview) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a2, _b, _c, _d, _e, _f;
     this.isShowPreview = isShowPreview != null ? isShowPreview : !this.isShowPreview;
     this.$content.classList.toggle(this.wrapClassName("preview-active"), this.isShowPreview);
     if (this.isShowPreview) {
-      (_b = (_a = this.context) == null ? void 0 : _a.extendWrapper) == null ? void 0 : _b.appendChild(this.renderPreviewMask());
+      (_b = (_a2 = this.context) == null ? void 0 : _a2.extendWrapper) == null ? void 0 : _b.appendChild(this.renderPreviewMask());
       (_d = (_c = this.context) == null ? void 0 : _c.extendWrapper) == null ? void 0 : _d.appendChild(this.renderPreview());
       if ((_e = this.context) == null ? void 0 : _e.extendWrapper) {
         this.context.extendWrapper.style.display = "block";
@@ -38838,9 +38858,9 @@ class SlideDocsViewer {
     this.slideController = null;
     this.isViewMounted = false;
     this.onError = ({ error, index }) => {
-      var _a, _b;
+      var _a2, _b;
       this.viewer.setPaused();
-      if ((_a = this.slideController) == null ? void 0 : _a.showRenderError) {
+      if ((_a2 = this.slideController) == null ? void 0 : _a2.showRenderError) {
         this.$overlay.textContent = `Error on slide[page=${this.slideController.page}]: ${error.message}`;
         this.$overlay.style.opacity = "1";
       }
@@ -39023,12 +39043,12 @@ class SlideDocsViewer {
     this.render();
   }
   getNoteHasLink() {
-    var _a;
-    return (_a = this.viewer) == null ? void 0 : _a.getNoteHasLink();
+    var _a2;
+    return (_a2 = this.viewer) == null ? void 0 : _a2.getNoteHasLink();
   }
   getNoteLink() {
-    var _a;
-    return (_a = this.viewer) == null ? void 0 : _a.getNoteLink();
+    var _a2;
+    return (_a2 = this.viewer) == null ? void 0 : _a2.getNoteLink();
   }
   render() {
     this.viewer.$content.appendChild(this.renderSlideContainer());
@@ -39162,8 +39182,8 @@ const apps = {
   queue: [],
   validateQueue() {
     this.queue.sort((a, b) => {
-      var _a, _b, _c, _d;
-      const za = (_b = (_a = this.boxes.get(a)) == null ? void 0 : _a.zIndex) != null ? _b : 0;
+      var _a2, _b, _c, _d;
+      const za = (_b = (_a2 = this.boxes.get(a)) == null ? void 0 : _a2.zIndex) != null ? _b : 0;
       const zb = (_d = (_c = this.boxes.get(b)) == null ? void 0 : _c.zIndex) != null ? _d : 0;
       return -(za - zb);
     });
@@ -39228,7 +39248,7 @@ const addHooks = (emitter) => {
     on_destroyed_callbacks.forEach((callback) => callback(appId));
   });
 };
-var styles = /* @__PURE__ */ (() => ".netless-app-slide-content{position:relative;height:100%;overflow:hidden}.netless-app-slide-preview-mask{display:block;position:fixed;z-index:200;top:0;left:0;width:100%;height:100%}.netless-app-slide-preview{display:flex;flex-direction:column;align-items:center;z-index:300;top:0;right:0;width:23%;padding:12px;box-shadow:-4.8px -3.2px 20px #20233826;transition:transform .4s;background:#f5f5fc;border-radius:4px;-webkit-box-shadow:-4.8px -3.2px 20px rgba(32,35,56,.15);height:100%;position:absolute}.netless-app-slide-preview-active .netless-app-slide-preview-mask{display:block}.netless-app-slide-preview-active .netless-app-slide-preview{transform:translate(0);opacity:1}.netless-app-slide-preview-head{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:10px}.netless-app-slide-preview-head>h3{color:#484c70;font-weight:400;font-size:14px;width:calc(100% - 20px);overflow:hidden;-o-text-overflow:ellipsis;text-overflow:ellipsis;white-space:nowrap}.netless-app-slide-preview-head .netless-app-slide-close{width:25px;height:25px;padding:0;outline:none;border:none;background:#fff;display:flex;justify-content:center;align-items:center;border-radius:100%;cursor:pointer}.netless-app-slide-preview-head .netless-app-slide-close button{width:22px;height:22px;padding:0;outline:none;border:none;background:center/cover no-repeat;background-image:url(./icons/close.svg)}.netless-app-slide-preview-page{position:relative;display:flex;width:100%;margin-bottom:10px;font-size:0;color:transparent;outline:none;border-radius:4px;transition:border-color .3s;user-select:none;align-items:flex-end}.netless-app-slide-preview-page>img{width:calc(90% - 10px);height:auto;box-sizing:border-box;border:2px solid rgba(0,0,0,.5);border-radius:2px;background-color:#fff}.netless-app-slide-preview-page>img.netless-app-slide-active{border-color:#ff5353}.netless-app-slide-preview-page-name{text-align:right;font-size:12px;color:#8d8fa6;user-select:none;margin-right:10px;width:5%}.netless-app-slide-footer{box-sizing:border-box;height:40px;display:flex;align-items:center;padding:0 16px;color:#191919;background:#ebecfa}.netless-app-slide-note{width:80%;max-height:200px;padding:14px;position:absolute;left:10%;bottom:15px;z-index:102;background-color:#00000080;border-radius:14px}.netless-app-slide-note-content{color:#fff}.netless-app-slide-note-content a{color:#fff;text-decoration:underline}.netless-app-slide-note-hide{display:none}.netless-app-slide-float-footer{width:100%;min-height:40px;position:absolute;left:0;bottom:0;z-index:2000;transition:opacity .4s;color:#191919}.netless-app-slide-footer-btn{box-sizing:border-box;width:26px;height:26px;font-size:0;margin:0;padding:3px;border:none;border-radius:4px;outline:none;color:currentColor;background:transparent;transition:background .4s;cursor:pointer;user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0);color:#8d8fa6}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-disable{color:#c6c7d2;cursor:not-allowed}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-disable .arrow{fill:#c6c7d2}.netless-app-slide-footer-btn .arrow{fill:#8d8fa6}.netless-app-slide-footer-btn:hover{background-color:#1b1f4d0a}@media (hover: none){.netless-app-slide-footer-btn:hover{background:transparent!important}}.netless-app-slide-footer-btn>svg{width:100%;height:100%}.netless-app-slide-footer-btn>svg:nth-of-type(2){display:none}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-playing>svg:nth-of-type(1){display:none}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-playing>svg:nth-of-type(2){display:initial}.netless-app-slide-hide{visibility:hidden}.netless-app-slide-page-jumps{flex:1;display:flex;justify-content:center;align-items:center;gap:8px}.netless-app-slide-page-number{font-size:14px;color:#8d8fa6;user-select:none;white-space:nowrap;word-break:keep-all}.netless-app-slide-page-number-input{border:none;outline:none;width:3em;margin:0;padding:0 2px;text-align:right;font-size:13px;line-height:1;font-weight:400;font-family:inherit;border-radius:2px;color:currentColor;background:transparent;transition:background .4s;user-select:text;-webkit-tap-highlight-color:rgba(0,0,0,0)}.netless-app-slide-readonly .netless-app-slide-footer-btn{cursor:not-allowed}.netless-app-slide-readonly .netless-app-slide-footer-btn:hover{background:transparent}.netless-app-slide-readonly .netless-app-slide-page-number-input{cursor:not-allowed}.netless-app-slide-readonly .netless-app-slide-page-number-input:hover,.netless-app-slide-readonly .netless-app-slide-page-number-input:focus,.netless-app-slide-readonly .netless-app-slide-page-number-input:active{background:transparent;box-shadow:none}.netless-app-slide-readonly .netless-app-slide-page-number-input:disabled{color:inherit}.netless-app-slide-readonly.netless-app-slide-float-footer{display:none}.telebox-color-scheme-dark .netless-app-slide-page-number-input{color:#a6a6a8}.telebox-color-scheme-dark .netless-app-slide-page-number-input:active,.telebox-color-scheme-dark .netless-app-slide-page-number-input:focus,.telebox-color-scheme-dark .netless-app-slide-page-number-input:hover{color:#222}.telebox-color-scheme-dark .netless-app-slide-footer{color:#a6a6a8;background:#2d2d33;border-top:none}.telebox-color-scheme-dark .netless-app-slide-footer-btn:hover{background:#212126}.telebox-color-scheme-dark .netless-app-slide-preview{background:rgba(50,50,50,.9)}.netless-app-slide-wb-view{position:absolute;top:0;left:0;width:100%;height:100%;z-index:100;overflow:hidden;transition:opacity .2s}.netless-app-slide-wb-view-hidden{opacity:0}.netless-app-slide-overlay{display:flex;align-items:center;justify-content:center;position:absolute;z-index:200;top:0;left:0;width:100%;height:100%;padding:8px;background:rgba(255,0,0,.25);transition:opacity .3s;opacity:0;pointer-events:none}.netless-app-slide-slide{width:100%;height:100%;display:flex;align-items:center;justify-content:center}.netless-app-slide-slide canvas{transform:scale(var(--netless-app-slide-scale, 1))}\n")();
+var styles = /* @__PURE__ */ (() => ".netless-app-slide-content{position:relative;height:100%;overflow:hidden}.netless-app-slide-preview-mask{display:block;position:fixed;z-index:200;top:0;left:0;width:100%;height:100%}.netless-app-slide-preview{display:flex;flex-direction:column;align-items:center;z-index:300;top:0;right:0;width:23%;padding:12px;box-shadow:-4.8px -3.2px 20px #20233826;transition:transform .4s;background:#f5f5fc;border-radius:4px;-webkit-box-shadow:-4.8px -3.2px 20px rgba(32,35,56,.15);height:100%;position:absolute}.netless-app-slide-preview-active .netless-app-slide-preview-mask{display:block}.netless-app-slide-preview-active .netless-app-slide-preview{transform:translate(0);opacity:1}.netless-app-slide-preview-head{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:10px}.netless-app-slide-preview-head>h3{color:#484c70;font-weight:400;font-size:14px;width:calc(100% - 20px);overflow:hidden;-o-text-overflow:ellipsis;text-overflow:ellipsis;white-space:nowrap}.netless-app-slide-preview-head .netless-app-slide-close{width:25px;height:25px;padding:0;outline:none;border:none;background:#fff;display:flex;justify-content:center;align-items:center;border-radius:100%;cursor:pointer}.netless-app-slide-preview-head .netless-app-slide-close button{width:22px;height:22px;padding:0;outline:none;border:none;background:center/cover no-repeat;background-image:url(./icons/close.svg)}.netless-app-slide-preview-page{position:relative;display:flex;width:100%;margin-bottom:10px;font-size:0;color:transparent;outline:none;border-radius:4px;transition:border-color .3s;user-select:none;align-items:flex-end}.netless-app-slide-preview-page>img{width:calc(90% - 10px);height:auto;box-sizing:border-box;border:2px solid rgba(0,0,0,.5);border-radius:2px;background-color:#fff}.netless-app-slide-preview-page>img.netless-app-slide-active{border-color:#ff5353}.netless-app-slide-preview-page-name{text-align:right;font-size:12px;color:#8d8fa6;user-select:none;margin-right:10px;width:5%}.netless-app-slide-footer{box-sizing:border-box;height:40px;display:flex;align-items:center;padding:0 16px;color:#191919;background:#ebecfa}.netless-app-slide-note{width:80%;max-height:200px;padding:14px;position:absolute;left:10%;bottom:15px;z-index:102;background-color:#00000080;border-radius:14px}.netless-app-slide-note-content{color:#fff}.netless-app-slide-note-content a{color:#fff;text-decoration:underline}.netless-app-slide-note-hide{display:none}.netless-app-slide-float-footer{width:100%;min-height:40px;position:absolute;left:0;bottom:0;z-index:2000;transition:opacity .4s;color:#191919}.netless-app-slide-footer-btn{box-sizing:border-box;width:26px;height:26px;font-size:0;margin:0;padding:3px;border:none;border-radius:4px;outline:none;color:currentColor;background:transparent;transition:background .4s;cursor:pointer;user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0);color:#8d8fa6}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-disable{color:#c6c7d2;cursor:not-allowed}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-disable .arrow{fill:#c6c7d2}.netless-app-slide-footer-btn .arrow{fill:#8d8fa6}.netless-app-slide-footer-btn:hover{background-color:#1b1f4d0a}@media (hover: none){.netless-app-slide-footer-btn:hover{background:transparent!important}}.netless-app-slide-footer-btn>svg{width:100%;height:100%}.netless-app-slide-footer-btn>svg:nth-of-type(2){display:none}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-playing>svg:nth-of-type(1){display:none}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-playing>svg:nth-of-type(2){display:initial}.netless-app-slide-hide{visibility:hidden}.netless-app-slide-page-jumps{flex:1;display:flex;justify-content:center;align-items:center;gap:8px}.netless-app-slide-page-number{font-size:14px;color:#8d8fa6;user-select:none;white-space:nowrap;word-break:keep-all}.netless-app-slide-page-number-input{border:none;outline:none;width:3em;margin:0;padding:0 2px;text-align:right;font-size:13px;line-height:1;font-weight:400;font-family:inherit;border-radius:2px;color:currentColor;background:transparent;transition:background .4s;user-select:text;-webkit-tap-highlight-color:rgba(0,0,0,0)}.netless-app-slide-readonly .netless-app-slide-footer-btn{cursor:not-allowed}.netless-app-slide-readonly .netless-app-slide-footer-btn:hover{background:transparent}.netless-app-slide-readonly .netless-app-slide-page-number-input{cursor:not-allowed}.netless-app-slide-readonly .netless-app-slide-page-number-input:hover,.netless-app-slide-readonly .netless-app-slide-page-number-input:focus,.netless-app-slide-readonly .netless-app-slide-page-number-input:active{background:transparent;box-shadow:none}.netless-app-slide-readonly .netless-app-slide-page-number-input:disabled{color:inherit}.netless-app-slide-readonly.netless-app-slide-float-footer,.netless-app-slide-readonly.netless-app-slide-note{display:none}.telebox-color-scheme-dark .netless-app-slide-page-number-input{color:#a6a6a8}.telebox-color-scheme-dark .netless-app-slide-page-number-input:active,.telebox-color-scheme-dark .netless-app-slide-page-number-input:focus,.telebox-color-scheme-dark .netless-app-slide-page-number-input:hover{color:#222}.telebox-color-scheme-dark .netless-app-slide-footer{color:#a6a6a8;background:#2d2d33;border-top:none}.telebox-color-scheme-dark .netless-app-slide-footer-btn:hover{background:#212126}.telebox-color-scheme-dark .netless-app-slide-preview{background:rgba(50,50,50,.9)}.netless-app-slide-wb-view{position:absolute;top:0;left:0;width:100%;height:100%;z-index:100;overflow:hidden;transition:opacity .2s}.netless-app-slide-wb-view-hidden{opacity:0}.netless-app-slide-overlay{display:flex;align-items:center;justify-content:center;position:absolute;z-index:200;top:0;left:0;width:100%;height:100%;padding:8px;background:rgba(255,0,0,.25);transition:opacity .3s;opacity:0;pointer-events:none}.netless-app-slide-slide{width:100%;height:100%;display:flex;align-items:center;justify-content:center}.netless-app-slide-slide canvas{transform:scale(var(--netless-app-slide-scale, 1))}\n")();
 function previewSlide({
   container,
   taskId,
@@ -39393,11 +39413,11 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.63";
+const version = "0.2.65";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
-    var _a;
+    var _a2;
     console.log("[Slide] setup @ " + version);
     if (context.getIsWritable()) {
       context.storage.ensureState(EmptyAttributes);
@@ -39471,7 +39491,7 @@ const SlideApp = {
       mountWhiteboard: context.mountView.bind(context),
       baseScenePath,
       appId: context.appId,
-      urlInterrupter: (_a = context.getAppOptions()) == null ? void 0 : _a.urlInterrupter,
+      urlInterrupter: (_a2 = context.getAppOptions()) == null ? void 0 : _a2.urlInterrupter,
       onPagesReady: ({ length }) => {
         const index = (docsViewer == null ? void 0 : docsViewer.viewer.pageIndex) || 0;
         context.dispatchAppEvent("pageStateChange", { index, length });
@@ -39483,9 +39503,9 @@ const SlideApp = {
     const room = context.getRoom();
     const sideEffect = new SideEffectManager();
     sideEffect.add(() => {
-      var _a2;
+      var _a3;
       logger.setAppContext(context.appId, context);
-      logger.enable = ((_a2 = context.getAppOptions()) == null ? void 0 : _a2.debug) || false;
+      logger.enable = ((_a3 = context.getAppOptions()) == null ? void 0 : _a3.debug) || false;
       logger.level = "debug";
       return () => logger.deleteApp(context.appId);
     });
@@ -39520,13 +39540,13 @@ const SlideApp = {
         return docsViewer == null ? void 0 : docsViewer.slideController;
       },
       slide: () => {
-        var _a2;
-        return (_a2 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a2.slide;
+        var _a3;
+        return (_a3 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a3.slide;
       },
       nextStep: () => {
-        var _a2;
+        var _a3;
         if (docsViewer) {
-          if ((_a2 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a2.slide.hasNextStep()) {
+          if ((_a3 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a3.slide.hasNextStep()) {
             docsViewer.slideController.slide.nextStep();
           } else {
             const controller = docsViewer == null ? void 0 : docsViewer.slideController;
@@ -39542,9 +39562,9 @@ const SlideApp = {
         return false;
       },
       prevStep: () => {
-        var _a2;
+        var _a3;
         if (docsViewer && docsViewer.slideController) {
-          (_a2 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a2.slide.prevStep();
+          (_a3 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a3.slide.prevStep();
           return true;
         }
         return false;
@@ -39592,8 +39612,8 @@ const SlideApp = {
         docsViewer == null ? void 0 : docsViewer.viewer.togglePreview(visible);
       },
       getNoteHasLink: () => {
-        var _a2;
-        return (_a2 = docsViewer == null ? void 0 : docsViewer.viewer.getNoteHasLink()) != null ? _a2 : false;
+        var _a3;
+        return (_a3 = docsViewer == null ? void 0 : docsViewer.viewer.getNoteHasLink()) != null ? _a3 : false;
       },
       getNoteLink: () => {
         return docsViewer == null ? void 0 : docsViewer.viewer.getNoteLink();

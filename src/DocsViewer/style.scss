@@ -286,6 +286,10 @@ $namespace: $slide-namespace;
   &.#{$namespace}-float-footer {
     display: none;
   }
+
+  &.#{$namespace}-note {
+    display: none;
+  }
 }
 
 .telebox-color-scheme-dark {
