@@ -38790,7 +38790,9 @@ class DocsViewer {
       });
       $pageJumps.appendChild($btnPageNext);
       this.$btnPageNext = $btnPageNext;
-      this.$footer.appendChild($pageJumps);
+      if (!this.appReadonly && !isIOS() && !isAndroid()) {
+        this.$footer.appendChild($pageJumps);
+      }
       this.box.events.on("maximized", (max) => {
         this.$footer.classList.toggle(this.wrapClassName("hide"), max);
       });
@@ -39413,7 +39415,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.65";
+const version = "0.2.66";
 const SlideApp = {
   kind: "Slide",
   setup(context) {

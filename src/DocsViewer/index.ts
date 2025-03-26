@@ -459,8 +459,9 @@ export class DocsViewer {
       });
       $pageJumps.appendChild($btnPageNext);
       this.$btnPageNext = $btnPageNext;
-
-      this.$footer.appendChild($pageJumps);
+      if (!this.appReadonly && !isIOS() && !isAndroid()) {
+        this.$footer.appendChild($pageJumps);
+      }
       this.box.events.on("maximized", max => {
         this.$footer.classList.toggle(this.wrapClassName("hide"), max);
       });
