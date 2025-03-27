@@ -262,9 +262,9 @@ export class SlideDocsViewer {
     this.viewer.destroy();
   }
 
-  public toggleClickThrough(tool?: string) {
+  public toggleClickThrough(tool?: string, readonly?: boolean) {
     this.$whiteboardView.style.pointerEvents =
-      !tool || ClickThroughAppliances.has(tool) ? "none" : "auto";
+      readonly || !tool || ClickThroughAppliances.has(tool) ? "none" : "auto";
   }
 
   protected scaleDocsToFit = () => {

@@ -211,11 +211,11 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
     });
 
     if (room) {
-      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName);
+      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, room.isWritable);
       sideEffect.add(() => {
         const onRoomStateChanged = (e: Partial<RoomState>) => {
           if (e.memberState && docsViewer) {
-            docsViewer.toggleClickThrough(e.memberState.currentApplianceName);
+            docsViewer.toggleClickThrough(e.memberState.currentApplianceName, room.isWritable);
           }
         };
         room.callbacks.on("onRoomStateChanged", onRoomStateChanged);

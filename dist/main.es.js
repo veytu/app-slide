@@ -39138,8 +39138,8 @@ class SlideDocsViewer {
     this.unmount();
     this.viewer.destroy();
   }
-  toggleClickThrough(tool) {
-    this.$whiteboardView.style.pointerEvents = !tool || ClickThroughAppliances.has(tool) ? "none" : "auto";
+  toggleClickThrough(tool, readonly) {
+    this.$whiteboardView.style.pointerEvents = readonly || !tool || ClickThroughAppliances.has(tool) ? "none" : "auto";
   }
   wrapClassName(className) {
     return `${this.namespace}-${className}`;
@@ -39512,11 +39512,11 @@ const SlideApp = {
       return () => logger.deleteApp(context.appId);
     });
     if (room) {
-      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName);
+      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, room.isWritable);
       sideEffect.add(() => {
         const onRoomStateChanged = (e) => {
           if (e.memberState && docsViewer) {
-            docsViewer.toggleClickThrough(e.memberState.currentApplianceName);
+            docsViewer.toggleClickThrough(e.memberState.currentApplianceName, room.isWritable);
           }
         };
         room.callbacks.on("onRoomStateChanged", onRoomStateChanged);

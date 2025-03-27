@@ -314,7 +314,7 @@ declare class SlideDocsViewer {
     unmount(): this;
     setReadonly(readonly: boolean): void;
     destroy(): void;
-    toggleClickThrough(tool?: string): void;
+    toggleClickThrough(tool?: string, readonly?: boolean): void;
     protected scaleDocsToFit: () => void;
     protected onPlay: () => void;
     protected onNewPageIndex: (index: number, origin?: string) => void;
