@@ -9,6 +9,7 @@ import { logger } from "../utils/logger";
 import { isEditable } from "../utils/helpers";
 import type { Attributes, MagixEvents } from "../typings";
 import type { AppOptions } from "..";
+import { isAndroid, isIOS } from "../DocsViewer/utils/environment";
 
 export const ClickThroughAppliances = new Set(["clicker"]);
 
@@ -264,7 +265,9 @@ export class SlideDocsViewer {
 
   public toggleClickThrough(tool?: string, readonly?: boolean) {
     this.$whiteboardView.style.pointerEvents =
-      readonly || !tool || ClickThroughAppliances.has(tool) ? "none" : "auto";
+      isIOS() || isAndroid() || readonly || !tool || ClickThroughAppliances.has(tool)
+        ? "none"
+        : "auto";
   }
 
   protected scaleDocsToFit = () => {

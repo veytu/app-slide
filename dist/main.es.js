@@ -39139,7 +39139,7 @@ class SlideDocsViewer {
     this.viewer.destroy();
   }
   toggleClickThrough(tool, readonly) {
-    this.$whiteboardView.style.pointerEvents = readonly || !tool || ClickThroughAppliances.has(tool) ? "none" : "auto";
+    this.$whiteboardView.style.pointerEvents = isIOS() || isAndroid() || readonly || !tool || ClickThroughAppliances.has(tool) ? "none" : "auto";
   }
   wrapClassName(className) {
     return `${this.namespace}-${className}`;
@@ -39415,7 +39415,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.66";
+const version = "0.2.67";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
