@@ -38790,7 +38790,7 @@ class DocsViewer {
       });
       $pageJumps.appendChild($btnPageNext);
       this.$btnPageNext = $btnPageNext;
-      if (!this.appReadonly && !isIOS() && !isAndroid()) {
+      if (!isIOS() && !isAndroid()) {
         this.$footer.appendChild($pageJumps);
       }
       this.box.events.on("maximized", (max) => {
