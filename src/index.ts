@@ -218,8 +218,19 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
             docsViewer.toggleClickThrough(e.memberState.currentApplianceName, room.isWritable);
           }
         };
+        const onWriteableChange = (isWritable: boolean) => {
+          if (docsViewer) {
+            docsViewer.toggleClickThrough(undefined, isWritable);
+          }
+        };
+
         room.callbacks.on("onRoomStateChanged", onRoomStateChanged);
-        return () => room.callbacks.off("onRoomStateChanged", onRoomStateChanged);
+        context.emitter.on("writableChange", onWriteableChange);
+
+        return () => {
+          room.callbacks.off("onRoomStateChanged", onRoomStateChanged);
+          context.emitter.off("writableChange", onWriteableChange);
+        };
       });
     }
 
