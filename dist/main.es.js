@@ -39443,7 +39443,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.72";
+const version = "0.2.73";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -39540,30 +39540,16 @@ const SlideApp = {
       return () => logger.deleteApp(context.appId);
     });
     if (room) {
-      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !room.enableWriteNow);
+      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName);
       sideEffect.add(() => {
         const onRoomStateChanged = () => {
           if (docsViewer) {
-            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !room.enableWriteNow);
-          }
-        };
-        const onWriteableChange = () => {
-          if (docsViewer) {
-            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !room.enableWriteNow);
-          }
-        };
-        const readonlyChange = (e) => {
-          if (docsViewer) {
-            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !e);
+            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName);
           }
         };
         room.callbacks.on("onRoomStateChanged", onRoomStateChanged);
-        room.callbacks.on("onEnableWriteNowChanged", onWriteableChange);
-        context.emitter.on("writableChange", readonlyChange);
         return () => {
           room.callbacks.off("onRoomStateChanged", onRoomStateChanged);
-          room.callbacks.off("onEnableWriteNowChanged", onWriteableChange);
-          context.emitter.off("writableChange", readonlyChange);
         };
       });
     }
