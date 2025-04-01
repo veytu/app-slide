@@ -39443,7 +39443,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.69";
+const version = "0.2.71";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -39542,14 +39542,14 @@ const SlideApp = {
     if (room) {
       docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, room.isWritable);
       sideEffect.add(() => {
-        const onRoomStateChanged = (e) => {
-          if (e.memberState && docsViewer) {
-            docsViewer.toggleClickThrough(e.memberState.currentApplianceName, room.isWritable);
+        const onRoomStateChanged = () => {
+          if (docsViewer) {
+            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, room.isWritable);
           }
         };
         const onWriteableChange = (isWritable) => {
           if (docsViewer) {
-            docsViewer.toggleClickThrough(void 0, isWritable);
+            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, isWritable);
           }
         };
         room.callbacks.on("onRoomStateChanged", onRoomStateChanged);

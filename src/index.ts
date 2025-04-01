@@ -1,5 +1,4 @@
 import type { NetlessApp } from "@netless/window-manager";
-import type { RoomState } from "white-web-sdk";
 import type { ISlideConfig } from "@netless/slide";
 import type { MountSlideOptions } from "./SlideDocsViewer";
 import type { Attributes, MagixEvents } from "./typings";
@@ -213,14 +212,17 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
     if (room) {
       docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, room.isWritable);
       sideEffect.add(() => {
-        const onRoomStateChanged = (e: Partial<RoomState>) => {
-          if (e.memberState && docsViewer) {
-            docsViewer.toggleClickThrough(e.memberState.currentApplianceName, room.isWritable);
+        const onRoomStateChanged = () => {
+          if (docsViewer) {
+            docsViewer.toggleClickThrough(
+              room.state.memberState.currentApplianceName,
+              room.isWritable
+            );
           }
         };
         const onWriteableChange = (isWritable: boolean) => {
           if (docsViewer) {
-            docsViewer.toggleClickThrough(undefined, isWritable);
+            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, isWritable);
           }
         };
 
