@@ -210,13 +210,16 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
     });
 
     if (room) {
-      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !room.isWritable);
+      docsViewer.toggleClickThrough(
+        room.state.memberState.currentApplianceName,
+        !room.enableWriteNow
+      );
       sideEffect.add(() => {
         const onRoomStateChanged = () => {
           if (docsViewer) {
             docsViewer.toggleClickThrough(
               room.state.memberState.currentApplianceName,
-              !room.isWritable
+              !room.enableWriteNow
             );
           }
         };
@@ -224,17 +227,25 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
           if (docsViewer) {
             docsViewer.toggleClickThrough(
               room.state.memberState.currentApplianceName,
-              !room.isWritable
+              !room.enableWriteNow
             );
           }
         };
 
+        const readonlyChange = (e: boolean) => {
+          if (docsViewer) {
+            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !e);
+          }
+        };
+
         room.callbacks.on("onRoomStateChanged", onRoomStateChanged);
-        context.emitter.on("writableChange", onWriteableChange);
+        room.callbacks.on("onEnableWriteNowChanged", onWriteableChange);
+        context.emitter.on("writableChange", readonlyChange);
 
         return () => {
           room.callbacks.off("onRoomStateChanged", onRoomStateChanged);
-          context.emitter.off("writableChange", onWriteableChange);
+          room.callbacks.off("onEnableWriteNowChanged", onWriteableChange);
+          context.emitter.off("writableChange", readonlyChange);
         };
       });
     }
