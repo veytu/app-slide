@@ -317,6 +317,12 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
       getNoteLink: () => {
         return docsViewer?.viewer.getNoteLink();
       },
+      toggleNoteVisible: (visible: boolean) => {
+        return docsViewer?.viewer.toggleNoteVisible(visible);
+      },
+      getNoteVisible: () => {
+        return docsViewer?.viewer.getNoteVisible();
+      },
     };
   },
 };

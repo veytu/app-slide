@@ -69,6 +69,7 @@ export class DocsViewer {
     if (this.onPagesReady) {
       this.onPagesReady(value);
     }
+    this.loading(false);
   }
 
   public get pages() {
@@ -85,8 +86,10 @@ export class DocsViewer {
   public $btnSidebar!: HTMLButtonElement;
   private $btnPageNext!: HTMLElement;
   private $btnPageBack!: HTMLElement;
+  private $loading!: HTMLElement;
 
   private notes?: Record<string, Paragraph[]>;
+  private noteVisible = false;
 
   readonly context?: AppContext<Attributes, MagixEvents, AppOptions>;
 
@@ -177,7 +180,21 @@ export class DocsViewer {
   public render(): HTMLElement {
     this.renderContent();
     this.renderFooter();
+    this.loading(true);
     return this.$content;
+  }
+
+  public loading(active: boolean) {
+    if (active) {
+      this.$loading = document.createElement("div");
+      this.$loading.className = this.wrapClassName("loading");
+      const loader = document.createElement("div");
+      loader.className = this.wrapClassName("loader");
+      this.$loading.appendChild(loader);
+      this.$content.appendChild(this.$loading);
+    } else {
+      this.$loading.remove();
+    }
   }
 
   protected renderContent(): HTMLElement {
@@ -251,8 +268,21 @@ export class DocsViewer {
       }
     });
 
-    this.$content?.appendChild(note$);
     return note$;
+  }
+
+  public toggleNoteVisible(visible: boolean) {
+    this.noteVisible = visible;
+    if (visible) {
+      if (!this.note$) return;
+      this.$content?.appendChild(this.note$);
+    } else {
+      this.note$?.remove();
+    }
+  }
+
+  public getNoteVisible() {
+    return this.noteVisible;
   }
 
   protected renderNoteContent(): void {
