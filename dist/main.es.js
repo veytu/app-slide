@@ -39443,7 +39443,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.71";
+const version = "0.2.72";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -39540,16 +39540,16 @@ const SlideApp = {
       return () => logger.deleteApp(context.appId);
     });
     if (room) {
-      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, room.isWritable);
+      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !room.isWritable);
       sideEffect.add(() => {
         const onRoomStateChanged = () => {
           if (docsViewer) {
-            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, room.isWritable);
+            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !room.isWritable);
           }
         };
-        const onWriteableChange = (isWritable) => {
+        const onWriteableChange = () => {
           if (docsViewer) {
-            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, isWritable);
+            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !room.isWritable);
           }
         };
         room.callbacks.on("onRoomStateChanged", onRoomStateChanged);

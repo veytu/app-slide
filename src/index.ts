@@ -210,19 +210,22 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
     });
 
     if (room) {
-      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, room.isWritable);
+      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, !room.isWritable);
       sideEffect.add(() => {
         const onRoomStateChanged = () => {
           if (docsViewer) {
             docsViewer.toggleClickThrough(
               room.state.memberState.currentApplianceName,
-              room.isWritable
+              !room.isWritable
             );
           }
         };
-        const onWriteableChange = (isWritable: boolean) => {
+        const onWriteableChange = () => {
           if (docsViewer) {
-            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName, isWritable);
+            docsViewer.toggleClickThrough(
+              room.state.memberState.currentApplianceName,
+              !room.isWritable
+            );
           }
         };
 
