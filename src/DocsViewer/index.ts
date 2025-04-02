@@ -31,6 +31,8 @@ export interface DocsViewerConfig {
   context?: AppContext<Attributes, MagixEvents, AppOptions>;
 }
 
+export type NotesType = Record<string, Paragraph[]>;
+
 export class DocsViewer {
   public constructor({
     readonly,
@@ -88,7 +90,7 @@ export class DocsViewer {
   private $btnPageBack!: HTMLElement;
   private $loading!: HTMLElement;
 
-  private notes?: Record<string, Paragraph[]>;
+  private notes?: NotesType;
   private noteVisible = false;
 
   readonly context?: AppContext<Attributes, MagixEvents, AppOptions>;
@@ -283,6 +285,10 @@ export class DocsViewer {
 
   public getNoteVisible() {
     return this.noteVisible;
+  }
+
+  public getNotes() {
+    return this.notes;
   }
 
   protected renderNoteContent(): void {

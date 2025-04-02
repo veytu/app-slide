@@ -38650,6 +38650,9 @@ class DocsViewer {
   getNoteVisible() {
     return this.noteVisible;
   }
+  getNotes() {
+    return this.notes;
+  }
   renderNoteContent() {
     var _a2, _b, _c, _d, _e, _f, _g;
     if (this.readonly) {
@@ -39441,7 +39444,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.74";
+const version = "0.2.75";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -39653,6 +39656,9 @@ const SlideApp = {
       },
       getNoteVisible: () => {
         return docsViewer == null ? void 0 : docsViewer.viewer.getNoteVisible();
+      },
+      getNotes: () => {
+        return docsViewer == null ? void 0 : docsViewer.viewer.getNotes();
       }
     };
   }

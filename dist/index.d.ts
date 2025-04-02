@@ -123,6 +123,22 @@ declare class SideEffectManager {
     genUID(): string;
 }
 
+declare type Run = {
+    wordSpace: number;
+    baseline: number;
+    bold: boolean;
+    italic: boolean;
+    text: string;
+    runType: string;
+};
+declare type Paragraph = {
+    align: string;
+    indent: number;
+    marginLeft: number;
+    marginRight: number;
+    runs: Run[];
+};
+
 interface DocsViewerPage {
     src: string;
     height: number;
@@ -138,6 +154,7 @@ interface DocsViewerConfig {
     onPagesReady?: (pages: DocsViewerPage[]) => void;
     context?: AppContext<Attributes, MagixEvents, AppOptions>;
 }
+declare type NotesType = Record<string, Paragraph[]>;
 declare class DocsViewer {
     constructor({ readonly, onNewPageIndex, onPlay, onPagesReady, urlInterrupter, box, context, }: DocsViewerConfig);
     protected readonly: boolean;
@@ -185,6 +202,7 @@ declare class DocsViewer {
     protected renderNote(): HTMLDivElement | undefined;
     toggleNoteVisible(visible: boolean): void;
     getNoteVisible(): boolean;
+    getNotes(): NotesType | undefined;
     protected renderNoteContent(): void;
     protected renderPreview(): HTMLElement;
     private refreshPreview;
@@ -435,6 +453,7 @@ interface AppResult {
     togglePreview: (visible?: boolean) => void;
     getNoteHasLink: () => boolean;
     getNoteLink: () => string | undefined;
+    getNotes: () => NotesType | undefined;
 }
 declare const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult>;
 

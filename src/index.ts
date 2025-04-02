@@ -16,6 +16,7 @@ import { SlideDocsViewer } from "./SlideDocsViewer";
 import { apps, FreezerLength, addHooks, useFreezer } from "./utils/freezer";
 import { log, logger } from "./utils/logger";
 import styles from "./style.scss?inline";
+import type { NotesType } from "./DocsViewer";
 
 export type { PreviewParams } from "./SlidePreviewer";
 export { SlidePreviewer, default as previewSlide } from "./SlidePreviewer";
@@ -91,6 +92,7 @@ export interface AppResult {
   togglePreview: (visible?: boolean) => void;
   getNoteHasLink: () => boolean;
   getNoteLink: () => string | undefined;
+  getNotes: () => NotesType | undefined;
 }
 
 const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
@@ -325,6 +327,9 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
       },
       getNoteVisible: () => {
         return docsViewer?.viewer.getNoteVisible();
+      },
+      getNotes: () => {
+        return docsViewer?.viewer.getNotes();
       },
     };
   },
