@@ -390,11 +390,11 @@ export class SlideController {
     if (!(this.visible = document.visibilityState === "visible")) {
       this.savedIsFrozen = this.isFrozen;
       log("[Slide] freeze because tab becomes invisible");
-      this.freeze();
+      // this.freeze();
     } else {
       log("[Slide] unfreeze because tab becomes visible", { savedIsFrozen: this.savedIsFrozen });
       if (!this.savedIsFrozen) {
-        this.unfreeze();
+        // this.unfreeze();
       }
     }
   };

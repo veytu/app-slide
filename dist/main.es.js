@@ -37562,12 +37562,10 @@ class SlideController {
       if (!(this.visible = document.visibilityState === "visible")) {
         this.savedIsFrozen = this.isFrozen;
         log("[Slide] freeze because tab becomes invisible");
-        this.freeze();
       } else {
         log("[Slide] unfreeze because tab becomes visible", { savedIsFrozen: this.savedIsFrozen });
-        if (!this.savedIsFrozen) {
-          this.unfreeze();
-        }
+        if (!this.savedIsFrozen)
+          ;
       }
     };
     this.invisibleBehavior = invisibleBehavior != null ? invisibleBehavior : "frozen";
@@ -39443,7 +39441,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.73";
+const version = "0.2.74";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
