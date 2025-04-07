@@ -123,10 +123,10 @@ $namespace: $slide-namespace;
 
 .#{$namespace}-footer {
   box-sizing: border-box;
-  height: 40px;
+  height: 2.778vw;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 1.11vw;
   color: #191919;
   background: #ebecfa;
 }
@@ -154,7 +154,7 @@ $namespace: $slide-namespace;
 }
 .#{$namespace}-float-footer {
   width: 100%;
-  min-height: 40px;
+  min-height: 2.778vw;
   position: absolute;
   left: 0;
   bottom: 0;
@@ -165,8 +165,8 @@ $namespace: $slide-namespace;
 
 .#{$namespace}-footer-btn {
   box-sizing: border-box;
-  width: 26px;
-  height: 26px;
+  width: 1.81vw;
+  height: 1.81vw;
   font-size: 0;
   margin: 0;
   padding: 3px;
@@ -229,11 +229,11 @@ $namespace: $slide-namespace;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 0.556vw;
 }
 
 .#{$namespace}-page-number {
-  font-size: 14px;
+  font-size: 1vw;
   color: rgba(141, 143, 166, 1);
   user-select: none;
   white-space: nowrap;
@@ -247,7 +247,7 @@ $namespace: $slide-namespace;
   margin: 0;
   padding: 0 2px;
   text-align: right;
-  font-size: 13px;
+  font-size: 1vw;
   line-height: 1;
   font-weight: normal;
   font-family: inherit;
