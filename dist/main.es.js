@@ -37694,7 +37694,7 @@ class SlideController {
       navigatorDelegate: options.navigatorDelegate || {
         gotoPage: (index) => {
           if (!this.context.getIsAppReadonly()) {
-            slide.setSlideState(__spreadProps(__spreadValues({}, slide.slideState), { currentSlideIndex: index }));
+            slide.renderSlide(index);
           }
         }
       },
@@ -39450,7 +39450,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.77";
+const version = "0.2.78";
 const SlideApp = {
   kind: "Slide",
   setup(context) {

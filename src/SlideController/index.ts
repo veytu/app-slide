@@ -315,7 +315,7 @@ export class SlideController {
       navigatorDelegate: options.navigatorDelegate || {
         gotoPage: (index: number) => {
           if (!this.context.getIsAppReadonly()) {
-            slide.setSlideState({ ...slide.slideState, currentSlideIndex: index });
+            slide.renderSlide(index);
           }
         },
       },
