@@ -312,7 +312,13 @@ export class SlideController {
       },
       fixedFrameSize: options.fixedFrameSize,
       loaderDelegate: options.loaderDelegate,
-      navigatorDelegate: options.navigatorDelegate,
+      navigatorDelegate: options.navigatorDelegate || {
+        gotoPage: (index: number) => {
+          if (!this.context.getIsAppReadonly()) {
+            slide.setSlideState({ ...slide.slideState, currentSlideIndex: index });
+          }
+        },
+      },
       urlInterrupter: options.urlInterrupter,
       resourceTimeout: options.resourceTimeout,
       rtcAudio: options.rtcAudio,

@@ -37691,7 +37691,13 @@ class SlideController {
       },
       fixedFrameSize: options.fixedFrameSize,
       loaderDelegate: options.loaderDelegate,
-      navigatorDelegate: options.navigatorDelegate,
+      navigatorDelegate: options.navigatorDelegate || {
+        gotoPage: (index) => {
+          if (!this.context.getIsAppReadonly()) {
+            slide.setSlideState(__spreadProps(__spreadValues({}, slide.slideState), { currentSlideIndex: index }));
+          }
+        }
+      },
       urlInterrupter: options.urlInterrupter,
       resourceTimeout: options.resourceTimeout,
       rtcAudio: options.rtcAudio,
@@ -39444,7 +39450,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.76";
+const version = "0.2.77";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
