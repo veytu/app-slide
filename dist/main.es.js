@@ -37686,7 +37686,7 @@ class SlideController {
         resolution: options.resolution,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
         maxResolutionLevel: options.maxResolutionLevel,
-        forceCanvas: options.forceCanvas,
+        forceCanvas: true,
         enableNvidiaDetect: options.enableNvidiaDetect
       },
       fixedFrameSize: options.fixedFrameSize,
@@ -37701,7 +37701,7 @@ class SlideController {
       urlInterrupter: options.urlInterrupter,
       resourceTimeout: options.resourceTimeout,
       rtcAudio: options.rtcAudio,
-      useLocalCache: options.useLocalCache,
+      useLocalCache: options.useLocalCache || true,
       logger: options.logger,
       whiteTracker: defaults.whiteTracker,
       timestamp: this.timestamp
