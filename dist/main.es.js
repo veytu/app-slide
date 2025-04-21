@@ -37605,10 +37605,12 @@ class SlideController {
       if (!(this.visible = document.visibilityState === "visible")) {
         this.savedIsFrozen = this.isFrozen;
         log("[Slide] freeze because tab becomes invisible");
+        this.freeze();
       } else {
         log("[Slide] unfreeze because tab becomes visible", { savedIsFrozen: this.savedIsFrozen });
-        if (!this.savedIsFrozen)
-          ;
+        if (!this.savedIsFrozen) {
+          this.unfreeze();
+        }
       }
     };
     this.invisibleBehavior = invisibleBehavior != null ? invisibleBehavior : "frozen";
@@ -37729,7 +37731,7 @@ class SlideController {
         resolution: 1,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
         maxResolutionLevel: 1,
-        forceCanvas: true,
+        forceCanvas: options.forceCanvas,
         enableNvidiaDetect: options.enableNvidiaDetect
       },
       fixedFrameSize: options.fixedFrameSize,
@@ -39493,7 +39495,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.83";
+const version = "0.2.86";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
