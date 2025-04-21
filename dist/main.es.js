@@ -38472,15 +38472,15 @@ function convertToHTML(paragraphs) {
       margin-left: ${paragraph.marginLeft}px;
       margin-right: ${paragraph.marginRight}px;
     `;
-    const paragraphHasLink = paragraph.runs.some((run) => /@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/.test(run.text));
+    const paragraphHasLink = paragraph.runs.some((run) => /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text));
     hasLink = hasLink || paragraphHasLink;
-    const linkRun = paragraph.runs.find((run) => /@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/.test(run.text));
+    const linkRun = paragraph.runs.find((run) => /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text));
     if (linkRun) {
       link = ((_c = (_b = (_a2 = linkRun == null ? void 0 : linkRun.text) == null ? void 0 : _a2.match) == null ? void 0 : _b.call(_a2, /@@@(https?:\/\/[^\s@]+)@@@/)) == null ? void 0 : _c[1]) || void 0;
     }
     const runsHTML = paragraph.runs.map((run) => {
       const runStyle = `word-spacing: ${run.wordSpace}px; baseline-shift: ${run.baseline}px;`;
-      const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@#([^#]*)#/g, '<a href="$1" onclick="return false">$2</a>');
+      const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@/g, "");
       let finalText = processedText;
       if (run.bold) {
         finalText = `<strong>${finalText}</strong>`;
