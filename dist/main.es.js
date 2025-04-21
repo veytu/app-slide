@@ -37724,14 +37724,13 @@ class SlideController {
       controller: logger.enable,
       enableGlobalClick: (_a2 = options.enableGlobalClick) != null ? _a2 : true,
       renderOptions: {
-        minFPS: options.minFPS || 25,
+        minFPS: options.minFPS || 40,
         maxFPS: options.maxFPS || 60,
         autoFPS: (_b = options.autoFPS) != null ? _b : true,
-        autoResolution: false,
-        resolution: 1,
+        autoResolution: true,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
-        maxResolutionLevel: 1,
-        forceCanvas: options.forceCanvas,
+        maxResolutionLevel: 2,
+        forceCanvas: true,
         enableNvidiaDetect: options.enableNvidiaDetect
       },
       fixedFrameSize: options.fixedFrameSize,
@@ -39495,7 +39494,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.86";
+const version = "0.2.87";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
