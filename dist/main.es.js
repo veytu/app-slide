@@ -37725,10 +37725,10 @@ class SlideController {
         minFPS: options.minFPS || 25,
         maxFPS: options.maxFPS || 60,
         autoFPS: (_b = options.autoFPS) != null ? _b : true,
-        autoResolution: (_c = options.autoResolution) != null ? _c : true,
-        resolution: options.resolution,
+        autoResolution: false,
+        resolution: 1,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
-        maxResolutionLevel: 2,
+        maxResolutionLevel: 1,
         forceCanvas: true,
         enableNvidiaDetect: options.enableNvidiaDetect
       },
@@ -37744,7 +37744,7 @@ class SlideController {
       urlInterrupter: options.urlInterrupter,
       resourceTimeout: options.resourceTimeout,
       rtcAudio: options.rtcAudio,
-      useLocalCache: options.useLocalCache || true,
+      useLocalCache: (_c = options.useLocalCache) != null ? _c : true,
       logger: options.logger,
       whiteTracker: defaults.whiteTracker,
       timestamp: this.timestamp
@@ -39493,7 +39493,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.81";
+const version = "0.2.83";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
