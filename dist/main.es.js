@@ -37729,8 +37729,8 @@ class SlideController {
         autoFPS: (_b = options.autoFPS) != null ? _b : true,
         autoResolution: true,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
+        resolution: 1,
         maxResolutionLevel: 2,
-        forceCanvas: true,
         enableNvidiaDetect: options.enableNvidiaDetect
       },
       fixedFrameSize: options.fixedFrameSize,
@@ -39494,7 +39494,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.87";
+const version = "0.2.88";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
