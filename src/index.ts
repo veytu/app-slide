@@ -94,7 +94,7 @@ export interface AppResult {
   getNoteLink: () => string | undefined;
   getNotes: () => NotesType | undefined;
 }
-
+const cachePages = new Set();
 const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
   kind: "Slide",
   setup(context) {
@@ -142,6 +142,27 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
         const length = docsViewer.viewer.pages.length;
         if (length > 0) {
           context.dispatchAppEvent("pageStateChange", { index: page - 1, length });
+          const pages = [];
+          for (let i = page + 1; i <= Math.min(page + 5, length); i++) {
+            pages.push(i);
+          }
+
+          const newPages = pages.filter(num => !cachePages.has(num));
+
+          newPages.forEach(num => {
+            cachePages.add(num);
+          });
+
+          window.postMessage(
+            {
+              type: "@slide/_preload_slide_",
+              taskId: context.storage.state.taskId,
+              prefix: context.storage.state.url,
+              pages: newPages,
+              sessionId: new Date().valueOf().toString(),
+            },
+            "*"
+          );
         }
       }
     };

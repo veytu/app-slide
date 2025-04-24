@@ -39494,7 +39494,8 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.90";
+const version = "0.2.91";
+const cachePages = /* @__PURE__ */ new Set();
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -39534,6 +39535,21 @@ const SlideApp = {
         const length = docsViewer.viewer.pages.length;
         if (length > 0) {
           context.dispatchAppEvent("pageStateChange", { index: page - 1, length });
+          const pages = [];
+          for (let i = page + 1; i <= Math.min(page + 5, length); i++) {
+            pages.push(i);
+          }
+          const newPages = pages.filter((num) => !cachePages.has(num));
+          newPages.forEach((num) => {
+            cachePages.add(num);
+          });
+          window.postMessage({
+            type: "@slide/_preload_slide_",
+            taskId: context.storage.state.taskId,
+            prefix: context.storage.state.url,
+            pages: newPages,
+            sessionId: new Date().valueOf().toString()
+          }, "*");
         }
       }
     };
