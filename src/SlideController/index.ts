@@ -179,6 +179,15 @@ export class SlideController {
     // so anyway, we start polling the slide's "ready state"
     // if in the next 20 seconds the slide is not ready, start render first page
     this.pollReadyState();
+    const firstInit = (e: any) => {
+      if (e.currentSlideIndex == 1) {
+        setTimeout(() => {
+          this.preloadFirstRender(this.slide);
+        });
+        slide.removeListener(SLIDE_EVENTS.stateChange, firstInit);
+      }
+    };
+    slide.on(SLIDE_EVENTS.stateChange, firstInit);
   }
 
   private registerEventListeners() {
@@ -332,21 +341,25 @@ export class SlideController {
       (window as any).slide = slide;
     }
 
-    setTimeout(() => {
-      this.preloadFirstRender(slide);
-    });
     return slide;
   }
 
   private async preloadFirstRender(slide: Slide) {
-    await slide.preload(2);
-    await slide.preload(3);
-    await slide.preload(4);
-    await slide.preload(5);
-    await slide.preload(6);
-    window.postMessage({
-      type: "@slide/_preload_slide_first_finish_",
-    });
+    try {
+      await slide.preload(2);
+      await slide.preload(3);
+      await slide.preload(4);
+      window.postMessage({
+        type: "@slide/_preload_slide_first_finish_",
+      });
+      await slide.preload(5);
+      console.log("slide first load done");
+    } catch (e) {
+      console.log(e);
+      window.postMessage({
+        type: "@slide/_preload_slide_first_finish_",
+      });
+    }
   }
 
   private destroyed = false;

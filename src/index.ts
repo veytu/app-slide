@@ -149,10 +149,9 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
                   number,
                   any
                 >
-              )[`${page + 2}`]
+              )[`${page + 4}`]
             ) {
-              docsViewer?.slideController?.slide.preload(Math.min(page + 2, length));
-              docsViewer?.slideController?.slide.preload(Math.min(page + 3, length));
+              docsViewer?.slideController?.slide.preload(Math.min(page + 4, length));
             }
           });
         }

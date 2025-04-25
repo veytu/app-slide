@@ -37693,6 +37693,15 @@ class SlideController {
       slide.renderSlide(1);
     }
     this.pollReadyState();
+    const firstInit = (e) => {
+      if (e.currentSlideIndex == 1) {
+        setTimeout(() => {
+          this.preloadFirstRender(this.slide);
+        });
+        slide.removeListener(Slide.SLIDE_EVENTS.stateChange, firstInit);
+      }
+    };
+    slide.on(Slide.SLIDE_EVENTS.stateChange, firstInit);
   }
   registerEventListeners() {
     const { context, slide } = this;
@@ -37777,20 +37786,24 @@ class SlideController {
       whiteTracker: defaults.whiteTracker,
       timestamp: this.timestamp
     });
-    setTimeout(() => {
-      this.preloadFirstRender(slide);
-    });
     return slide;
   }
   async preloadFirstRender(slide) {
-    await slide.preload(2);
-    await slide.preload(3);
-    await slide.preload(4);
-    await slide.preload(5);
-    await slide.preload(6);
-    window.postMessage({
-      type: "@slide/_preload_slide_first_finish_"
-    });
+    try {
+      await slide.preload(2);
+      await slide.preload(3);
+      await slide.preload(4);
+      window.postMessage({
+        type: "@slide/_preload_slide_first_finish_"
+      });
+      await slide.preload(5);
+      console.log("slide first load done");
+    } catch (e) {
+      console.log(e);
+      window.postMessage({
+        type: "@slide/_preload_slide_first_finish_"
+      });
+    }
   }
   destroy() {
     this.sideEffect.flushAll();
@@ -38576,15 +38589,15 @@ class DocsViewer {
     this.appReadonly = context == null ? void 0 : context.getIsAppReadonly();
     this.render();
     const firstPreLoad = (evt) => {
-      if (!this.pages.length) {
-        setTimeout(() => {
-          window.postMessage({
-            type: "@slide/_preload_slide_first_finish_"
-          });
-        }, 500);
-        return;
-      }
       if (evt.data.type === "@slide/_preload_slide_first_finish_") {
+        if (!this.pages.length) {
+          setTimeout(() => {
+            window.postMessage({
+              type: "@slide/_preload_slide_first_finish_"
+            });
+          }, 500);
+          return;
+        }
         this.loading(false);
         window.removeEventListener("message", firstPreLoad);
       } else if (evt.data.type === "@slide/_preload_slide_first_error_") {
@@ -39386,7 +39399,7 @@ const addHooks = (emitter) => {
     on_destroyed_callbacks.forEach((callback) => callback(appId));
   });
 };
-var styles = /* @__PURE__ */ (() => ".netless-app-slide-content{position:relative;height:100%;overflow:hidden}.netless-app-slide-preview-mask{display:block;position:fixed;z-index:200;top:0;left:0;width:100%;height:100%}.netless-app-slide-preview{display:flex;flex-direction:column;align-items:center;z-index:300;top:0;right:0;width:23%;padding:12px;box-shadow:-4.8px -3.2px 20px #20233826;transition:transform .4s;background:#f5f5fc;border-radius:4px;-webkit-box-shadow:-4.8px -3.2px 20px rgba(32,35,56,.15);height:100%;position:absolute}.netless-app-slide-preview-active .netless-app-slide-preview-mask{display:block}.netless-app-slide-preview-active .netless-app-slide-preview{transform:translate(0);opacity:1}.netless-app-slide-preview-head{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:10px}.netless-app-slide-preview-head>h3{color:#484c70;font-weight:400;font-size:14px;width:calc(100% - 20px);overflow:hidden;-o-text-overflow:ellipsis;text-overflow:ellipsis;white-space:nowrap}.netless-app-slide-preview-head .netless-app-slide-close{width:25px;height:25px;padding:0;outline:none;border:none;background:#fff;display:flex;justify-content:center;align-items:center;border-radius:100%;cursor:pointer}.netless-app-slide-preview-head .netless-app-slide-close button{width:22px;height:22px;padding:0;outline:none;border:none;background:center/cover no-repeat;background-image:url(./icons/close.svg)}.netless-app-slide-preview-page{position:relative;display:flex;width:100%;margin-bottom:10px;font-size:0;color:transparent;outline:none;border-radius:4px;transition:border-color .3s;user-select:none;align-items:flex-end}.netless-app-slide-preview-page>img{width:calc(90% - 10px);height:auto;box-sizing:border-box;border:2px solid rgba(0,0,0,.5);border-radius:2px;background-color:#fff}.netless-app-slide-preview-page>img.netless-app-slide-active{border-color:#ff5353}.netless-app-slide-preview-page-name{text-align:right;font-size:12px;color:#8d8fa6;user-select:none;margin-right:10px;width:5%}.netless-app-slide-footer{box-sizing:border-box;height:2.778vw;display:flex;align-items:center;padding:0 1.11vw;color:#191919;background:#ebecfa}.netless-app-slide-note{width:80%;max-height:200px;padding:14px;position:absolute;left:10%;bottom:15px;z-index:102;background-color:#00000080;border-radius:14px}.netless-app-slide-note-content{color:#fff}.netless-app-slide-note-content a{color:#fff;text-decoration:underline}.netless-app-slide-note-hide{display:none}.netless-app-slide-float-footer{width:100%;min-height:2.778vw;position:absolute;left:0;bottom:0;z-index:2000;transition:opacity .4s;color:#191919}.netless-app-slide-footer-btn{box-sizing:border-box;width:1.81vw;height:1.81vw;font-size:0;margin:0;padding:3px;border:none;border-radius:4px;outline:none;color:currentColor;background:transparent;transition:background .4s;cursor:pointer;user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0);color:#8d8fa6}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-disable{color:#c6c7d2;cursor:not-allowed}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-disable .arrow{fill:#c6c7d2}.netless-app-slide-footer-btn .arrow{fill:#8d8fa6}.netless-app-slide-footer-btn:hover{background-color:#1b1f4d0a}@media (hover: none){.netless-app-slide-footer-btn:hover{background:transparent!important}}.netless-app-slide-footer-btn>svg{width:100%;height:100%}.netless-app-slide-footer-btn>svg:nth-of-type(2){display:none}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-playing>svg:nth-of-type(1){display:none}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-playing>svg:nth-of-type(2){display:initial}.netless-app-slide-hide{visibility:hidden}.netless-app-slide-page-jumps{flex:1;display:flex;justify-content:center;align-items:center;gap:.556vw}.netless-app-slide-page-number{font-size:1vw;color:#8d8fa6;user-select:none;white-space:nowrap;word-break:keep-all}.netless-app-slide-page-number-input{border:none;outline:none;width:3em;margin:0;padding:0 2px;text-align:right;font-size:1vw;line-height:1;font-weight:400;font-family:inherit;border-radius:2px;color:currentColor;background:transparent;transition:background .4s;user-select:text;-webkit-tap-highlight-color:rgba(0,0,0,0)}.netless-app-slide-readonly .netless-app-slide-footer-btn{cursor:not-allowed}.netless-app-slide-readonly .netless-app-slide-footer-btn:hover{background:transparent}.netless-app-slide-readonly .netless-app-slide-page-number-input{cursor:not-allowed}.netless-app-slide-readonly .netless-app-slide-page-number-input:hover,.netless-app-slide-readonly .netless-app-slide-page-number-input:focus,.netless-app-slide-readonly .netless-app-slide-page-number-input:active{background:transparent;box-shadow:none}.netless-app-slide-readonly .netless-app-slide-page-number-input:disabled{color:inherit}.netless-app-slide-readonly.netless-app-slide-float-footer,.netless-app-slide-readonly.netless-app-slide-note{display:none}.telebox-color-scheme-dark .netless-app-slide-page-number-input{color:#a6a6a8}.telebox-color-scheme-dark .netless-app-slide-page-number-input:active,.telebox-color-scheme-dark .netless-app-slide-page-number-input:focus,.telebox-color-scheme-dark .netless-app-slide-page-number-input:hover{color:#222}.telebox-color-scheme-dark .netless-app-slide-footer{color:#a6a6a8;background:#2d2d33;border-top:none}.telebox-color-scheme-dark .netless-app-slide-footer-btn:hover{background:#212126}.telebox-color-scheme-dark .netless-app-slide-preview{background:rgba(50,50,50,.9)}.netless-app-slide-loading{display:flex;justify-content:center;align-items:center;width:100%;height:100%;position:absolute;top:0;left:0;z-index:100;background:white}.netless-app-slide-loader{border:4px solid rgb(57,171,255);border-left-color:transparent;width:36px;height:36px;animation:spin 1s linear infinite;border-radius:100%}@keyframes spin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}.netless-app-slide-wb-view{position:absolute;top:0;left:0;width:100%;height:100%;z-index:100;overflow:hidden;transition:opacity .2s}.netless-app-slide-wb-view-hidden{opacity:0}.netless-app-slide-overlay{display:flex;align-items:center;justify-content:center;position:absolute;z-index:200;top:0;left:0;width:100%;height:100%;padding:8px;background:rgba(255,0,0,.25);transition:opacity .3s;opacity:0;pointer-events:none}.netless-app-slide-slide{width:100%;height:100%;display:flex;align-items:center;justify-content:center}.netless-app-slide-slide canvas{transform:scale(var(--netless-app-slide-scale, 1))}\n")();
+var styles = /* @__PURE__ */ (() => ".netless-app-slide-content{position:relative;height:100%;overflow:hidden}.netless-app-slide-preview-mask{display:block;position:fixed;z-index:200;top:0;left:0;width:100%;height:100%}.netless-app-slide-preview{display:flex;flex-direction:column;align-items:center;z-index:300;top:0;right:0;width:23%;padding:12px;box-shadow:-4.8px -3.2px 20px #20233826;transition:transform .4s;background:#f5f5fc;border-radius:4px;-webkit-box-shadow:-4.8px -3.2px 20px rgba(32,35,56,.15);height:100%;position:absolute}.netless-app-slide-preview-active .netless-app-slide-preview-mask{display:block}.netless-app-slide-preview-active .netless-app-slide-preview{transform:translate(0);opacity:1}.netless-app-slide-preview-head{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:10px}.netless-app-slide-preview-head>h3{color:#484c70;font-weight:400;font-size:14px;width:calc(100% - 20px);overflow:hidden;-o-text-overflow:ellipsis;text-overflow:ellipsis;white-space:nowrap}.netless-app-slide-preview-head .netless-app-slide-close{width:25px;height:25px;padding:0;outline:none;border:none;background:#fff;display:flex;justify-content:center;align-items:center;border-radius:100%;cursor:pointer}.netless-app-slide-preview-head .netless-app-slide-close button{width:22px;height:22px;padding:0;outline:none;border:none;background:center/cover no-repeat;background-image:url(./icons/close.svg)}.netless-app-slide-preview-page{position:relative;display:flex;width:100%;margin-bottom:10px;font-size:0;color:transparent;outline:none;border-radius:4px;transition:border-color .3s;user-select:none;align-items:flex-end}.netless-app-slide-preview-page>img{width:calc(90% - 10px);height:auto;box-sizing:border-box;border:2px solid rgba(0,0,0,.5);border-radius:2px;background-color:#fff}.netless-app-slide-preview-page>img.netless-app-slide-active{border-color:#ff5353}.netless-app-slide-preview-page-name{text-align:right;font-size:12px;color:#8d8fa6;user-select:none;margin-right:10px;width:5%}.netless-app-slide-footer{box-sizing:border-box;height:2.778vw;display:flex;align-items:center;padding:0 1.11vw;color:#191919;background:#ebecfa}.netless-app-slide-note{width:80%;max-height:200px;padding:14px;position:absolute;left:10%;bottom:15px;z-index:102;background-color:#00000080;border-radius:14px}.netless-app-slide-note-content{color:#fff}.netless-app-slide-note-content a{color:#fff;text-decoration:underline}.netless-app-slide-note-hide{display:none}.netless-app-slide-float-footer{width:100%;min-height:2.778vw;position:absolute;left:0;bottom:0;z-index:2000;transition:opacity .4s;color:#191919}.netless-app-slide-footer-btn{box-sizing:border-box;width:1.81vw;height:1.81vw;font-size:0;margin:0;padding:3px;border:none;border-radius:4px;outline:none;color:currentColor;background:transparent;transition:background .4s;cursor:pointer;user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0);color:#8d8fa6}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-disable{color:#c6c7d2;cursor:not-allowed}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-disable .arrow{fill:#c6c7d2}.netless-app-slide-footer-btn .arrow{fill:#8d8fa6}.netless-app-slide-footer-btn:hover{background-color:#1b1f4d0a}@media (hover: none){.netless-app-slide-footer-btn:hover{background:transparent!important}}.netless-app-slide-footer-btn>svg{width:100%;height:100%}.netless-app-slide-footer-btn>svg:nth-of-type(2){display:none}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-playing>svg:nth-of-type(1){display:none}.netless-app-slide-footer-btn.netless-app-slide-footer-btn-playing>svg:nth-of-type(2){display:initial}.netless-app-slide-hide{visibility:hidden}.netless-app-slide-page-jumps{flex:1;display:flex;justify-content:center;align-items:center;gap:.556vw}.netless-app-slide-page-number{font-size:1vw;color:#8d8fa6;user-select:none;white-space:nowrap;word-break:keep-all}.netless-app-slide-page-number-input{border:none;outline:none;width:3em;margin:0;padding:0 2px;text-align:right;font-size:1vw;line-height:1;font-weight:400;font-family:inherit;border-radius:2px;color:currentColor;background:transparent;transition:background .4s;user-select:text;-webkit-tap-highlight-color:rgba(0,0,0,0)}.netless-app-slide-readonly .netless-app-slide-footer-btn{cursor:not-allowed}.netless-app-slide-readonly .netless-app-slide-footer-btn:hover{background:transparent}.netless-app-slide-readonly .netless-app-slide-page-number-input{cursor:not-allowed}.netless-app-slide-readonly .netless-app-slide-page-number-input:hover,.netless-app-slide-readonly .netless-app-slide-page-number-input:focus,.netless-app-slide-readonly .netless-app-slide-page-number-input:active{background:transparent;box-shadow:none}.netless-app-slide-readonly .netless-app-slide-page-number-input:disabled{color:inherit}.netless-app-slide-readonly.netless-app-slide-float-footer,.netless-app-slide-readonly.netless-app-slide-note{display:none}.telebox-color-scheme-dark .netless-app-slide-page-number-input{color:#a6a6a8}.telebox-color-scheme-dark .netless-app-slide-page-number-input:active,.telebox-color-scheme-dark .netless-app-slide-page-number-input:focus,.telebox-color-scheme-dark .netless-app-slide-page-number-input:hover{color:#222}.telebox-color-scheme-dark .netless-app-slide-footer{color:#a6a6a8;background:#2d2d33;border-top:none}.telebox-color-scheme-dark .netless-app-slide-footer-btn:hover{background:#212126}.telebox-color-scheme-dark .netless-app-slide-preview{background:rgba(50,50,50,.9)}.netless-app-slide-loading{display:flex;justify-content:center;align-items:center;width:100%;height:100%;position:absolute;top:0;left:0;z-index:200;background:white}.netless-app-slide-loader{border:4px solid rgb(57,171,255);border-left-color:transparent;width:36px;height:36px;animation:spin 1s linear infinite;border-radius:100%}@keyframes spin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}.netless-app-slide-wb-view{position:absolute;top:0;left:0;width:100%;height:100%;z-index:100;overflow:hidden;transition:opacity .2s}.netless-app-slide-wb-view-hidden{opacity:0}.netless-app-slide-overlay{display:flex;align-items:center;justify-content:center;position:absolute;z-index:200;top:0;left:0;width:100%;height:100%;padding:8px;background:rgba(255,0,0,.25);transition:opacity .3s;opacity:0;pointer-events:none}.netless-app-slide-slide{width:100%;height:100%;display:flex;align-items:center;justify-content:center}.netless-app-slide-slide canvas{transform:scale(var(--netless-app-slide-scale, 1))}\n")();
 function previewSlide({
   container,
   taskId,
@@ -39592,10 +39605,9 @@ const SlideApp = {
         if (length > 0) {
           context.dispatchAppEvent("pageStateChange", { index: page - 1, length });
           setTimeout(() => {
-            var _a3, _b, _c;
-            if (!((_a3 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a3.slide).player.stagePool.stageJsons[`${page + 2}`]) {
-              (_b = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _b.slide.preload(Math.min(page + 2, length));
-              (_c = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _c.slide.preload(Math.min(page + 3, length));
+            var _a3, _b;
+            if (!((_a3 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a3.slide).player.stagePool.stageJsons[`${page + 4}`]) {
+              (_b = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _b.slide.preload(Math.min(page + 4, length));
             }
           });
         }
