@@ -35943,23 +35943,45 @@ void main(void){
       };
     }
   };
-  function sT(t2, e2, i2, n2) {
+  function sT(t2, e2, i2, n2, r2) {
     return rT(this, void 0, void 0, function() {
-      var r2, o2, s2, a2;
-      return oT(this, function(l2) {
-        switch (l2.label) {
+      var o2, s2, a2, l2, h2, u2;
+      return oT(this, function(c2) {
+        switch (c2.label) {
           case 0:
-            return r2 = document.createElement("div"), (o2 = new yT({ anchor: r2, renderOptions: { minFPS: 1, maxFPS: 1, resolution: 1, maxResolutionLevel: i2, forceCanvas: true }, mode: "local", interactive: false, useLocalCache: true })).setResource(t2, e2), [4, o2.getSlideCountAsync()];
+            return o2 = document.createElement("div"), (s2 = new yT({ anchor: o2, renderOptions: { minFPS: 1, maxFPS: 1, resolution: 1, maxResolutionLevel: i2, forceCanvas: true }, mode: "local", interactive: false, useLocalCache: true })).setResource(t2, e2), [4, s2.getSlideCountAsync()];
           case 1:
-            s2 = l2.sent(), a2 = 1, l2.label = 2;
+            a2 = c2.sent(), c2.label = 2;
           case 2:
-            return a2 <= s2 ? [4, o2.player.stagePool.preload(a2, true)] : [3, 5];
+            if (c2.trys.push([2, 12, 13, 14]), !(r2 && r2.length > 0))
+              return [3, 7];
+            l2 = r2.filter(function(t3, e3) {
+              return r2.indexOf(t3) === e3;
+            }), u2 = 0, c2.label = 3;
           case 3:
-            l2.sent(), n2(Math.round(a2 / s2 * 100) / 100), l2.label = 4;
+            return u2 < l2.length ? (h2 = l2[u2]) > 0 && h2 <= a2 ? [4, s2.player.stagePool.preload(h2, true)] : [3, 5] : [3, 6];
           case 4:
-            return a2++, [3, 2];
+            c2.sent(), n2(Math.round((u2 + 1) / l2.length * 100) / 100), c2.label = 5;
           case 5:
-            return o2.destroy(), [2];
+            return u2++, [3, 3];
+          case 6:
+            return [3, 11];
+          case 7:
+            u2 = 1, c2.label = 8;
+          case 8:
+            return u2 <= a2 ? [4, s2.player.stagePool.preload(u2, true)] : [3, 11];
+          case 9:
+            c2.sent(), n2(Math.round(u2 / a2 * 100) / 100), c2.label = 10;
+          case 10:
+            return u2++, [3, 8];
+          case 11:
+            return [3, 14];
+          case 12:
+            throw c2.sent();
+          case 13:
+            return s2.destroy(), [7];
+          case 14:
+            return [2];
         }
       });
     });
@@ -36107,7 +36129,7 @@ void main(void){
   }
   var mT = { syncDispatch: "syncDispatch", syncReceive: "syncReceive", syncEventLag: "syncEventLag", renderStart: "renderStart", renderEnd: "renderEnd", renderError: "renderError", slideChange: "slideChange", mainSeqStepStart: "mainSeqStepStart", mainSeqStepEnd: "mainSeqStepEnd", animateStart: "animateStart", animateEnd: "animateEnd", stateChange: "stateChange", slideStepEnd: "slideEnd", slideStepStart: "slideStart" }, gT = { taskId: "", url: "", currentSlideIndex: -1, mainSeqStep: -1, mainSeqState: null, mediaState: /* @__PURE__ */ Object.create(null), interactiveSeqState: /* @__PURE__ */ Object.create(null) }, vT = "";
   try {
-    vT = "1.4.18";
+    vT = "1.4.20";
   } catch (t2) {
     vT = "dev";
   }
@@ -36313,7 +36335,7 @@ void main(void){
       return o2.setInteractive(this.interactive), o2.updateConfig(t3.renderOptions || {}), o2.on(Vy.renderStart, function(t4) {
         r2.isLoading = true, r2.emit(mT.renderStart, t4), window.postMessage({ type: "@slide/_render_start_", taskId: r2.taskId, index: t4 }, "*");
       }), o2.on(Vy.renderEnd, function(t4) {
-        r2.isLoading = false, r2.player && (r2.designHeight = r2.player.designHeight, r2.designWidth = r2.player.designWidth, r2.cacheImage.style.width = r2.player.designWidth + "px", r2.cacheImage.style.height = r2.player.designHeight + "px", r2._slideCount = r2.player.slideCount), r2.emit(mT.renderEnd, t4), window.postMessage({ type: "@slide/_render_end_", taskId: r2.taskId, index: t4 }, "*");
+        r2.isLoading = false, r2.player && (r2.designHeight = r2.player.designHeight, r2.designWidth = r2.player.designWidth, r2.cacheImage.style.width = r2.player.designWidth + "px", r2.cacheImage.style.height = r2.player.designHeight + "px", r2.cacheImage.style.maxWidth = r2.player.designWidth + "px", r2.cacheImage.style.minWidth = r2.player.designHeight + "px", r2._slideCount = r2.player.slideCount), r2.emit(mT.renderEnd, t4), window.postMessage({ type: "@slide/_render_end_", taskId: r2.taskId, index: t4 }, "*");
       }), o2.on(Vy.slideChange, function(t4) {
         r2.__slideState.currentSlideIndex = t4, r2.emitStateChange(), r2.emit(mT.slideChange, t4);
       }), o2.on(Vy.mainSeqStateChange, function(t4) {
@@ -36859,6 +36881,7 @@ void main(void){
   }(Za.a);
   _T == null || _T.clear().catch(function() {
   }), window.addEventListener("__slide_log__", yT.handleLogDownload), window.addEventListener("message", function(t2) {
+    var e2;
     if (t2.data.type === "@slide/_request_log_")
       yT.handleLogReport(t2.data.sessionId).catch(function() {
       });
@@ -36867,18 +36890,22 @@ void main(void){
     else if (t2.data.type === "@slide/_request_release_")
       yT.handleReleaseAllSlide();
     else if (t2.data.type === "@slide/_update_volume_") {
-      var e2 = 0.5;
+      var i2 = 0.5;
       try {
-        e2 = parseFloat(t2.data.volume.toString());
+        i2 = parseFloat(t2.data.volume.toString());
       } catch (t3) {
       }
-      yT.volumeAdjuster.volume = e2;
-    } else
-      t2.data.type === "@slide/_get_volume_" ? window.postMessage({ type: "@slide/_report_volume_", volume: yT.volumeAdjuster.volume, customMessage: "@slide/_report_volume_" }, "*") : t2.data.type === "@slide/_preload_slide_" && yT.preloadResource(t2.data.taskId, t2.data.prefix, t2.data.maxResolutionLevel, function(e3) {
-        window.postMessage({ type: "@slide/_preload_slide_progress_", taskId: t2.data.taskId, progress: e3 }, "*");
-      }).catch(function(e3) {
-        window.postMessage({ type: "@slide/_preload_slide_error_", taskId: t2.data.taskId, error: e3 }, "*");
+      yT.volumeAdjuster.volume = i2;
+    } else if (t2.data.type === "@slide/_get_volume_")
+      window.postMessage({ type: "@slide/_report_volume_", volume: yT.volumeAdjuster.volume, customMessage: "@slide/_report_volume_" }, "*");
+    else if (t2.data.type === "@slide/_preload_slide_") {
+      var n2 = (e2 = t2.data.sessionId) !== null && e2 !== void 0 ? e2 : Math.random().toString(32).substr(2);
+      yT.preloadResource(t2.data.taskId, t2.data.prefix, t2.data.maxResolutionLevel, function(e3) {
+        window.postMessage({ type: "@slide/_preload_slide_progress_", sessionId: n2, taskId: t2.data.taskId, progress: e3 }, "*");
+      }, t2.data.pages).catch(function(e3) {
+        window.postMessage({ type: "@slide/_preload_slide_error_", sessionId: n2, taskId: t2.data.taskId, error: e3 }, "*");
       });
+    }
   }), window.setInterval(function() {
     yT.flushLog().catch(function() {
     });
@@ -37715,7 +37742,7 @@ class SlideController {
     return this.slide.slideState.currentSlideIndex;
   }
   createSlide(anchor, defaults = {}) {
-    var _a2, _b, _c;
+    var _a2, _b;
     const options = this.context.getAppOptions() || {};
     const slide = new Slide.Slide({
       anchor,
@@ -37724,13 +37751,13 @@ class SlideController {
       controller: logger.enable,
       enableGlobalClick: (_a2 = options.enableGlobalClick) != null ? _a2 : true,
       renderOptions: {
-        minFPS: options.minFPS || 40,
+        minFPS: options.minFPS || 20,
         maxFPS: options.maxFPS || 60,
         autoFPS: (_b = options.autoFPS) != null ? _b : true,
         autoResolution: true,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
         resolution: options.resolution,
-        maxResolutionLevel: 3,
+        maxResolutionLevel: 2,
         enableNvidiaDetect: options.enableNvidiaDetect
       },
       fixedFrameSize: options.fixedFrameSize,
@@ -37745,12 +37772,25 @@ class SlideController {
       urlInterrupter: options.urlInterrupter,
       resourceTimeout: options.resourceTimeout,
       rtcAudio: options.rtcAudio,
-      useLocalCache: (_c = options.useLocalCache) != null ? _c : true,
+      useLocalCache: true,
       logger: options.logger,
       whiteTracker: defaults.whiteTracker,
       timestamp: this.timestamp
     });
+    setTimeout(() => {
+      this.preloadFirstRender(slide);
+    });
     return slide;
+  }
+  async preloadFirstRender(slide) {
+    await slide.preload(2);
+    await slide.preload(3);
+    await slide.preload(4);
+    await slide.preload(5);
+    await slide.preload(6);
+    window.postMessage({
+      type: "@slide/_preload_slide_first_finish_"
+    });
   }
   destroy() {
     this.sideEffect.flushAll();
@@ -38535,6 +38575,24 @@ class DocsViewer {
     this.context = context;
     this.appReadonly = context == null ? void 0 : context.getIsAppReadonly();
     this.render();
+    const firstPreLoad = (evt) => {
+      if (!this.pages.length) {
+        setTimeout(() => {
+          window.postMessage({
+            type: "@slide/_preload_slide_first_finish_"
+          });
+        }, 500);
+        return;
+      }
+      if (evt.data.type === "@slide/_preload_slide_first_finish_") {
+        this.loading(false);
+        window.removeEventListener("message", firstPreLoad);
+      } else if (evt.data.type === "@slide/_preload_slide_first_error_") {
+        this.loading(false);
+        window.removeEventListener("message", firstPreLoad);
+      }
+    };
+    window.addEventListener("message", firstPreLoad);
   }
   set pages(value) {
     this._pages = value;
@@ -38543,7 +38601,6 @@ class DocsViewer {
     if (this.onPagesReady) {
       this.onPagesReady(value);
     }
-    this.loading(false);
   }
   get pages() {
     return this._pages;
@@ -39494,8 +39551,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.91";
-const cachePages = /* @__PURE__ */ new Set();
+const version = "0.2.93";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -39535,21 +39591,13 @@ const SlideApp = {
         const length = docsViewer.viewer.pages.length;
         if (length > 0) {
           context.dispatchAppEvent("pageStateChange", { index: page - 1, length });
-          const pages = [];
-          for (let i = page + 1; i <= Math.min(page + 5, length); i++) {
-            pages.push(i);
-          }
-          const newPages = pages.filter((num) => !cachePages.has(num));
-          newPages.forEach((num) => {
-            cachePages.add(num);
+          setTimeout(() => {
+            var _a3, _b, _c;
+            if (!((_a3 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a3.slide).player.stagePool.stageJsons[`${page + 2}`]) {
+              (_b = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _b.slide.preload(Math.min(page + 2, length));
+              (_c = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _c.slide.preload(Math.min(page + 3, length));
+            }
           });
-          window.postMessage({
-            type: "@slide/_preload_slide_",
-            taskId: context.storage.state.taskId,
-            prefix: context.storage.state.url,
-            pages: newPages,
-            sessionId: new Date().valueOf().toString()
-          }, "*");
         }
       }
     };

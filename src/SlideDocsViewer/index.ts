@@ -8,7 +8,7 @@ import { DocsViewer, type DocsViewerPage } from "../DocsViewer";
 import { logger } from "../utils/logger";
 import { isEditable } from "../utils/helpers";
 import type { Attributes, MagixEvents } from "../typings";
-import type { AppOptions } from "..";
+import { type AppOptions } from "..";
 
 export const ClickThroughAppliances = new Set(["clicker"]);
 

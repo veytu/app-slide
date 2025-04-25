@@ -300,13 +300,13 @@ export class SlideController {
       controller: logger.enable,
       enableGlobalClick: options.enableGlobalClick ?? true,
       renderOptions: {
-        minFPS: options.minFPS || 40,
+        minFPS: options.minFPS || 20,
         maxFPS: options.maxFPS || 60,
         autoFPS: options.autoFPS ?? true,
         autoResolution: true,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
         resolution: options.resolution,
-        maxResolutionLevel: 3,
+        maxResolutionLevel: 2,
         // forceCanvas: true,
         enableNvidiaDetect: options.enableNvidiaDetect,
       },
@@ -322,7 +322,7 @@ export class SlideController {
       urlInterrupter: options.urlInterrupter,
       resourceTimeout: options.resourceTimeout,
       rtcAudio: options.rtcAudio,
-      useLocalCache: options.useLocalCache ?? true,
+      useLocalCache: true,
       logger: options.logger,
       whiteTracker: defaults.whiteTracker,
       timestamp: this.timestamp,
@@ -331,7 +331,22 @@ export class SlideController {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).slide = slide;
     }
+
+    setTimeout(() => {
+      this.preloadFirstRender(slide);
+    });
     return slide;
+  }
+
+  private async preloadFirstRender(slide: Slide) {
+    await slide.preload(2);
+    await slide.preload(3);
+    await slide.preload(4);
+    await slide.preload(5);
+    await slide.preload(6);
+    window.postMessage({
+      type: "@slide/_preload_slide_first_finish_",
+    });
   }
 
   private destroyed = false;

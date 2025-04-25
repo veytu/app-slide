@@ -275,6 +275,7 @@ declare class SlideController {
     get pageCount(): number;
     get page(): number;
     private createSlide;
+    private preloadFirstRender;
     private destroyed;
     destroy(): void;
     timestamp: () => number;
