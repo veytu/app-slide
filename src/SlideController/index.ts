@@ -309,8 +309,8 @@ export class SlideController {
       controller: logger.enable,
       enableGlobalClick: options.enableGlobalClick ?? true,
       renderOptions: {
-        minFPS: options.minFPS || 20,
-        maxFPS: options.maxFPS || 60,
+        minFPS: options.minFPS || 5,
+        maxFPS: options.maxFPS || 15,
         autoFPS: options.autoFPS ?? true,
         autoResolution: true,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
@@ -429,6 +429,9 @@ export class SlideController {
       log("[Slide] unfreeze because tab becomes visible", { savedIsFrozen: this.savedIsFrozen });
       if (!this.savedIsFrozen) {
         this.unfreeze();
+        window.postMessage({
+          type: "@slide/_preload_slide_first_finish_",
+        });
       }
     }
   };

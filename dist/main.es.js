@@ -37637,6 +37637,9 @@ class SlideController {
         log("[Slide] unfreeze because tab becomes visible", { savedIsFrozen: this.savedIsFrozen });
         if (!this.savedIsFrozen) {
           this.unfreeze();
+          window.postMessage({
+            type: "@slide/_preload_slide_first_finish_"
+          });
         }
       }
     };
@@ -37760,8 +37763,8 @@ class SlideController {
       controller: logger.enable,
       enableGlobalClick: (_a2 = options.enableGlobalClick) != null ? _a2 : true,
       renderOptions: {
-        minFPS: options.minFPS || 20,
-        maxFPS: options.maxFPS || 60,
+        minFPS: options.minFPS || 5,
+        maxFPS: options.maxFPS || 15,
         autoFPS: (_b = options.autoFPS) != null ? _b : true,
         autoResolution: true,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
@@ -39564,7 +39567,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.93";
+const version = "0.2.94";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
