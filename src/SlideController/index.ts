@@ -348,11 +348,12 @@ export class SlideController {
     try {
       await slide.preload(2);
       await slide.preload(3);
-      await slide.preload(4);
       window.postMessage({
         type: "@slide/_preload_slide_first_finish_",
       });
+      await slide.preload(4);
       await slide.preload(5);
+      await slide.preload(6);
       console.log("slide first load done");
     } catch (e) {
       console.log(e);

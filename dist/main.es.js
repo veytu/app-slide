@@ -37795,11 +37795,12 @@ class SlideController {
     try {
       await slide.preload(2);
       await slide.preload(3);
-      await slide.preload(4);
       window.postMessage({
         type: "@slide/_preload_slide_first_finish_"
       });
+      await slide.preload(4);
       await slide.preload(5);
+      await slide.preload(6);
       console.log("slide first load done");
     } catch (e) {
       console.log(e);
@@ -39567,7 +39568,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.94";
+const version = "0.2.95";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
