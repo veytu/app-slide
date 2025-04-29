@@ -37699,7 +37699,7 @@ class SlideController {
     const firstInit = (e) => {
       if (e.currentSlideIndex == 1) {
         setTimeout(() => {
-          this.preloadFirstRender(this.slide);
+          this.preloadFirstRender(this.slide, taskId, url);
         });
         slide.removeListener(Slide.SLIDE_EVENTS.stateChange, firstInit);
       }
@@ -37759,7 +37759,7 @@ class SlideController {
     const slide = new Slide.Slide({
       anchor,
       interactive: true,
-      mode: "interactive",
+      mode: "sync",
       controller: logger.enable,
       enableGlobalClick: (_a2 = options.enableGlobalClick) != null ? _a2 : true,
       renderOptions: {
@@ -37791,14 +37791,20 @@ class SlideController {
     });
     return slide;
   }
-  async preloadFirstRender(slide) {
+  async preloadFirstRender(slide, taskId, url) {
     try {
-      await slide.preload(2);
-      await slide.preload(3);
       window.postMessage({
-        type: "@slide/_preload_slide_first_finish_"
-      });
-      await slide.preload(4);
+        type: "@slide/_preload_slide_",
+        taskId,
+        prefix: url,
+        pages: [2, 3, 4],
+        sessionId: "first-load"
+      }, "*");
+      setTimeout(() => {
+        window.postMessage({
+          type: "@slide/_preload_slide_first_finish_"
+        });
+      }, 15e3);
       await slide.preload(5);
       await slide.preload(6);
       console.log("slide first load done");
@@ -39568,7 +39574,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.95";
+const version = "0.2.96";
 const SlideApp = {
   kind: "Slide",
   setup(context) {

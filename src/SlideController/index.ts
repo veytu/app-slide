@@ -182,7 +182,7 @@ export class SlideController {
     const firstInit = (e: any) => {
       if (e.currentSlideIndex == 1) {
         setTimeout(() => {
-          this.preloadFirstRender(this.slide);
+          this.preloadFirstRender(this.slide, taskId, url);
         });
         slide.removeListener(SLIDE_EVENTS.stateChange, firstInit);
       }
@@ -305,7 +305,7 @@ export class SlideController {
     const slide = new Slide({
       anchor,
       interactive: true,
-      mode: "interactive",
+      mode: "sync",
       controller: logger.enable,
       enableGlobalClick: options.enableGlobalClick ?? true,
       renderOptions: {
@@ -344,14 +344,23 @@ export class SlideController {
     return slide;
   }
 
-  private async preloadFirstRender(slide: Slide) {
+  private async preloadFirstRender(slide: Slide, taskId: string, url: string) {
     try {
-      await slide.preload(2);
-      await slide.preload(3);
-      window.postMessage({
-        type: "@slide/_preload_slide_first_finish_",
-      });
-      await slide.preload(4);
+      window.postMessage(
+        {
+          type: "@slide/_preload_slide_",
+          taskId,
+          prefix: url,
+          pages: [2, 3, 4],
+          sessionId: "first-load",
+        },
+        "*"
+      );
+      setTimeout(() => {
+        window.postMessage({
+          type: "@slide/_preload_slide_first_finish_",
+        });
+      }, 15000);
       await slide.preload(5);
       await slide.preload(6);
       console.log("slide first load done");
