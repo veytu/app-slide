@@ -96,7 +96,7 @@ export class SlideController {
     showRenderError,
     invisibleBehavior,
   }: SlideControllerOptions) {
-    this.clientId = genUID();
+    this.clientId = context?.getRoom()?.uid || genUID();
     this.invisibleBehavior = invisibleBehavior ?? "frozen";
     this.onRenderStart = onRenderStart;
     this.onPageChanged = onPageChanged;

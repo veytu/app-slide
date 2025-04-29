@@ -37526,6 +37526,7 @@ class SlideController {
     showRenderError,
     invisibleBehavior
   }) {
+    var _a2;
     this.sideEffect = new SideEffectManager();
     this.previewList = [];
     this.ready = false;
@@ -37608,7 +37609,7 @@ class SlideController {
       }
     };
     this.unfreeze = async () => {
-      var _a2;
+      var _a3;
       if (!this.visible)
         return;
       this.isFrozen = false;
@@ -37619,7 +37620,7 @@ class SlideController {
         } else {
           this.slide.resume();
         }
-        const currentSlideIndex = (_a2 = this.context.storage.state.state) == null ? void 0 : _a2.currentSlideIndex;
+        const currentSlideIndex = (_a3 = this.context.storage.state.state) == null ? void 0 : _a3.currentSlideIndex;
         if (currentSlideIndex) {
           log("[Slide] sync storage", currentSlideIndex);
           this.slide.setSlideState({ currentSlideIndex });
@@ -37643,7 +37644,7 @@ class SlideController {
         }
       }
     };
-    this.clientId = genUID();
+    this.clientId = ((_a2 = context == null ? void 0 : context.getRoom()) == null ? void 0 : _a2.uid) || genUID();
     this.invisibleBehavior = invisibleBehavior != null ? invisibleBehavior : "frozen";
     this.onRenderStart = onRenderStart;
     this.onPageChanged = onPageChanged;
@@ -39576,7 +39577,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.97";
+const version = "0.2.98";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
