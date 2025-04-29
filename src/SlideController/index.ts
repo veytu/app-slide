@@ -13,7 +13,7 @@ import type { ISlideConfig, SyncEvent } from "@netless/slide";
 import type { Attributes, MagixEvents, MagixPayload, SlideState } from "../typings";
 import type { AppOptions } from "..";
 
-import { SideEffectManager } from "side-effect-manager";
+import { genUID, SideEffectManager } from "side-effect-manager";
 import { Slide, SLIDE_EVENTS } from "@netless/slide";
 import { clamp } from "../utils/helpers";
 import { cachedGetBgColor } from "../utils/bgcolor";
@@ -81,6 +81,8 @@ export class SlideController {
   // 签名后的预览图
   public previewList: string[] = [];
 
+  private clientId: string;
+
   public constructor({
     context,
     anchor,
@@ -94,6 +96,7 @@ export class SlideController {
     showRenderError,
     invisibleBehavior,
   }: SlideControllerOptions) {
+    this.clientId = genUID();
     this.invisibleBehavior = invisibleBehavior ?? "frozen";
     this.onRenderStart = onRenderStart;
     this.onPageChanged = onPageChanged;
@@ -304,6 +307,7 @@ export class SlideController {
     const options = this.context.getAppOptions() || {};
     const slide = new Slide({
       anchor,
+      clientId: this.clientId,
       interactive: true,
       mode: "sync",
       controller: logger.enable,

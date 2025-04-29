@@ -37643,6 +37643,7 @@ class SlideController {
         }
       }
     };
+    this.clientId = genUID();
     this.invisibleBehavior = invisibleBehavior != null ? invisibleBehavior : "frozen";
     this.onRenderStart = onRenderStart;
     this.onPageChanged = onPageChanged;
@@ -37758,6 +37759,7 @@ class SlideController {
     const options = this.context.getAppOptions() || {};
     const slide = new Slide.Slide({
       anchor,
+      clientId: this.clientId,
       interactive: true,
       mode: "sync",
       controller: logger.enable,
@@ -39574,7 +39576,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.96";
+const version = "0.2.97";
 const SlideApp = {
   kind: "Slide",
   setup(context) {

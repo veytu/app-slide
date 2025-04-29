@@ -257,6 +257,7 @@ declare class SlideController {
     private savedIsFrozen;
     private invisibleBehavior;
     previewList: string[];
+    private clientId;
     constructor({ context, anchor, onRenderStart, onPageChanged, onTransitionStart, onTransitionEnd, onNavigate, onError, onRenderError, showRenderError, invisibleBehavior, }: SlideControllerOptions);
     ready: boolean;
     private resolveReady;
