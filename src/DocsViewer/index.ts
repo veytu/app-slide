@@ -52,24 +52,6 @@ export class DocsViewer {
     this.context = context;
     this.appReadonly = context?.getIsAppReadonly();
     this.render();
-    const firstPreLoad = (evt: MessageEvent) => {
-      if (evt.data.type === "@slide/_preload_slide_first_finish_") {
-        if (!this.pages.length) {
-          setTimeout(() => {
-            window.postMessage({
-              type: "@slide/_preload_slide_first_finish_",
-            });
-          }, 500);
-          return;
-        }
-        this.loading(false);
-        window.removeEventListener("message", firstPreLoad);
-      } else if (evt.data.type === "@slide/_preload_slide_first_error_") {
-        this.loading(false);
-        window.removeEventListener("message", firstPreLoad);
-      }
-    };
-    window.addEventListener("message", firstPreLoad);
   }
 
   protected readonly: boolean;
@@ -89,6 +71,7 @@ export class DocsViewer {
     if (this.onPagesReady) {
       this.onPagesReady(value);
     }
+    this.loading(false);
   }
 
   public get pages() {
@@ -211,6 +194,9 @@ export class DocsViewer {
       loader.className = this.wrapClassName("loader");
       this.$loading.appendChild(loader);
       this.$content.appendChild(this.$loading);
+      setTimeout(() => {
+        this.$loading.remove();
+      }, 20000);
     } else {
       this.$loading.remove();
     }

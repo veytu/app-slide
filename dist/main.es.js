@@ -37638,9 +37638,6 @@ class SlideController {
         log("[Slide] unfreeze because tab becomes visible", { savedIsFrozen: this.savedIsFrozen });
         if (!this.savedIsFrozen) {
           this.unfreeze();
-          window.postMessage({
-            type: "@slide/_preload_slide_first_finish_"
-          });
         }
       }
     };
@@ -37701,7 +37698,7 @@ class SlideController {
     const firstInit = (e) => {
       if (e.currentSlideIndex == 1) {
         setTimeout(() => {
-          this.preloadFirstRender(this.slide, taskId, url);
+          this.preloadFirstRender(this.slide);
         });
         slide.removeListener(Slide.SLIDE_EVENTS.stateChange, firstInit);
       }
@@ -37816,20 +37813,10 @@ class SlideController {
     });
     return slide;
   }
-  async preloadFirstRender(slide, taskId, url) {
+  async preloadFirstRender(slide) {
     try {
-      window.postMessage({
-        type: "@slide/_preload_slide_",
-        taskId,
-        prefix: url,
-        pages: [2, 3, 4],
-        sessionId: "first-load"
-      }, "*");
-      setTimeout(() => {
-        window.postMessage({
-          type: "@slide/_preload_slide_first_finish_"
-        });
-      }, 15e3);
+      await slide.preload(3);
+      await slide.preload(4);
       await slide.preload(5);
       await slide.preload(6);
       console.log("slide first load done");
@@ -38623,24 +38610,6 @@ class DocsViewer {
     this.context = context;
     this.appReadonly = context == null ? void 0 : context.getIsAppReadonly();
     this.render();
-    const firstPreLoad = (evt) => {
-      if (evt.data.type === "@slide/_preload_slide_first_finish_") {
-        if (!this.pages.length) {
-          setTimeout(() => {
-            window.postMessage({
-              type: "@slide/_preload_slide_first_finish_"
-            });
-          }, 500);
-          return;
-        }
-        this.loading(false);
-        window.removeEventListener("message", firstPreLoad);
-      } else if (evt.data.type === "@slide/_preload_slide_first_error_") {
-        this.loading(false);
-        window.removeEventListener("message", firstPreLoad);
-      }
-    };
-    window.addEventListener("message", firstPreLoad);
   }
   set pages(value) {
     this._pages = value;
@@ -38649,6 +38618,7 @@ class DocsViewer {
     if (this.onPagesReady) {
       this.onPagesReady(value);
     }
+    this.loading(false);
   }
   get pages() {
     return this._pages;
@@ -38733,6 +38703,9 @@ class DocsViewer {
       loader.className = this.wrapClassName("loader");
       this.$loading.appendChild(loader);
       this.$content.appendChild(this.$loading);
+      setTimeout(() => {
+        this.$loading.remove();
+      }, 2e4);
     } else {
       this.$loading.remove();
     }
@@ -39599,7 +39572,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.99";
+const version = "0.2.102";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
