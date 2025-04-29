@@ -37719,15 +37719,37 @@ class SlideController {
     this.sideEffect.add(() => context.addMagixEventListener(Slide.SLIDE_EVENTS.syncDispatch, this.magixEventListener, {
       fireSelfEventAfterCommit: true
     }));
-    slide.on(Slide.SLIDE_EVENTS.renderStart, this.onRenderStart);
+    slide.on(Slide.SLIDE_EVENTS.renderStart, () => {
+      var _a2;
+      slide.player.app.ticker.minFPS = 25;
+      slide.player.app.ticker.maxFPS = 40;
+      console.log("renderstart");
+      (_a2 = this.onRenderStart) == null ? void 0 : _a2.call(this);
+    });
     slide.on(Slide.SLIDE_EVENTS.slideChange, this.onPageChanged);
-    slide.on(Slide.SLIDE_EVENTS.renderEnd, this.onTransitionEnd);
+    slide.on(Slide.SLIDE_EVENTS.renderEnd, () => {
+      var _a2;
+      slide.player.app.ticker.minFPS = 5;
+      slide.player.app.ticker.maxFPS = 15;
+      console.log("renderend");
+      (_a2 = this.onTransitionEnd) == null ? void 0 : _a2.call(this);
+    });
     slide.on(Slide.SLIDE_EVENTS.mainSeqStepStart, this.onTransitionStart);
     slide.on(Slide.SLIDE_EVENTS.mainSeqStepEnd, this.onTransitionEnd);
     slide.on(Slide.SLIDE_EVENTS.renderError, this.onError);
     slide.on(Slide.SLIDE_EVENTS.stateChange, this.onStateChange);
     slide.on(Slide.SLIDE_EVENTS.syncDispatch, this.onSyncDispatch);
     slide.on(Slide.SLIDE_EVENTS.renderEnd, this.resolveReady);
+    slide.on(Slide.SLIDE_EVENTS.animateStart, () => {
+      slide.player.app.ticker.minFPS = 25;
+      slide.player.app.ticker.maxFPS = 40;
+      console.log("animatestart");
+    });
+    slide.on(Slide.SLIDE_EVENTS.animateEnd, () => {
+      slide.player.app.ticker.minFPS = 5;
+      slide.player.app.ticker.maxFPS = 15;
+      console.log("animateend");
+    });
     this.sideEffect.add(() => {
       document.addEventListener("visibilitychange", this.onVisibilityChange);
       return () => document.removeEventListener("visibilitychange", this.onVisibilityChange);
@@ -39577,7 +39599,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.98";
+const version = "0.2.99";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
