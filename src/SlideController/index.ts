@@ -451,6 +451,7 @@ export class SlideController {
       if (!this.savedIsFrozen) {
         this.unfreeze();
       }
+      this.context.getRoom()?.refresh();
     }
   };
 }
