@@ -33401,7 +33401,7 @@ void main(void){
           this.tasks.splice(e2 + 1, 0, ...t2.sub);
         }
       }).catch((e2) => {
-        t2.state = "error", this.logger.error(`${e2} ${e2.stack}`, this.taskId), this.emit("task-error", Tm.transform(e2), this.slideIndex);
+        t2.state = "error", this.logger.error(`${e2} ${e2 == null ? void 0 : e2.stack} ${t2 == null ? void 0 : t2.name}`, this.taskId), this.emit("task-error", Tm.transform(e2), this.slideIndex);
       }));
     }
     applyAll() {
@@ -33425,7 +33425,7 @@ void main(void){
                   }
                 } catch (e2) {
                   let i2;
-                  i2 = (e2 == null ? void 0 : e2.errorType) ? e2 : new Tm(gm.RuntimeError, `subtask ${t2.name} error. ${e2}`), t2.state = "error", this.logger.error(`${e2} ${e2.stack}`, this.taskId), this.emit("task-error", Tm.transform(i2), this.slideIndex);
+                  console.error(e2), i2 = (e2 == null ? void 0 : e2.errorType) ? e2 : new Tm(gm.RuntimeError, `subtask ${t2.name} error. ${e2}`), t2.state = "error", this.logger.error(`${e2} ${e2 == null ? void 0 : e2.stack} ${e2 == null ? void 0 : e2.name}`, this.taskId), this.emit("task-error", Tm.transform(i2), this.slideIndex);
                   break;
                 }
               }
@@ -33668,7 +33668,9 @@ void main(void){
       e2.addMTask(() => Dy(this, void 0, void 0, function* () {
         const i2 = this.stageCtxs[t2];
         i2.graphicsTexture.pack().forEach((t3, n2) => {
-          e2.addSubMTask(() => i2.graphicsTexture.render(t3, n2, this.objPoolGroup, 1), "@StagePool[graphicsTexture.render]");
+          e2.addSubMTask(() => Dy(this, void 0, void 0, function* () {
+            return i2.graphicsTexture.render(t3, n2, this.objPoolGroup, 1);
+          }), "@StagePool[graphicsTexture.render]");
         });
       }), "@StagePool[createGraphicsTexture]");
     }
@@ -36129,7 +36131,7 @@ void main(void){
   }
   var mT = { syncDispatch: "syncDispatch", syncReceive: "syncReceive", syncEventLag: "syncEventLag", renderStart: "renderStart", renderEnd: "renderEnd", renderError: "renderError", slideChange: "slideChange", mainSeqStepStart: "mainSeqStepStart", mainSeqStepEnd: "mainSeqStepEnd", animateStart: "animateStart", animateEnd: "animateEnd", stateChange: "stateChange", slideStepEnd: "slideEnd", slideStepStart: "slideStart" }, gT = { taskId: "", url: "", currentSlideIndex: -1, mainSeqStep: -1, mainSeqState: null, mediaState: /* @__PURE__ */ Object.create(null), interactiveSeqState: /* @__PURE__ */ Object.create(null) }, vT = "";
   try {
-    vT = "1.4.20";
+    vT = "1.4.21";
   } catch (t2) {
     vT = "dev";
   }
@@ -36246,7 +36248,7 @@ void main(void){
         var o2 = (r2 = n3.config.logger) === null || r2 === void 0 ? void 0 : r2.error;
         o2 && o2("[" + i4 + "] " + t3);
       } }, n3.logger.info("new slide with clientId: " + n3.config.clientId + ", version: " + n3.version, n3.taskId), n3.tracker({ name: "initSlide", result: "", reason: "", payload: { taskId: n3.taskId } }), n3.anchor = n3.config.anchor, n3.syncQueue = new Qb(n3.receiveSyncHandler), n3.lock = new $b(n3.mode === "interactive"), n3.cacheImage.style.position = "absolute", n3.cacheImage.style.zIndex = "100", n3.setMedianControllerAttribute(), n3.canvasContainer.style.position = "relative", n3.canvasContainer.style.fontSize = "0", n3.canvasContainer.appendChild(n3.medianController), n3.frame.appendChild(n3.canvasContainer), n3.frameResizeObserver.observe(n3.frame), n3.on(mT.syncReceive, function(t3) {
-        n3.lock.unlock(t3.type, t3.uuid), n3.syncQueue.addTask(t3);
+        n3.lock.unlock(t3.type, t3.uuid), n3.mode === "sync" && n3.config.clientId === t3.clientId || n3.syncQueue.addTask(t3);
       }), n3.renderingTaskManager.eventHub.on("task-error", function(t3) {
         var e3 = t3.error, i4 = t3.task, r2 = Tm.transform(e3);
         r2.errorType === gm.RuntimeWarn ? n3.logger.warn(r2.message, n3.taskId) : n3.logger.error(r2.message, n3.taskId), n3.isLoading = false, n3.reportError(r2, i4.slideIndex);
@@ -39572,7 +39574,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.102";
+const version = "0.2.103";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
