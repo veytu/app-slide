@@ -37576,6 +37576,7 @@ class SlideController {
         } else if (this._toFreeze === -1) {
           this.unfreeze();
         }
+        this.preloadFirstRender();
       } else if (this.pollCount < MaxPollCount) {
         this.pollCount++;
         setTimeout(this.pollReadyState, 500);
@@ -37699,15 +37700,6 @@ class SlideController {
       slide.renderSlide(1);
     }
     this.pollReadyState();
-    const firstInit = (e) => {
-      if (e.currentSlideIndex == 1) {
-        setTimeout(() => {
-          this.preloadFirstRender(this.slide);
-        });
-        slide.removeListener(Slide.SLIDE_EVENTS.stateChange, firstInit);
-      }
-    };
-    slide.on(Slide.SLIDE_EVENTS.stateChange, firstInit);
   }
   registerEventListeners() {
     const { context, slide } = this;
@@ -37817,15 +37809,19 @@ class SlideController {
     });
     return slide;
   }
-  async preloadFirstRender(slide) {
+  async preloadFirstRender() {
     try {
-      await slide.preload(3);
-      await slide.preload(4);
-      await slide.preload(5);
-      await slide.preload(6);
+      const { taskId, url } = this.context.storage.state;
+      window.postMessage({
+        type: "@slide/_preload_slide_",
+        taskId,
+        prefix: url,
+        pages: [3, 4, 5, 6],
+        sessionId: "3456"
+      }, "*");
       console.log("slide first load done");
     } catch (e) {
-      console.log(e);
+      console.error(e);
       window.postMessage({
         type: "@slide/_preload_slide_first_finish_"
       });
@@ -39576,7 +39572,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.104";
+const version = "0.2.105";
 const SlideApp = {
   kind: "Slide",
   setup(context) {

@@ -182,15 +182,6 @@ export class SlideController {
     // so anyway, we start polling the slide's "ready state"
     // if in the next 20 seconds the slide is not ready, start render first page
     this.pollReadyState();
-    const firstInit = (e: any) => {
-      if (e.currentSlideIndex == 1) {
-        setTimeout(() => {
-          this.preloadFirstRender(this.slide);
-        });
-        slide.removeListener(SLIDE_EVENTS.stateChange, firstInit);
-      }
-    };
-    slide.on(SLIDE_EVENTS.stateChange, firstInit);
   }
 
   private registerEventListeners() {
@@ -301,6 +292,7 @@ export class SlideController {
       } else if (this._toFreeze === -1) {
         this.unfreeze();
       }
+      this.preloadFirstRender();
     } else if (this.pollCount < MaxPollCount) {
       this.pollCount++;
       setTimeout(this.pollReadyState, 500);
@@ -368,15 +360,22 @@ export class SlideController {
     return slide;
   }
 
-  private async preloadFirstRender(slide: Slide) {
+  private async preloadFirstRender() {
     try {
-      await slide.preload(3);
-      await slide.preload(4);
-      await slide.preload(5);
-      await slide.preload(6);
+      const { taskId, url } = this.context.storage.state;
+      window.postMessage(
+        {
+          type: "@slide/_preload_slide_",
+          taskId,
+          prefix: url,
+          pages: [3, 4, 5, 6],
+          sessionId: "3456",
+        },
+        "*"
+      );
       console.log("slide first load done");
     } catch (e) {
-      console.log(e);
+      console.error(e);
       window.postMessage({
         type: "@slide/_preload_slide_first_finish_",
       });
