@@ -37816,7 +37816,13 @@ class SlideController {
         type: "@slide/_preload_slide_",
         taskId,
         prefix: url,
-        pages: [3, 4, 5, 6],
+        pages: [
+          this.slide.slideState.currentSlideIndex + 1,
+          this.slide.slideState.currentSlideIndex + 2,
+          this.slide.slideState.currentSlideIndex + 3,
+          this.slide.slideState.currentSlideIndex + 4,
+          this.slide.slideState.currentSlideIndex + 5
+        ],
         sessionId: "3456"
       }, "*");
       console.log("slide first load done");
@@ -39572,7 +39578,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.105";
+const version = "0.2.106";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
