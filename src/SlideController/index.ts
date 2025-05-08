@@ -334,6 +334,7 @@ export class SlideController {
         maxResolutionLevel: 2,
         // forceCanvas: true,
         enableNvidiaDetect: options.enableNvidiaDetect,
+        transitionResolutionLevel: 1,
       },
       fixedFrameSize: options.fixedFrameSize,
       loaderDelegate: options.loaderDelegate,
@@ -363,6 +364,7 @@ export class SlideController {
   private async preloadFirstRender() {
     try {
       const { taskId, url } = this.context.storage.state;
+
       window.postMessage(
         {
           type: "@slide/_preload_slide_",
@@ -379,6 +381,10 @@ export class SlideController {
         },
         "*"
       );
+
+      for (let i = 2; i < this.slide.slideCount + 1; i++) {
+        await this.slide.preloadResource(i);
+      }
       console.log("slide first load done");
     } catch (e) {
       console.error(e);

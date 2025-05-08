@@ -138,23 +138,6 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
         docsViewer.viewer.setPageIndex(page - 1);
         docsViewer.viewer.setPaused();
         docsViewer.onPageChanged();
-        const length = docsViewer.viewer.pages.length;
-        if (length > 0) {
-          context.dispatchAppEvent("pageStateChange", { index: page - 1, length });
-
-          setTimeout(() => {
-            if (
-              !(
-                (docsViewer?.slideController?.slide as any).player.stagePool.stageJsons as Record<
-                  number,
-                  any
-                >
-              )[`${page + 4}`]
-            ) {
-              docsViewer?.slideController?.slide.preload(Math.min(page + 4, length));
-            }
-          });
-        }
       }
     };
 

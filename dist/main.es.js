@@ -6099,7 +6099,7 @@ var Slide = function(t) {
       }
       return d === void 0 && (d = setTimeout(b, e2)), c;
     }
-    return e2 = o(e2) || 0, n(i2) && (m = !!i2.leading, u = (g = "maxWait" in i2) ? s(o(i2.maxWait) || 0, e2) : u, v = "trailing" in i2 ? !!i2.trailing : v), console.log("max wait", u), E.cancel = function() {
+    return e2 = o(e2) || 0, n(i2) && (m = !!i2.leading, u = (g = "maxWait" in i2) ? s(o(i2.maxWait) || 0, e2) : u, v = "trailing" in i2 ? !!i2.trailing : v), E.cancel = function() {
       d !== void 0 && clearTimeout(d), f = 0, l = p = h = d = void 0;
     }, E.flush = function() {
       return d === void 0 ? c : T(r());
@@ -28653,14 +28653,13 @@ void main() {
           n2 = yield this.urlInterrupter(n2), this.logger.info(`use url interrupter, ${n2}, time: ${Date.now() - t3}`, this.taskId);
         }
         let o2;
-        const s2 = r2 + "-v2";
-        if (this.useCache && (this.logger.info("load resource from cache. " + r2, this.taskId || ""), o2 = yield this.localStorage.getItem(s2)), o2) {
-          const { scale: t3, scaledBase64: e3 } = o2;
-          this.logger.info("cache hit. " + r2, this.taskId || "");
-          const s3 = new Vh.c(e3, { resolution: 1 });
-          return this.tracker({ name: "slideResourceLoad", result: "success", reason: "", payload: { duration: Date.now() - i2, url: n2, type: "image", channel: "cache" } }), { baseTexture: s3, scale: t3 };
+        const s2 = r2 + "-v3";
+        if (this.useCache) {
+          this.logger.info("load resource from cache. " + r2, this.taskId || "");
+          const t3 = yield this.localStorage.getItem(s2);
+          t3 && (o2 = t3.base64, this.logger.info("cache hit. " + r2, this.taskId || ""), this.tracker({ name: "slideResourceLoad", result: "success", reason: "", payload: { duration: Date.now() - i2, url: n2, type: "image", channel: "cache" } }));
         }
-        {
+        if (!o2) {
           let t3;
           if (this.delegate)
             try {
@@ -28689,25 +28688,25 @@ void main() {
                 i3(new Tm(gm.ResourceError, "Failed parse blob data."));
               }, n3.readAsDataURL(t4);
             });
-          }(t3);
-          const a2 = document.createElement("img");
-          a2.src = o2, yield new Promise((t4, e3) => {
-            a2.onload = () => t4(""), a2.onerror = () => e3(new Error("load sprite image failed"));
+          }(t3), this.useCache && this.localStorage.setItem(s2, { base64: o2 }).catch(() => {
           });
-          let l2 = e2;
-          const h2 = a2.width || 1, u2 = a2.height || 1, c2 = 2048, d2 = 2048;
-          if (h2 > c2 || u2 > d2) {
-            l2 *= c2 / h2;
-            const t4 = l2 * u2;
-            t4 > d2 && (l2 *= u2 / t4);
-          }
-          const p2 = document.createElement("canvas"), f2 = Math.ceil(a2.width * l2), m2 = Math.ceil(a2.height * l2);
-          p2.width = f2, p2.height = m2;
-          p2.getContext("2d").drawImage(a2, 0, 0, f2, m2);
-          const g2 = p2.toDataURL("image/png"), v2 = new Vh.c(g2, { resolution: 1 });
-          return this.logger.info("load end. " + r2, this.taskId || ""), this.useCache && this.localStorage.setItem(s2, { scale: l2, scaledBase64: g2 }).catch(() => {
-          }), { baseTexture: v2, scale: l2 };
         }
+        const a2 = document.createElement("img");
+        a2.src = o2, yield new Promise((t3, e3) => {
+          a2.onload = () => t3(""), a2.onerror = () => e3(new Error("load sprite image failed"));
+        });
+        let l2 = e2;
+        const h2 = a2.width || 1, u2 = a2.height || 1;
+        if (h2 > 2048 || u2 > 2048) {
+          l2 *= 2048 / h2;
+          const t3 = l2 * u2;
+          t3 > 2048 && (l2 *= u2 / t3);
+        }
+        const c2 = document.createElement("canvas"), d2 = Math.ceil(a2.width * l2), p2 = Math.ceil(a2.height * l2);
+        c2.width = d2, c2.height = p2;
+        c2.getContext("2d").drawImage(a2, 0, 0, d2, p2);
+        const f2 = new Vh.c(c2, { resolution: 1 });
+        return this.logger.info("load end. " + r2, this.taskId || ""), { baseTexture: f2, scale: l2 };
       });
     }
     destroy() {
@@ -29477,6 +29476,9 @@ void main() {
   Eg.matrix = [1, 0, 0, 0, 0.1, 0, 1, 0, 0, 0.1, 0, 0, 1, 0, 0.1, 0, 0, 0, 1, 0];
   const Sg = { darken: xg, darkenLess: bg, lightenLess: Eg, lighten: Tg };
   class wg extends hg {
+    constructor(t2, e2, i2) {
+      super({ position: { x: t2.x, y: t2.y }, width: t2.width, height: t2.height }, e2, i2), this.fillColorFilter = new _g(), this.fill = new ng(this), this.json = t2, this.ctx = e2, this.parentGlobalPos = i2.parentGlobalPos, this.global = { x: i2.parentGlobalPos.x + t2.x, y: i2.parentGlobalPos.y + t2.y }, this.updateTransform({ position: { x: t2.x, y: t2.y }, width: t2.width, height: t2.height });
+    }
     get fillActive() {
       var t2, e2;
       return ((e2 = (t2 = this.container.filters) === null || t2 === void 0 ? void 0 : t2.length) !== null && e2 !== void 0 ? e2 : -1) > 0;
@@ -29484,9 +29486,6 @@ void main() {
     set fillActive(t2) {
       var e2, i2;
       t2 ? ((i2 = (e2 = this.container.filters) === null || e2 === void 0 ? void 0 : e2.indexOf(this.fillColorFilter)) !== null && i2 !== void 0 ? i2 : -1) < 0 && (this.container.filters = [this.fillColorFilter]) : this.container.filters = [];
-    }
-    constructor(t2, e2, i2) {
-      super({ position: { x: t2.x, y: t2.y }, width: t2.width, height: t2.height }, e2, i2), this.fillColorFilter = new _g(), this.fill = new ng(this), this.json = t2, this.ctx = e2, this.parentGlobalPos = i2.parentGlobalPos, this.global = { x: i2.parentGlobalPos.x + t2.x, y: i2.parentGlobalPos.y + t2.y }, this.updateTransform({ position: { x: t2.x, y: t2.y }, width: t2.width, height: t2.height });
     }
     get renderContainer() {
       return this.container;
@@ -30024,6 +30023,9 @@ void main(void){
     }), i2;
   }
   class hv {
+    constructor(t2, e2, i2, n2, r2) {
+      this.ctx = t2, this.fillStyle = e2, this.width = i2, this.height = n2, this.config = r2, this.clonedObjects = [], this._displayObject = null, this.gradientHash = jm()(`${JSON.stringify(e2)}${Math.ceil(i2)}${Math.ceil(n2)}`);
+    }
     get displayObject() {
       return this._displayObject || (this._displayObject = this.createDisplayObject()), this._displayObject;
     }
@@ -30032,9 +30034,6 @@ void main(void){
     }
     get hasFill() {
       return !!this.fillStyle && this.fillStyle.fillType !== "noFill";
-    }
-    constructor(t2, e2, i2, n2, r2) {
-      this.ctx = t2, this.fillStyle = e2, this.width = i2, this.height = n2, this.config = r2, this.clonedObjects = [], this._displayObject = null, this.gradientHash = jm()(`${JSON.stringify(e2)}${Math.ceil(i2)}${Math.ceil(n2)}`);
     }
     createDisplayObject() {
       var t2, e2;
@@ -30241,9 +30240,6 @@ void main(void){
     });
   };
   class Lv extends Za.a {
-    get container() {
-      return this._targetContainer;
-    }
     constructor(t2, e2, i2, n2, r2, o2) {
       super(), this.effects = [], this.attachs = [], this.frames = /* @__PURE__ */ new Map(), this._targetContainer = new Oh.b(), this.frameCount = 1, this.ctx = n2, this.originWidth = t2.width, this.originHeight = t2.height, this.cacheKey = i2, this.sourceSprite = new ep();
       for (const i3 of e2)
@@ -30269,6 +30265,9 @@ void main(void){
       this.sourceSprite.name = "source-sprite";
       const s2 = new Lh.j(0, 0, this.originWidth, this.originHeight), a2 = this.effects.map((t3) => t3.filterAreaJustify(s2)), l2 = a2.map((t3) => t3.x), h2 = a2.map((t3) => t3.y), u2 = a2.map((t3) => t3.width), c2 = a2.map((t3) => t3.height);
       this.filterArea = new Lh.j(Math.min(...l2, 0), Math.min(...h2, 0), Math.max(...u2, this.originWidth), Math.max(...c2, this.originHeight)), this.sourceSprite.filters = this.effects, this.sourceSprite.filterArea = new Lh.j(0, 0, this.filterArea.width, this.filterArea.height), this._targetSprite = new ep(), this._targetSprite.name = "effect-sprite", this._targetContainer.sortableChildren = true, this._targetSprite.zIndex = 999, this._targetContainer.addChild(this._targetSprite);
+    }
+    get container() {
+      return this._targetContainer;
     }
     getSdfTexture(t2, e2) {
       return Nv(this, void 0, void 0, function* () {
@@ -30700,6 +30699,12 @@ void main(void){
     });
   };
   class qv {
+    constructor(t2, e2, i2, n2, r2) {
+      var o2;
+      this.iterateElements = [], this.paragraphs = [], this.effectList = [], this.container = new Oh.b(), this.textContainer = new Oh.b(), this.textColorFilter = new _g(), this.json = t2, this.ctx = e2, this.shapeRotation = r2, this.parentGlobalPos = n2, this.iterateType = i2, this.container.name = "textBody", this.global = { x: this.parentGlobalPos.x + t2.position.x, y: this.parentGlobalPos.y + t2.position.y }, this.container.position.x = t2.position.x, this.container.position.y = t2.position.y, this.container.scale.x = t2.scale.x, this.container.scale.y = t2.scale.y;
+      const s2 = new Jd();
+      s2.drawRect(0, 0, t2.width, t2.height), this.container.addChild(s2), this.container.addChild(this.textContainer), this.textColorFilter.currentColor = "#000000FF", this.textColorFilter.designColor = "#000000FF", this.effectList = (o2 = t2.effectList) !== null && o2 !== void 0 ? o2 : [];
+    }
     get width() {
       return this.json.width;
     }
@@ -30726,12 +30731,6 @@ void main(void){
     set on(t2) {
       var e2;
       t2 === "true" ? ((e2 = this.container.filters) !== null && e2 !== void 0 ? e2 : []).indexOf(this.textColorFilter) < 0 && (this.container.filters = [this.textColorFilter]) : this.container.filters = [];
-    }
-    constructor(t2, e2, i2, n2, r2) {
-      var o2;
-      this.iterateElements = [], this.paragraphs = [], this.effectList = [], this.container = new Oh.b(), this.textContainer = new Oh.b(), this.textColorFilter = new _g(), this.json = t2, this.ctx = e2, this.shapeRotation = r2, this.parentGlobalPos = n2, this.iterateType = i2, this.container.name = "textBody", this.global = { x: this.parentGlobalPos.x + t2.position.x, y: this.parentGlobalPos.y + t2.position.y }, this.container.position.x = t2.position.x, this.container.position.y = t2.position.y, this.container.scale.x = t2.scale.x, this.container.scale.y = t2.scale.y;
-      const s2 = new Jd();
-      s2.drawRect(0, 0, t2.width, t2.height), this.container.addChild(s2), this.container.addChild(this.textContainer), this.textColorFilter.currentColor = "#000000FF", this.textColorFilter.designColor = "#000000FF", this.effectList = (o2 = t2.effectList) !== null && o2 !== void 0 ? o2 : [];
     }
     getTextElement(t2, e2) {
       return t2 === "paragraph" ? this.paragraphs[e2[0]] : null;
@@ -30882,11 +30881,11 @@ void main(void){
     }
   }
   class Jv {
-    get displayObject() {
-      return this._displayObject;
-    }
     constructor(t2, e2, i2, n2, r2, o2, s2, a2, l2, h2, u2) {
       this.id = t2, this.ctx = e2, this.paths = i2, this.hash = n2, this.nept = r2, this.width = o2, this.height = s2, this.lineStyle = a2, this.shouldFill = l2, this.bgColor = h2, this.lnColor = u2, this.clonedObjects = [], this._displayObject = null, this.isRectangle = false, this.isPureRect = false, this.isColoredPureRect = false, this.isRectangle = this.rectangleDetect(i2), this.isRectangle && l2 ? this.bgColor ? this.isColoredPureRect = true : this.isPureRect = true : this.ctx.graphicsTexture.addGraphics(this.id, this.paths, this.hash, this.nept, this.width, this.height, this.lineStyle, this.ctx.objectPoolGroup, this.shouldFill, this.bgColor, this.lnColor);
+    }
+    get displayObject() {
+      return this._displayObject;
     }
     pointDis(t2, e2) {
       return Math.pow(t2.x - e2.x, 2) + Math.pow(t2.y - e2.y, 2);
@@ -31279,9 +31278,6 @@ void main(void){
   }
   const l_ = { medianContainerClass: "median-container", hoverHiddeDelay: 1500, portalWidth: 300, portalHeight: 50, hiddenOpacity: "0", hoverOpacity: "1", opacityAnimationTime: 0.4 };
   class h_ {
-    get clippedDuration() {
-      return this.duration;
-    }
     constructor(t2) {
       var e2, i2;
       this.progress = document.createElement("div"), this.totalTime = document.createElement("span"), this.playButton = document.createElement("div"), this.pauseButton = document.createElement("div"), this.currentTime = document.createElement("span"), this.mediaController = document.createElement("div"), this.currentProgress = document.createElement("div"), this.fullScreenButton = document.createElement("div"), this.exitFullScreenButton = document.createElement("div"), this.medianIsEnd = false, this.pickBookmarkIndex = 0, this.playCallBackList = [], this.duration = 0, this.isVideo = false, this.start = 0, this.end = 0, this.fullscreenStatus = false, this.fadeState = { in: false, out: false }, this.changeMediaProgress = (t3) => {
@@ -31343,6 +31339,9 @@ void main(void){
       }, this.targetId = t2.targetId, this.ctx = t2.ctx, this.height = t2.height, this.width = t2.width, this.target = t2.target, this.media = t2.media, this.info = t2.info, this.shapeId = t2.shapeId, this.canvasElement = t2.canvasElement, this.media.type === "video" && (this.isVideo = true), this.getMedianContainer(), this.createMediaController(), this.info.cut && (this.start = (e2 = this.info.cut.start) !== null && e2 !== void 0 ? e2 : 0, this.end = (i2 = this.info.cut.end) !== null && i2 !== void 0 ? i2 : 0), this.info.bookmarkList && (this.bookmarkList = this.info.bookmarkList.sort((t3, e3) => t3.time - e3.time)), this.ctx.globalEventHub.on("togglePlayStatus", (t3) => {
         t3 === this.targetId && (this.media.isPlaying ? this.pauseMediaFromCtrl(false) : this.playMediaFromCtrl(false));
       });
+    }
+    get clippedDuration() {
+      return this.duration;
     }
     getMedianContainer() {
       var t2;
@@ -31572,27 +31571,6 @@ void main(void){
     });
   };
   class p_ extends Za.a {
-    get videoElement() {
-      return this.videoResource.source;
-    }
-    get currentTime() {
-      var t2, e2;
-      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.currentTime) !== null && e2 !== void 0 ? e2 : 0;
-    }
-    set currentTime(t2) {
-      this.rtcAudio.currentTime = t2, this.videoElement && (this.videoElement.currentTime = t2);
-    }
-    get paused() {
-      var t2, e2;
-      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.paused) === null || e2 === void 0 || e2;
-    }
-    get duration() {
-      var t2, e2;
-      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.duration) !== null && e2 !== void 0 ? e2 : 0;
-    }
-    get clippedDuration() {
-      return this.controller.clippedDuration;
-    }
     constructor(t2) {
       var e2, i2, n2, r2, o2, s2, a2;
       super(), this.type = "video", this.sprite = new ep(), this.isPlaying = false, this.isGlobalPause = false, this.fullscreen = false, this.url = "", this.isLoaded = false, this.onVideoResourceLoaded = () => {
@@ -31637,6 +31615,27 @@ void main(void){
           t3 === "timeupdate" && this.isPlaying, this.emit(t3);
         });
       }), this.ctx.activeMedia.add(this), this.ctx.volumeAdjuster.on("update", this.updateVolume), this.ctx.globalEventHub.on("syncFullscreenVideoState", this.syncFullscreenVideoState);
+    }
+    get videoElement() {
+      return this.videoResource.source;
+    }
+    get currentTime() {
+      var t2, e2;
+      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.currentTime) !== null && e2 !== void 0 ? e2 : 0;
+    }
+    set currentTime(t2) {
+      this.rtcAudio.currentTime = t2, this.videoElement && (this.videoElement.currentTime = t2);
+    }
+    get paused() {
+      var t2, e2;
+      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.paused) === null || e2 === void 0 || e2;
+    }
+    get duration() {
+      var t2, e2;
+      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.duration) !== null && e2 !== void 0 ? e2 : 0;
+    }
+    get clippedDuration() {
+      return this.controller.clippedDuration;
     }
     showController() {
       this.controller.show();
@@ -32732,10 +32731,11 @@ void main(void){
   }
   function by(t2) {
     return function(t3) {
-      return !!(t3 == null ? void 0 : t3.cBhvr);
-    }(t2) ? t2.cBhvr.ctn : function(t3) {
       var e2;
-      return !!((e2 = t3 == null ? void 0 : t3.cMediaNode) === null || e2 === void 0 ? void 0 : e2.ctn);
+      return !!((e2 = t3) === null || e2 === void 0 ? void 0 : e2.cBhvr);
+    }(t2) ? t2.cBhvr.ctn : function(t3) {
+      var e2, i2;
+      return !!((i2 = (e2 = t3) === null || e2 === void 0 ? void 0 : e2.cMediaNode) === null || i2 === void 0 ? void 0 : i2.ctn);
     }(t2) ? t2.cMediaNode.ctn : t2.ctn;
   }
   var Ty = function(t2, e2, i2, n2) {
@@ -33401,7 +33401,7 @@ void main(void){
           this.tasks.splice(e2 + 1, 0, ...t2.sub);
         }
       }).catch((e2) => {
-        t2.state = "error", this.logger.error(`${e2} ${e2 == null ? void 0 : e2.stack} ${t2 == null ? void 0 : t2.name}`, this.taskId), this.emit("task-error", Tm.transform(e2), this.slideIndex);
+        t2.state = "error", this.logger.error(`${e2} ${e2.stack}`, this.taskId), this.emit("task-error", Tm.transform(e2), this.slideIndex);
       }));
     }
     applyAll() {
@@ -33425,7 +33425,7 @@ void main(void){
                   }
                 } catch (e2) {
                   let i2;
-                  console.error(e2), i2 = (e2 == null ? void 0 : e2.errorType) ? e2 : new Tm(gm.RuntimeError, `subtask ${t2.name} error. ${e2}`), t2.state = "error", this.logger.error(`${e2} ${e2 == null ? void 0 : e2.stack} ${e2 == null ? void 0 : e2.name}`, this.taskId), this.emit("task-error", Tm.transform(i2), this.slideIndex);
+                  i2 = (e2 == null ? void 0 : e2.errorType) ? e2 : new Tm(gm.RuntimeError, `subtask ${t2.name} error. ${e2}`), t2.state = "error", this.logger.error(`${e2} ${e2.stack}`, this.taskId), this.emit("task-error", Tm.transform(i2), this.slideIndex);
                   break;
                 }
               }
@@ -33668,9 +33668,7 @@ void main(void){
       e2.addMTask(() => Dy(this, void 0, void 0, function* () {
         const i2 = this.stageCtxs[t2];
         i2.graphicsTexture.pack().forEach((t3, n2) => {
-          e2.addSubMTask(() => Dy(this, void 0, void 0, function* () {
-            return i2.graphicsTexture.render(t3, n2, this.objPoolGroup, 1);
-          }), "@StagePool[graphicsTexture.render]");
+          e2.addSubMTask(() => i2.graphicsTexture.render(t3, n2, this.objPoolGroup, 1), "@StagePool[graphicsTexture.render]");
         });
       }), "@StagePool[createGraphicsTexture]");
     }
@@ -33697,16 +33695,33 @@ void main(void){
         this.destroyStageByIndex(e2);
       });
     }
+    preloadResource(t2) {
+      return Dy(this, void 0, void 0, function* () {
+        const e2 = yield this.loader.fetchJson(`${this.url}/${this.taskId}/jsonOutput/slide-${t2}.json`), { coloredSheets: i2, sheets: n2 } = e2, r2 = i2 || n2;
+        for (const t3 of r2) {
+          yield this.loader.fetchJson(`${this.url}/${this.taskId}/jsonOutput/${t3}.json`);
+          let i3 = 1;
+          if (e2.width > this.maxResolution.x || e2.height > this.maxResolution.y) {
+            i3 = this.maxResolution.x / e2.width;
+            const t4 = i3 * e2.height;
+            t4 > this.maxResolution.y && (i3 *= this.maxResolution.y / t4);
+          }
+          yield this.loader.fetchPng(`${this.url}/${this.taskId}/jsonOutput/${t3}.png`, i3);
+        }
+      });
+    }
     preload(t2, e2 = false) {
-      if (this.stageImpls[t2] || this.stageStates[t2])
-        return Promise.resolve();
-      const i2 = new Oy(t2, this.taskId, this.logger);
-      return i2.on("task-error", (t3, e3) => {
-        delete this.stageStates[e3], delete this.stageImpls[e3], delete this.stageCtxs[e3], this.errorChannel.emit("error", t3, e3);
-      }), this.stageStates[t2] = { state: "load", task: i2 }, this.createCtx(t2), this.loadStageJson(t2), this.loadSpriteSheets(t2), this.createStage(t2), this.preRenderStage(t2), this.createGraphicsTexture(t2), this.renderStage(t2), this.microTaskManager.addTask(i2), e2 ? i2.applyAll() : new Promise((e3) => {
-        i2.once("task-finish", () => {
+      return this.stageImpls[t2] || this.stageStates[t2] ? Promise.resolve() : new Promise((i2, n2) => {
+        const r2 = new Oy(t2, this.taskId, this.logger);
+        r2.on("task-error", (t3, e3) => {
+          delete this.stageStates[e3], delete this.stageImpls[e3], delete this.stageCtxs[e3], this.errorChannel.emit("error", t3, e3), n2(t3);
+        }), this.stageStates[t2] = { state: "load", task: r2 }, this.createCtx(t2), this.loadStageJson(t2), this.loadSpriteSheets(t2), this.createStage(t2), this.preRenderStage(t2), this.createGraphicsTexture(t2), this.renderStage(t2), this.microTaskManager.addTask(r2), e2 ? r2.applyAll().then(() => {
+          i2();
+        }).catch((t3) => {
+          n2(t3);
+        }) : r2.once("task-finish", () => {
           this.stageStates[t2].state = "finish";
-          Object.keys(this.stageStates).length > 2 * this.cacheCount + 1 && this.destroyStage(), e3();
+          Object.keys(this.stageStates).length > 2 * this.cacheCount + 1 && this.destroyStage(), i2();
         });
       });
     }
@@ -33815,7 +33830,7 @@ void main(void){
     }
     canvas(t2, e2, i2, n2) {
       let r2, o2, s2, a2 = false, l2 = false;
-      t2 && (t2 instanceof Vh.p ? s2 = t2 : (s2 = e2.generateTexture(t2), l2 = true)), s2 ? (r2 = s2.baseTexture.resolution, o2 = s2.frame, a2 = false, e2.renderTexture.bind(s2)) : (r2 = e2.resolution, a2 = true, o2 = ky, o2.width = e2.width, o2.height = e2.height, e2.renderTexture.bind(null));
+      t2 && (t2 instanceof Vh.p ? s2 = t2 : (s2 = e2.generateTexture(t2), l2 = true)), s2 ? (r2 = s2.baseTexture.resolution, o2 = s2.frame, a2 = false) : (r2 = e2.resolution, a2 = true, o2 = ky, o2.width = e2.width, o2.height = e2.height, e2.renderTexture.bind(null));
       const h2 = Math.floor(o2.width * r2 + 1e-4), u2 = Math.floor(o2.height * r2 + 1e-4);
       let c2 = document.createElement("canvas");
       c2.width = h2, c2.height = u2;
@@ -33883,19 +33898,8 @@ void main(void){
   Ph.skipHello();
   const zy = { randomBar: "RandomLines", circle: "Shape", ripple: "Ripples", wipe: "Erase", dissolve: "Dissolve", morph: "Smooth", fade: "FadeInOut", push: "Push", split: "Separation", reveal: "Display", pull: "Uncover", cover: "Cover", flash: "Flash", checker: "Checkerboard", blinds: "WindowShades", curtains: "Curtain", fallOver: "Fall", drape: "Suspension", wheel: "Clock", comb: "Combing", warp: "Scale", peelOff: "PeelOff", flip: "Flip", gallery: "Gallery", switch: "Switch", prism: "Prism", doors: "Doors" }, Vy = { mainSeqStepChange: "mainSeqStepChange", mainSeqStateChange: "mainSeqStateChange", interactiveSeqStateChange: "interactiveSeqStateChange", interactiveSeqAction: "interactiveSeqAction", mainSeqStepStart: "mainSeqStepStart", mainSeqStepEnd: "mainSeqStepEnd", slideChange: "slideChange", renderStart: "renderStart", renderEnd: "renderEnd", hyperlinkTrigger: "hyperlinkTrigger", animateStart: "animateStart", animateEnd: "animateEnd", mediaSeek: "mediaSeek", mediaPlay: "mediaPlay", mediaPause: "mediaPause", mediaStop: "mediaStop", requestNextSlide: "requestNextSlide", requestPrevSlide: "requestPrevSlide", requestGotoSlide: "requestGotoSlide", requestOpenUrl: "requestOpenUrl", userInput: "userInput", fullscreenChange: "fullscreenChange", changeLocalFullscreenState: "changeLocalFullscreenState" };
   class Wy extends Za.a {
-    get view() {
-      return this.app.renderer ? this.app.view : null;
-    }
-    get nextSlideIndex() {
-      var t2;
-      return ((t2 = this.currentStage) === null || t2 === void 0 ? void 0 : t2.json.nextIndex) ? this.currentStage.json.nextIndex : this.currentIndex + 1;
-    }
-    get prevSlideIndex() {
-      var t2;
-      return ((t2 = this.currentStage) === null || t2 === void 0 ? void 0 : t2.json.prevIndex) ? this.currentStage.json.prevIndex : this.currentIndex - 1;
-    }
     constructor(t2, e2 = {}) {
-      super(), this.errorChannel = new Za.a(), this.transactionPlayer = null, this.isForward = true, this.drawCall = 0, this.scale = 1, this._isPaused = false, this.maxResolution = new Lh.g(0, 0), this.isNVIDIA = false, this.fps = new bm(), this.designWidth = 0, this.designHeight = 0, this.currentIndex = 0, this.slideCount = 0, this.runtime = { drawCall: 0, fps: 0 }, this.globalEventHub = new Za.a(), this.globalVideoBackground = new Jd(), this.globalVideoSprite = new ep(), this.onMousemoveTimeout = null, this.cacheFunctionMap = /* @__PURE__ */ new Map(), this.isPlayerPaused = () => this._isPaused, this.onWebGLLost = () => {
+      super(), this.errorChannel = new Za.a(), this.transactionPlayer = null, this.isForward = true, this.drawCall = 0, this.scale = 1, this._isPaused = false, this.maxResolution = new Lh.g(0, 0), this.transitionResolution = new Lh.g(0, 0), this.isNVIDIA = false, this.fps = new bm(), this.designWidth = 0, this.designHeight = 0, this.currentIndex = 0, this.slideCount = 0, this.runtime = { drawCall: 0, fps: 0 }, this.globalEventHub = new Za.a(), this.globalVideoBackground = new Jd(), this.globalVideoSprite = new ep(), this.onMousemoveTimeout = null, this.cacheFunctionMap = /* @__PURE__ */ new Map(), this.isPlayerPaused = () => this._isPaused, this.onWebGLLost = () => {
         this.errorChannel.emit("error", new Tm(gm.CanvasCrash, "webgl context lost."));
       }, this.fullscreenOnMousemove = ({ index: t3, targetId: e3 }) => {
         this.globalEventHub.emit("controllerShowStatusChange", { slideIndex: t3, targetId: e3, status: true }), this.onMousemoveTimeout && clearTimeout(this.onMousemoveTimeout), this.onMousemoveTimeout = setTimeout(() => {
@@ -33954,7 +33958,7 @@ void main(void){
           this.logger.error("removeChild error: PPTPlayer:1062", this.taskId);
         }
         this.globalEventHub.emit("onFullscreenChange", { status: false, slideIndex: this.currentIndex, targetId: (e3 = this.currentStage) === null || e3 === void 0 ? void 0 : e3.ctx.latestChangeFullscreenTargetId }), this.clearFullscreenEventListenersWithAppView(), t3 && this.emit(Vy.changeLocalFullscreenState, { status: false, slideIndex: this.currentIndex, targetId: (i3 = this.currentStage) === null || i3 === void 0 ? void 0 : i3.ctx.latestChangeFullscreenTargetId });
-      }, this.logger = t2.logger, this.tracker = t2.tracker, this.mode = t2.mode, this.volumeAdjuster = t2.volumeAdjuster, this.localStorage = new Uy(this.logger), this.cachedExtract = new Gy(this.localStorage), this.enableWebAudio = !!$a()(t2.enableWebAudio) || t2.enableWebAudio, this.config = { minFPS: $a()(e2.minFPS) ? 30 : e2.minFPS, maxFPS: $a()(e2.maxFPS) ? 40 : e2.maxFPS, resolution: $a()(e2.resolution) ? 1 : e2.resolution, autoFPS: !$a()(e2.autoFPS) && e2.autoFPS, autoResolution: !$a()(e2.autoResolution) && e2.autoResolution, transactionBgColor: $a()(e2.transactionBgColor) ? 0 : e2.transactionBgColor, maxResolutionLevel: this.getMaxResolution(e2.maxResolutionLevel), forceCanvas: !$a()(e2.forceCanvas) && e2.forceCanvas, enableNvidiaDetect: !$a()(e2.enableNvidiaDetect) && e2.enableNvidiaDetect }, this.updateMaxResolutionLevel(this.config.maxResolutionLevel), this.loader = new Lm(this.localStorage, t2.useLocalCache, this.logger, this.tracker, t2.resourceTimeout, t2.loadDelegate, t2.urlInterrupter);
+      }, this.logger = t2.logger, this.tracker = t2.tracker, this.mode = t2.mode, this.volumeAdjuster = t2.volumeAdjuster, this.localStorage = new Uy(this.logger), this.cachedExtract = new Gy(this.localStorage), this.enableWebAudio = !!$a()(t2.enableWebAudio) || t2.enableWebAudio, this.config = { minFPS: $a()(e2.minFPS) ? 30 : e2.minFPS, maxFPS: $a()(e2.maxFPS) ? 40 : e2.maxFPS, resolution: $a()(e2.resolution) ? 1 : e2.resolution, autoFPS: !$a()(e2.autoFPS) && e2.autoFPS, autoResolution: !$a()(e2.autoResolution) && e2.autoResolution, transactionBgColor: $a()(e2.transactionBgColor) ? 0 : e2.transactionBgColor, maxResolutionLevel: this.getMaxResolution(e2.maxResolutionLevel), forceCanvas: !$a()(e2.forceCanvas) && e2.forceCanvas, enableNvidiaDetect: !$a()(e2.enableNvidiaDetect) && e2.enableNvidiaDetect, transitionResolutionLevel: this.getMaxResolution(e2.transitionResolutionLevel) }, this.updateMaxResolutionLevel(this.config.maxResolutionLevel), this.updateTransitionResolutionLevel(this.config.transitionResolutionLevel), this.loader = new Lm(this.localStorage, t2.useLocalCache, this.logger, this.tracker, t2.resourceTimeout, t2.loadDelegate, t2.urlInterrupter);
       const i2 = Ph.isWebGLSupported();
       this.app = new Wh({ antialias: true, autoDensity: false, backgroundColor: 16777215, forceCanvas: this.config.forceCanvas || !i2 }), globalThis.__PIXI_APP__ = this.app, this.tracker({ name: "slidePlayerCreate", result: "", reason: "", payload: { webgl: i2, resolution: this.config.resolution, minFPS: this.config.minFPS, maxFPS: this.config.maxFPS, maxResolutionLevel: this.config.maxResolutionLevel, forceCanvas: this.config.forceCanvas } }), this.updateConfig(this.config), this.app.ticker.maxFPS = 60, this.app.ticker.minFPS = this.config.minFPS, this.app.ticker.maxFPS = this.config.maxFPS, this.app.view.style.zIndex = "1", this.app.stage.sortableChildren = true;
       const n2 = this.app.renderer;
@@ -33984,6 +33988,17 @@ void main(void){
       }
       this.globalEventHub.on("requestFullscreen", this.onRequestFullscreenVideo), this.globalEventHub.on("requestCancelFullscreen", this.onRequestCancelFullscreenVideo);
     }
+    get view() {
+      return this.app.renderer ? this.app.view : null;
+    }
+    get nextSlideIndex() {
+      var t2;
+      return ((t2 = this.currentStage) === null || t2 === void 0 ? void 0 : t2.json.nextIndex) ? this.currentStage.json.nextIndex : this.currentIndex + 1;
+    }
+    get prevSlideIndex() {
+      var t2;
+      return ((t2 = this.currentStage) === null || t2 === void 0 ? void 0 : t2.json.prevIndex) ? this.currentStage.json.prevIndex : this.currentIndex - 1;
+    }
     getMaxResolution(t2) {
       return !$a()(t2) && Number.isInteger(t2) ? (t2 < 1 && (t2 = 1), t2 > 4 && (t2 = 4), t2) : Wy.platform.isAndroid() || Wy.platform.isIOS() ? 2 : 4;
     }
@@ -33992,12 +34007,28 @@ void main(void){
       const e2 = [640, 960, 1280, 1920, 3200][t2], i2 = [360, 540, 720, 1080, 1800][t2];
       this.maxResolution.set(e2, i2);
     }
+    updateTransitionResolutionLevel(t2) {
+      t2 < 0 && (t2 = 0), t2 > 4 && (t2 = 4);
+      const e2 = [640, 960, 1280, 1920, 3200][t2], i2 = [360, 540, 720, 1080, 1800][t2];
+      this.transitionResolution.set(e2, i2);
+    }
     updateConfig(t2) {
-      $a()(t2.maxFPS) || $a()(t2.minFPS) || (this.config.maxFPS = t2.maxFPS, this.app.ticker.maxFPS = t2.maxFPS, this.config.minFPS = t2.minFPS, this.app.ticker.minFPS = t2.minFPS), $a()(t2.resolution) || (this.config.resolution = t2.resolution, this.updateResolution(this.scale * this.config.resolution)), $a()(t2.autoFPS) || (this.config.autoFPS = t2.autoFPS), $a()(t2.autoResolution) || (this.config.autoResolution = t2.autoResolution), $a()(t2.transactionBgColor) || (this.config.transactionBgColor = t2.transactionBgColor), this.taskId && this.logger.info("ppt player update config: " + JSON.stringify(this.config), this.taskId), $a()(t2.maxResolutionLevel) || (this.config.maxResolutionLevel = t2.maxResolutionLevel, this.updateMaxResolutionLevel(this.config.maxResolutionLevel));
+      $a()(t2.maxFPS) || $a()(t2.minFPS) || (this.config.maxFPS = t2.maxFPS, this.app.ticker.maxFPS = t2.maxFPS, this.config.minFPS = t2.minFPS, this.app.ticker.minFPS = t2.minFPS), $a()(t2.resolution) || (this.config.resolution = t2.resolution, this.updateResolution(this.scale * this.config.resolution)), $a()(t2.autoFPS) || (this.config.autoFPS = t2.autoFPS), $a()(t2.autoResolution) || (this.config.autoResolution = t2.autoResolution), $a()(t2.transactionBgColor) || (this.config.transactionBgColor = t2.transactionBgColor), this.taskId && this.logger.info("ppt player update config: " + JSON.stringify(this.config), this.taskId), $a()(t2.maxResolutionLevel) || (this.config.maxResolutionLevel = t2.maxResolutionLevel, this.updateMaxResolutionLevel(this.config.maxResolutionLevel)), $a()(t2.transitionResolutionLevel) || (this.config.transitionResolutionLevel = t2.transitionResolutionLevel, this.updateTransitionResolutionLevel(this.config.transitionResolutionLevel));
     }
     preload(t2) {
       return jy(this, void 0, void 0, function* () {
-        t2 < 1 || t2 > this.slideCount || (this.logger.info(`preload slide ${t2} begin`, this.taskId), yield this.stagePool.preload(t2), this.logger.info(`preload slide ${t2} end`, this.taskId));
+        if (t2 < 1 || t2 > this.slideCount)
+          return;
+        const e2 = Date.now();
+        this.logger.info(`preload slide ${t2} begin`, this.taskId), yield this.stagePool.preload(t2), this.logger.info(`preload slide ${t2} end`, this.taskId), this.tracker({ name: "slidePreload", reason: "", result: "", payload: { duration: Date.now() - e2, index: t2 } });
+      });
+    }
+    preloadResource(t2) {
+      return jy(this, void 0, void 0, function* () {
+        if (t2 < 1 || t2 > this.slideCount)
+          return;
+        const e2 = Date.now();
+        this.logger.info(`preload slide resource ${t2} begin`, this.taskId), yield this.stagePool.preloadResource(t2), this.logger.info(`preload slide resource ${t2} end`, this.taskId), this.tracker({ name: "slidePreloadResource", reason: "", result: "", payload: { duration: Date.now() - e2, index: t2 } });
       });
     }
     setResourceData(t2, e2) {
@@ -34064,10 +34095,12 @@ void main(void){
       });
     }
     getTransactionTexture(t2, e2, i2, n2) {
-      const r2 = Vh.p.create({ width: t2.json.width, height: t2.json.height, resolution: 1 });
-      this.app.renderer.render(t2.container, { renderTexture: r2 });
-      const o2 = this.cachedExtract.canvas(r2, this.app.renderer, n2, i2);
-      return new b(o2);
+      let r2 = this.transitionResolution.x / t2.json.width;
+      Math.floor(t2.json.height * r2 + 1e-4) > t2.json.height && (r2 = this.transitionResolution.y / t2.json.height), r2 = Math.min(1, r2);
+      const o2 = Vh.p.create({ width: t2.json.width * r2, height: t2.json.height * r2, resolution: 1 }), s2 = new Lh.d();
+      s2.scale(r2, r2), this.app.renderer.render(t2.container, { renderTexture: o2, transform: s2 });
+      const a2 = this.cachedExtract.canvas(o2, this.app.renderer, n2, i2);
+      return new b(a2);
     }
     renderToBase64(t2, e2, i2) {
       return jy(this, void 0, void 0, function* () {
@@ -36131,7 +36164,7 @@ void main(void){
   }
   var mT = { syncDispatch: "syncDispatch", syncReceive: "syncReceive", syncEventLag: "syncEventLag", renderStart: "renderStart", renderEnd: "renderEnd", renderError: "renderError", slideChange: "slideChange", mainSeqStepStart: "mainSeqStepStart", mainSeqStepEnd: "mainSeqStepEnd", animateStart: "animateStart", animateEnd: "animateEnd", stateChange: "stateChange", slideStepEnd: "slideEnd", slideStepStart: "slideStart" }, gT = { taskId: "", url: "", currentSlideIndex: -1, mainSeqStep: -1, mainSeqState: null, mediaState: /* @__PURE__ */ Object.create(null), interactiveSeqState: /* @__PURE__ */ Object.create(null) }, vT = "";
   try {
-    vT = "1.4.21";
+    vT = "1.4.22-alpha.0";
   } catch (t2) {
     vT = "dev";
   }
@@ -36725,6 +36758,8 @@ void main(void){
       });
     }, e2.prototype.preload = function(t3) {
       return this.player ? this.player.preload(t3) : Promise.resolve();
+    }, e2.prototype.preloadResource = function(t3) {
+      return this.player ? this.player.preloadResource(t3) : Promise.resolve();
     }, e2.prototype.destroy = function() {
       var t3 = this;
       this.logger.info("pre destroy slide", ""), this.isLoading ? this.waitLoadEnd().then(function() {
@@ -37786,7 +37821,8 @@ class SlideController {
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
         resolution: options.resolution,
         maxResolutionLevel: 2,
-        enableNvidiaDetect: options.enableNvidiaDetect
+        enableNvidiaDetect: options.enableNvidiaDetect,
+        transitionResolutionLevel: 1
       },
       fixedFrameSize: options.fixedFrameSize,
       loaderDelegate: options.loaderDelegate,
@@ -37823,6 +37859,9 @@ class SlideController {
         ],
         sessionId: "3456"
       }, "*");
+      for (let i = 2; i < this.slide.slideCount + 1; i++) {
+        await this.slide.preloadResource(i);
+      }
       console.log("slide first load done");
     } catch (e) {
       console.error(e);
@@ -39576,7 +39615,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.107";
+const version = "0.2.110";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -39613,16 +39652,6 @@ const SlideApp = {
         docsViewer.viewer.setPageIndex(page - 1);
         docsViewer.viewer.setPaused();
         docsViewer.onPageChanged();
-        const length = docsViewer.viewer.pages.length;
-        if (length > 0) {
-          context.dispatchAppEvent("pageStateChange", { index: page - 1, length });
-          setTimeout(() => {
-            var _a3, _b;
-            if (!((_a3 = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _a3.slide).player.stagePool.stageJsons[`${page + 4}`]) {
-              (_b = docsViewer == null ? void 0 : docsViewer.slideController) == null ? void 0 : _b.slide.preload(Math.min(page + 4, length));
-            }
-          });
-        }
       }
     };
     const mountSlideController = (options) => {
