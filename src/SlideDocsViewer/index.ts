@@ -51,6 +51,7 @@ export class SlideDocsViewer {
   private readonly baseScenePath: string;
   private readonly appId: string;
   private isViewMounted = false;
+  private visible = true;
 
   public constructor({
     context,
@@ -191,6 +192,11 @@ export class SlideDocsViewer {
       return () => this.whiteboardView.callbacks.off("onSizeUpdated", this.scaleDocsToFit);
     });
 
+    this.sideEffect.add(() => {
+      document.addEventListener("visibilitychange", this.onVisibilityChange);
+      return () => document.removeEventListener("visibilitychange", this.onVisibilityChange);
+    });
+
     return this;
   }
 
@@ -207,7 +213,9 @@ export class SlideDocsViewer {
   };
 
   protected onRenderStart = () => {
-    this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
+    if (this.visible) {
+      this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
+    }
     this.viewer.setPlaying();
   };
 
@@ -434,5 +442,10 @@ export class SlideDocsViewer {
     const dataUrl = pdf.output("arraybuffer");
     const title = this.box.title;
     this.reportProgress(100, { pdf: dataUrl, title });
+  };
+  private onVisibilityChange = () => {
+    setTimeout(() => {
+      this.visible = document.visibilityState === "visible";
+    }, 100);
   };
 }

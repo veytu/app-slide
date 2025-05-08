@@ -314,6 +314,7 @@ declare class SlideDocsViewer {
     private readonly baseScenePath;
     private readonly appId;
     private isViewMounted;
+    private visible;
     constructor({ context, box, view, mountSlideController, mountWhiteboard, baseScenePath, appId, urlInterrupter, onPagesReady, onNavigate, }: SlideDocsViewerConfig);
     $slide: HTMLDivElement;
     $whiteboardView: HTMLDivElement;
@@ -349,6 +350,7 @@ declare class SlideDocsViewer {
     private getWhiteSnapshot;
     private reportProgress;
     private toPdf;
+    private onVisibilityChange;
 }
 
 interface PreviewParams {

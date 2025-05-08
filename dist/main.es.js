@@ -37749,7 +37749,6 @@ class SlideController {
       var _a2;
       slide.player.app.ticker.minFPS = 25;
       slide.player.app.ticker.maxFPS = 40;
-      console.log("renderstart");
       (_a2 = this.onRenderStart) == null ? void 0 : _a2.call(this);
     });
     slide.on(Slide.SLIDE_EVENTS.slideChange, this.onPageChanged);
@@ -37757,7 +37756,6 @@ class SlideController {
       var _a2;
       slide.player.app.ticker.minFPS = 5;
       slide.player.app.ticker.maxFPS = 15;
-      console.log("renderend");
       (_a2 = this.onTransitionEnd) == null ? void 0 : _a2.call(this);
     });
     slide.on(Slide.SLIDE_EVENTS.mainSeqStepStart, this.onTransitionStart);
@@ -37769,12 +37767,10 @@ class SlideController {
     slide.on(Slide.SLIDE_EVENTS.animateStart, () => {
       slide.player.app.ticker.minFPS = 25;
       slide.player.app.ticker.maxFPS = 40;
-      console.log("animatestart");
     });
     slide.on(Slide.SLIDE_EVENTS.animateEnd, () => {
       slide.player.app.ticker.minFPS = 5;
       slide.player.app.ticker.maxFPS = 15;
-      console.log("animateend");
     });
     this.sideEffect.add(() => {
       document.addEventListener("visibilitychange", this.onVisibilityChange);
@@ -39059,6 +39055,7 @@ class SlideDocsViewer {
   }) {
     this.slideController = null;
     this.isViewMounted = false;
+    this.visible = true;
     this.onError = ({ error, index }) => {
       var _a2, _b;
       this.viewer.setPaused();
@@ -39072,7 +39069,9 @@ class SlideDocsViewer {
       logger.warn("[Slide] render error", error);
     };
     this.onRenderStart = () => {
-      this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
+      if (this.visible) {
+        this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
+      }
       this.viewer.setPlaying();
     };
     this.onRenderEnd = () => {
@@ -39207,6 +39206,11 @@ class SlideDocsViewer {
       const title = this.box.title;
       this.reportProgress(100, { pdf: dataUrl, title });
     };
+    this.onVisibilityChange = () => {
+      setTimeout(() => {
+        this.visible = document.visibilityState === "visible";
+      }, 100);
+    };
     this.context = context;
     this.box = box;
     this.whiteboardView = view;
@@ -39316,6 +39320,10 @@ class SlideDocsViewer {
     this.sideEffect.add(() => {
       this.whiteboardView.callbacks.on("onSizeUpdated", this.scaleDocsToFit);
       return () => this.whiteboardView.callbacks.off("onSizeUpdated", this.scaleDocsToFit);
+    });
+    this.sideEffect.add(() => {
+      document.addEventListener("visibilitychange", this.onVisibilityChange);
+      return () => document.removeEventListener("visibilitychange", this.onVisibilityChange);
     });
     return this;
   }
