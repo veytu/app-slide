@@ -29476,9 +29476,6 @@ void main() {
   Eg.matrix = [1, 0, 0, 0, 0.1, 0, 1, 0, 0, 0.1, 0, 0, 1, 0, 0.1, 0, 0, 0, 1, 0];
   const Sg = { darken: xg, darkenLess: bg, lightenLess: Eg, lighten: Tg };
   class wg extends hg {
-    constructor(t2, e2, i2) {
-      super({ position: { x: t2.x, y: t2.y }, width: t2.width, height: t2.height }, e2, i2), this.fillColorFilter = new _g(), this.fill = new ng(this), this.json = t2, this.ctx = e2, this.parentGlobalPos = i2.parentGlobalPos, this.global = { x: i2.parentGlobalPos.x + t2.x, y: i2.parentGlobalPos.y + t2.y }, this.updateTransform({ position: { x: t2.x, y: t2.y }, width: t2.width, height: t2.height });
-    }
     get fillActive() {
       var t2, e2;
       return ((e2 = (t2 = this.container.filters) === null || t2 === void 0 ? void 0 : t2.length) !== null && e2 !== void 0 ? e2 : -1) > 0;
@@ -29486,6 +29483,9 @@ void main() {
     set fillActive(t2) {
       var e2, i2;
       t2 ? ((i2 = (e2 = this.container.filters) === null || e2 === void 0 ? void 0 : e2.indexOf(this.fillColorFilter)) !== null && i2 !== void 0 ? i2 : -1) < 0 && (this.container.filters = [this.fillColorFilter]) : this.container.filters = [];
+    }
+    constructor(t2, e2, i2) {
+      super({ position: { x: t2.x, y: t2.y }, width: t2.width, height: t2.height }, e2, i2), this.fillColorFilter = new _g(), this.fill = new ng(this), this.json = t2, this.ctx = e2, this.parentGlobalPos = i2.parentGlobalPos, this.global = { x: i2.parentGlobalPos.x + t2.x, y: i2.parentGlobalPos.y + t2.y }, this.updateTransform({ position: { x: t2.x, y: t2.y }, width: t2.width, height: t2.height });
     }
     get renderContainer() {
       return this.container;
@@ -30023,9 +30023,6 @@ void main(void){
     }), i2;
   }
   class hv {
-    constructor(t2, e2, i2, n2, r2) {
-      this.ctx = t2, this.fillStyle = e2, this.width = i2, this.height = n2, this.config = r2, this.clonedObjects = [], this._displayObject = null, this.gradientHash = jm()(`${JSON.stringify(e2)}${Math.ceil(i2)}${Math.ceil(n2)}`);
-    }
     get displayObject() {
       return this._displayObject || (this._displayObject = this.createDisplayObject()), this._displayObject;
     }
@@ -30034,6 +30031,9 @@ void main(void){
     }
     get hasFill() {
       return !!this.fillStyle && this.fillStyle.fillType !== "noFill";
+    }
+    constructor(t2, e2, i2, n2, r2) {
+      this.ctx = t2, this.fillStyle = e2, this.width = i2, this.height = n2, this.config = r2, this.clonedObjects = [], this._displayObject = null, this.gradientHash = jm()(`${JSON.stringify(e2)}${Math.ceil(i2)}${Math.ceil(n2)}`);
     }
     createDisplayObject() {
       var t2, e2;
@@ -30240,6 +30240,9 @@ void main(void){
     });
   };
   class Lv extends Za.a {
+    get container() {
+      return this._targetContainer;
+    }
     constructor(t2, e2, i2, n2, r2, o2) {
       super(), this.effects = [], this.attachs = [], this.frames = /* @__PURE__ */ new Map(), this._targetContainer = new Oh.b(), this.frameCount = 1, this.ctx = n2, this.originWidth = t2.width, this.originHeight = t2.height, this.cacheKey = i2, this.sourceSprite = new ep();
       for (const i3 of e2)
@@ -30265,9 +30268,6 @@ void main(void){
       this.sourceSprite.name = "source-sprite";
       const s2 = new Lh.j(0, 0, this.originWidth, this.originHeight), a2 = this.effects.map((t3) => t3.filterAreaJustify(s2)), l2 = a2.map((t3) => t3.x), h2 = a2.map((t3) => t3.y), u2 = a2.map((t3) => t3.width), c2 = a2.map((t3) => t3.height);
       this.filterArea = new Lh.j(Math.min(...l2, 0), Math.min(...h2, 0), Math.max(...u2, this.originWidth), Math.max(...c2, this.originHeight)), this.sourceSprite.filters = this.effects, this.sourceSprite.filterArea = new Lh.j(0, 0, this.filterArea.width, this.filterArea.height), this._targetSprite = new ep(), this._targetSprite.name = "effect-sprite", this._targetContainer.sortableChildren = true, this._targetSprite.zIndex = 999, this._targetContainer.addChild(this._targetSprite);
-    }
-    get container() {
-      return this._targetContainer;
     }
     getSdfTexture(t2, e2) {
       return Nv(this, void 0, void 0, function* () {
@@ -30699,12 +30699,6 @@ void main(void){
     });
   };
   class qv {
-    constructor(t2, e2, i2, n2, r2) {
-      var o2;
-      this.iterateElements = [], this.paragraphs = [], this.effectList = [], this.container = new Oh.b(), this.textContainer = new Oh.b(), this.textColorFilter = new _g(), this.json = t2, this.ctx = e2, this.shapeRotation = r2, this.parentGlobalPos = n2, this.iterateType = i2, this.container.name = "textBody", this.global = { x: this.parentGlobalPos.x + t2.position.x, y: this.parentGlobalPos.y + t2.position.y }, this.container.position.x = t2.position.x, this.container.position.y = t2.position.y, this.container.scale.x = t2.scale.x, this.container.scale.y = t2.scale.y;
-      const s2 = new Jd();
-      s2.drawRect(0, 0, t2.width, t2.height), this.container.addChild(s2), this.container.addChild(this.textContainer), this.textColorFilter.currentColor = "#000000FF", this.textColorFilter.designColor = "#000000FF", this.effectList = (o2 = t2.effectList) !== null && o2 !== void 0 ? o2 : [];
-    }
     get width() {
       return this.json.width;
     }
@@ -30731,6 +30725,12 @@ void main(void){
     set on(t2) {
       var e2;
       t2 === "true" ? ((e2 = this.container.filters) !== null && e2 !== void 0 ? e2 : []).indexOf(this.textColorFilter) < 0 && (this.container.filters = [this.textColorFilter]) : this.container.filters = [];
+    }
+    constructor(t2, e2, i2, n2, r2) {
+      var o2;
+      this.iterateElements = [], this.paragraphs = [], this.effectList = [], this.container = new Oh.b(), this.textContainer = new Oh.b(), this.textColorFilter = new _g(), this.json = t2, this.ctx = e2, this.shapeRotation = r2, this.parentGlobalPos = n2, this.iterateType = i2, this.container.name = "textBody", this.global = { x: this.parentGlobalPos.x + t2.position.x, y: this.parentGlobalPos.y + t2.position.y }, this.container.position.x = t2.position.x, this.container.position.y = t2.position.y, this.container.scale.x = t2.scale.x, this.container.scale.y = t2.scale.y;
+      const s2 = new Jd();
+      s2.drawRect(0, 0, t2.width, t2.height), this.container.addChild(s2), this.container.addChild(this.textContainer), this.textColorFilter.currentColor = "#000000FF", this.textColorFilter.designColor = "#000000FF", this.effectList = (o2 = t2.effectList) !== null && o2 !== void 0 ? o2 : [];
     }
     getTextElement(t2, e2) {
       return t2 === "paragraph" ? this.paragraphs[e2[0]] : null;
@@ -30881,11 +30881,11 @@ void main(void){
     }
   }
   class Jv {
-    constructor(t2, e2, i2, n2, r2, o2, s2, a2, l2, h2, u2) {
-      this.id = t2, this.ctx = e2, this.paths = i2, this.hash = n2, this.nept = r2, this.width = o2, this.height = s2, this.lineStyle = a2, this.shouldFill = l2, this.bgColor = h2, this.lnColor = u2, this.clonedObjects = [], this._displayObject = null, this.isRectangle = false, this.isPureRect = false, this.isColoredPureRect = false, this.isRectangle = this.rectangleDetect(i2), this.isRectangle && l2 ? this.bgColor ? this.isColoredPureRect = true : this.isPureRect = true : this.ctx.graphicsTexture.addGraphics(this.id, this.paths, this.hash, this.nept, this.width, this.height, this.lineStyle, this.ctx.objectPoolGroup, this.shouldFill, this.bgColor, this.lnColor);
-    }
     get displayObject() {
       return this._displayObject;
+    }
+    constructor(t2, e2, i2, n2, r2, o2, s2, a2, l2, h2, u2) {
+      this.id = t2, this.ctx = e2, this.paths = i2, this.hash = n2, this.nept = r2, this.width = o2, this.height = s2, this.lineStyle = a2, this.shouldFill = l2, this.bgColor = h2, this.lnColor = u2, this.clonedObjects = [], this._displayObject = null, this.isRectangle = false, this.isPureRect = false, this.isColoredPureRect = false, this.isRectangle = this.rectangleDetect(i2), this.isRectangle && l2 ? this.bgColor ? this.isColoredPureRect = true : this.isPureRect = true : this.ctx.graphicsTexture.addGraphics(this.id, this.paths, this.hash, this.nept, this.width, this.height, this.lineStyle, this.ctx.objectPoolGroup, this.shouldFill, this.bgColor, this.lnColor);
     }
     pointDis(t2, e2) {
       return Math.pow(t2.x - e2.x, 2) + Math.pow(t2.y - e2.y, 2);
@@ -30913,7 +30913,7 @@ void main(void){
         const r3 = e2[t3], o3 = e2[t3 + 1], [s3, a2] = o3.split(",").map((t4) => Number(t4) / 100);
         i2.push(r3), n2.push({ x: s3, y: a2 });
       }
-      if (n2.length < 4)
+      if (n2.length !== 4)
         return false;
       if (this.isSquare(i2, n2))
         return true;
@@ -31278,6 +31278,9 @@ void main(void){
   }
   const l_ = { medianContainerClass: "median-container", hoverHiddeDelay: 1500, portalWidth: 300, portalHeight: 50, hiddenOpacity: "0", hoverOpacity: "1", opacityAnimationTime: 0.4 };
   class h_ {
+    get clippedDuration() {
+      return this.duration;
+    }
     constructor(t2) {
       var e2, i2;
       this.progress = document.createElement("div"), this.totalTime = document.createElement("span"), this.playButton = document.createElement("div"), this.pauseButton = document.createElement("div"), this.currentTime = document.createElement("span"), this.mediaController = document.createElement("div"), this.currentProgress = document.createElement("div"), this.fullScreenButton = document.createElement("div"), this.exitFullScreenButton = document.createElement("div"), this.medianIsEnd = false, this.pickBookmarkIndex = 0, this.playCallBackList = [], this.duration = 0, this.isVideo = false, this.start = 0, this.end = 0, this.fullscreenStatus = false, this.fadeState = { in: false, out: false }, this.changeMediaProgress = (t3) => {
@@ -31339,9 +31342,6 @@ void main(void){
       }, this.targetId = t2.targetId, this.ctx = t2.ctx, this.height = t2.height, this.width = t2.width, this.target = t2.target, this.media = t2.media, this.info = t2.info, this.shapeId = t2.shapeId, this.canvasElement = t2.canvasElement, this.media.type === "video" && (this.isVideo = true), this.getMedianContainer(), this.createMediaController(), this.info.cut && (this.start = (e2 = this.info.cut.start) !== null && e2 !== void 0 ? e2 : 0, this.end = (i2 = this.info.cut.end) !== null && i2 !== void 0 ? i2 : 0), this.info.bookmarkList && (this.bookmarkList = this.info.bookmarkList.sort((t3, e3) => t3.time - e3.time)), this.ctx.globalEventHub.on("togglePlayStatus", (t3) => {
         t3 === this.targetId && (this.media.isPlaying ? this.pauseMediaFromCtrl(false) : this.playMediaFromCtrl(false));
       });
-    }
-    get clippedDuration() {
-      return this.duration;
     }
     getMedianContainer() {
       var t2;
@@ -31571,6 +31571,27 @@ void main(void){
     });
   };
   class p_ extends Za.a {
+    get videoElement() {
+      return this.videoResource.source;
+    }
+    get currentTime() {
+      var t2, e2;
+      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.currentTime) !== null && e2 !== void 0 ? e2 : 0;
+    }
+    set currentTime(t2) {
+      this.rtcAudio.currentTime = t2, this.videoElement && (this.videoElement.currentTime = t2);
+    }
+    get paused() {
+      var t2, e2;
+      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.paused) === null || e2 === void 0 || e2;
+    }
+    get duration() {
+      var t2, e2;
+      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.duration) !== null && e2 !== void 0 ? e2 : 0;
+    }
+    get clippedDuration() {
+      return this.controller.clippedDuration;
+    }
     constructor(t2) {
       var e2, i2, n2, r2, o2, s2, a2;
       super(), this.type = "video", this.sprite = new ep(), this.isPlaying = false, this.isGlobalPause = false, this.fullscreen = false, this.url = "", this.isLoaded = false, this.onVideoResourceLoaded = () => {
@@ -31615,27 +31636,6 @@ void main(void){
           t3 === "timeupdate" && this.isPlaying, this.emit(t3);
         });
       }), this.ctx.activeMedia.add(this), this.ctx.volumeAdjuster.on("update", this.updateVolume), this.ctx.globalEventHub.on("syncFullscreenVideoState", this.syncFullscreenVideoState);
-    }
-    get videoElement() {
-      return this.videoResource.source;
-    }
-    get currentTime() {
-      var t2, e2;
-      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.currentTime) !== null && e2 !== void 0 ? e2 : 0;
-    }
-    set currentTime(t2) {
-      this.rtcAudio.currentTime = t2, this.videoElement && (this.videoElement.currentTime = t2);
-    }
-    get paused() {
-      var t2, e2;
-      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.paused) === null || e2 === void 0 || e2;
-    }
-    get duration() {
-      var t2, e2;
-      return (e2 = (t2 = this.videoElement) === null || t2 === void 0 ? void 0 : t2.duration) !== null && e2 !== void 0 ? e2 : 0;
-    }
-    get clippedDuration() {
-      return this.controller.clippedDuration;
     }
     showController() {
       this.controller.show();
@@ -32731,11 +32731,10 @@ void main(void){
   }
   function by(t2) {
     return function(t3) {
-      var e2;
-      return !!((e2 = t3) === null || e2 === void 0 ? void 0 : e2.cBhvr);
+      return !!(t3 == null ? void 0 : t3.cBhvr);
     }(t2) ? t2.cBhvr.ctn : function(t3) {
-      var e2, i2;
-      return !!((i2 = (e2 = t3) === null || e2 === void 0 ? void 0 : e2.cMediaNode) === null || i2 === void 0 ? void 0 : i2.ctn);
+      var e2;
+      return !!((e2 = t3 == null ? void 0 : t3.cMediaNode) === null || e2 === void 0 ? void 0 : e2.ctn);
     }(t2) ? t2.cMediaNode.ctn : t2.ctn;
   }
   var Ty = function(t2, e2, i2, n2) {
@@ -33898,6 +33897,17 @@ void main(void){
   Ph.skipHello();
   const zy = { randomBar: "RandomLines", circle: "Shape", ripple: "Ripples", wipe: "Erase", dissolve: "Dissolve", morph: "Smooth", fade: "FadeInOut", push: "Push", split: "Separation", reveal: "Display", pull: "Uncover", cover: "Cover", flash: "Flash", checker: "Checkerboard", blinds: "WindowShades", curtains: "Curtain", fallOver: "Fall", drape: "Suspension", wheel: "Clock", comb: "Combing", warp: "Scale", peelOff: "PeelOff", flip: "Flip", gallery: "Gallery", switch: "Switch", prism: "Prism", doors: "Doors" }, Vy = { mainSeqStepChange: "mainSeqStepChange", mainSeqStateChange: "mainSeqStateChange", interactiveSeqStateChange: "interactiveSeqStateChange", interactiveSeqAction: "interactiveSeqAction", mainSeqStepStart: "mainSeqStepStart", mainSeqStepEnd: "mainSeqStepEnd", slideChange: "slideChange", renderStart: "renderStart", renderEnd: "renderEnd", hyperlinkTrigger: "hyperlinkTrigger", animateStart: "animateStart", animateEnd: "animateEnd", mediaSeek: "mediaSeek", mediaPlay: "mediaPlay", mediaPause: "mediaPause", mediaStop: "mediaStop", requestNextSlide: "requestNextSlide", requestPrevSlide: "requestPrevSlide", requestGotoSlide: "requestGotoSlide", requestOpenUrl: "requestOpenUrl", userInput: "userInput", fullscreenChange: "fullscreenChange", changeLocalFullscreenState: "changeLocalFullscreenState" };
   class Wy extends Za.a {
+    get view() {
+      return this.app.renderer ? this.app.view : null;
+    }
+    get nextSlideIndex() {
+      var t2;
+      return ((t2 = this.currentStage) === null || t2 === void 0 ? void 0 : t2.json.nextIndex) ? this.currentStage.json.nextIndex : this.currentIndex + 1;
+    }
+    get prevSlideIndex() {
+      var t2;
+      return ((t2 = this.currentStage) === null || t2 === void 0 ? void 0 : t2.json.prevIndex) ? this.currentStage.json.prevIndex : this.currentIndex - 1;
+    }
     constructor(t2, e2 = {}) {
       super(), this.errorChannel = new Za.a(), this.transactionPlayer = null, this.isForward = true, this.drawCall = 0, this.scale = 1, this._isPaused = false, this.maxResolution = new Lh.g(0, 0), this.transitionResolution = new Lh.g(0, 0), this.isNVIDIA = false, this.fps = new bm(), this.designWidth = 0, this.designHeight = 0, this.currentIndex = 0, this.slideCount = 0, this.runtime = { drawCall: 0, fps: 0 }, this.globalEventHub = new Za.a(), this.globalVideoBackground = new Jd(), this.globalVideoSprite = new ep(), this.onMousemoveTimeout = null, this.cacheFunctionMap = /* @__PURE__ */ new Map(), this.isPlayerPaused = () => this._isPaused, this.onWebGLLost = () => {
         this.errorChannel.emit("error", new Tm(gm.CanvasCrash, "webgl context lost."));
@@ -33987,17 +33997,6 @@ void main(void){
         /Error creating WebGL context/.test(t3.message) ? this.errorChannel.emit("error", new Tm(gm.CanvasCrash, "webgl context lost.")) : this.errorChannel.emit("error", new Tm(gm.RuntimeWarn, t3.message));
       }
       this.globalEventHub.on("requestFullscreen", this.onRequestFullscreenVideo), this.globalEventHub.on("requestCancelFullscreen", this.onRequestCancelFullscreenVideo);
-    }
-    get view() {
-      return this.app.renderer ? this.app.view : null;
-    }
-    get nextSlideIndex() {
-      var t2;
-      return ((t2 = this.currentStage) === null || t2 === void 0 ? void 0 : t2.json.nextIndex) ? this.currentStage.json.nextIndex : this.currentIndex + 1;
-    }
-    get prevSlideIndex() {
-      var t2;
-      return ((t2 = this.currentStage) === null || t2 === void 0 ? void 0 : t2.json.prevIndex) ? this.currentStage.json.prevIndex : this.currentIndex - 1;
     }
     getMaxResolution(t2) {
       return !$a()(t2) && Number.isInteger(t2) ? (t2 < 1 && (t2 = 1), t2 > 4 && (t2 = 4), t2) : Wy.platform.isAndroid() || Wy.platform.isIOS() ? 2 : 4;
@@ -35731,9 +35730,9 @@ void main(void){
         t3.isScheduling = true;
         var e2 = t3.tasks.shift();
         e2 && !t3.isDestroy && (e2.status = "running", e2.fn.apply(null).then(function() {
-          t3.tasks.length > 0 ? window.requestAnimationFrame(t3.schedule) : t3.isScheduling = false;
+          t3.tasks.length > 0 ? setTimeout(t3.schedule) : t3.isScheduling = false;
         }).catch(function() {
-          t3.tasks.length > 0 ? window.requestAnimationFrame(t3.schedule) : t3.isScheduling = false;
+          t3.tasks.length > 0 ? setTimeout(t3.schedule) : t3.isScheduling = false;
         }));
       };
     }
@@ -36164,7 +36163,7 @@ void main(void){
   }
   var mT = { syncDispatch: "syncDispatch", syncReceive: "syncReceive", syncEventLag: "syncEventLag", renderStart: "renderStart", renderEnd: "renderEnd", renderError: "renderError", slideChange: "slideChange", mainSeqStepStart: "mainSeqStepStart", mainSeqStepEnd: "mainSeqStepEnd", animateStart: "animateStart", animateEnd: "animateEnd", stateChange: "stateChange", slideStepEnd: "slideEnd", slideStepStart: "slideStart" }, gT = { taskId: "", url: "", currentSlideIndex: -1, mainSeqStep: -1, mainSeqState: null, mediaState: /* @__PURE__ */ Object.create(null), interactiveSeqState: /* @__PURE__ */ Object.create(null) }, vT = "";
   try {
-    vT = "1.4.22-alpha.0";
+    vT = "1.4.22";
   } catch (t2) {
     vT = "dev";
   }
@@ -36281,7 +36280,7 @@ void main(void){
         var o2 = (r2 = n3.config.logger) === null || r2 === void 0 ? void 0 : r2.error;
         o2 && o2("[" + i4 + "] " + t3);
       } }, n3.logger.info("new slide with clientId: " + n3.config.clientId + ", version: " + n3.version, n3.taskId), n3.tracker({ name: "initSlide", result: "", reason: "", payload: { taskId: n3.taskId } }), n3.anchor = n3.config.anchor, n3.syncQueue = new Qb(n3.receiveSyncHandler), n3.lock = new $b(n3.mode === "interactive"), n3.cacheImage.style.position = "absolute", n3.cacheImage.style.zIndex = "100", n3.setMedianControllerAttribute(), n3.canvasContainer.style.position = "relative", n3.canvasContainer.style.fontSize = "0", n3.canvasContainer.appendChild(n3.medianController), n3.frame.appendChild(n3.canvasContainer), n3.frameResizeObserver.observe(n3.frame), n3.on(mT.syncReceive, function(t3) {
-        n3.lock.unlock(t3.type, t3.uuid), n3.mode === "sync" && n3.config.clientId === t3.clientId || n3.syncQueue.addTask(t3);
+        n3.lock.unlock(t3.type, t3.uuid), !n3.player && n3.config.skipActionWhenFrozen || n3.mode === "sync" && n3.config.clientId === t3.clientId || n3.syncQueue.addTask(t3);
       }), n3.renderingTaskManager.eventHub.on("task-error", function(t3) {
         var e3 = t3.error, i4 = t3.task, r2 = Tm.transform(e3);
         r2.errorType === gm.RuntimeWarn ? n3.logger.warn(r2.message, n3.taskId) : n3.logger.error(r2.message, n3.taskId), n3.isLoading = false, n3.reportError(r2, i4.slideIndex);
@@ -39623,7 +39622,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.112";
+const version = "0.2.113";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
