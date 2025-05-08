@@ -138,6 +138,7 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
         docsViewer.viewer.setPageIndex(page - 1);
         docsViewer.viewer.setPaused();
         docsViewer.onPageChanged();
+        const length = docsViewer.viewer.pages.length;
         if (length) {
           context.dispatchAppEvent("pageStateChange", { index: page - 1, length });
         }
