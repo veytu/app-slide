@@ -39380,8 +39380,8 @@ let FreezerLength = 2;
 function getFreezerLength() {
   return FreezerLength;
 }
-function setFreezerLength(length) {
-  FreezerLength = length < 1 ? Infinity : length;
+function setFreezerLength(length2) {
+  FreezerLength = length2 < 1 ? Infinity : length2;
 }
 const inspect = (arr) => {
   return "[" + arr + "]";
@@ -39623,7 +39623,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.110";
+const version = "0.2.111";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -39660,6 +39660,9 @@ const SlideApp = {
         docsViewer.viewer.setPageIndex(page - 1);
         docsViewer.viewer.setPaused();
         docsViewer.onPageChanged();
+        if (length) {
+          context.dispatchAppEvent("pageStateChange", { index: page - 1, length });
+        }
       }
     };
     const mountSlideController = (options) => {
@@ -39698,9 +39701,9 @@ const SlideApp = {
       baseScenePath,
       appId: context.appId,
       urlInterrupter: (_a2 = context.getAppOptions()) == null ? void 0 : _a2.urlInterrupter,
-      onPagesReady: ({ length }) => {
+      onPagesReady: ({ length: length2 }) => {
         const index = (docsViewer == null ? void 0 : docsViewer.viewer.pageIndex) || 0;
-        context.dispatchAppEvent("pageStateChange", { index, length });
+        context.dispatchAppEvent("pageStateChange", { index, length: length2 });
       },
       onNavigate: (page, origin) => {
         log("[Slide] user navigate to", page, origin ? `(${origin})` : "");
