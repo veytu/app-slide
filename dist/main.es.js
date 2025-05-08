@@ -37633,7 +37633,6 @@ class SlideController {
       }
     };
     this.onVisibilityChange = async () => {
-      var _a3;
       if (!(this.visible = document.visibilityState === "visible")) {
         this.savedIsFrozen = this.isFrozen;
         log("[Slide] freeze because tab becomes invisible");
@@ -37643,7 +37642,6 @@ class SlideController {
         if (!this.savedIsFrozen) {
           this.unfreeze();
         }
-        (_a3 = this.context.getRoom()) == null ? void 0 : _a3.refresh();
       }
     };
     this.clientId = ((_a2 = context == null ? void 0 : context.getRoom()) == null ? void 0 : _a2.uid) || genUID();
@@ -39578,7 +39576,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.106";
+const version = "0.2.107";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
