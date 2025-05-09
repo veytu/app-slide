@@ -206,14 +206,14 @@ export class SlideController {
     );
 
     slide.on(SLIDE_EVENTS.renderStart, () => {
-      (slide as any).player.app.ticker.minFPS = 25;
+      (slide as any).player.app.ticker.minFPS = 15;
       (slide as any).player.app.ticker.maxFPS = 40;
       this.onRenderStart?.();
     });
     slide.on(SLIDE_EVENTS.slideChange, this.onPageChanged);
     slide.on(SLIDE_EVENTS.renderEnd, () => {
       (slide as any).player.app.ticker.minFPS = 5;
-      (slide as any).player.app.ticker.maxFPS = 15;
+      (slide as any).player.app.ticker.maxFPS = 5;
       this.onTransitionEnd?.();
     });
     slide.on(SLIDE_EVENTS.mainSeqStepStart, this.onTransitionStart);
@@ -224,12 +224,12 @@ export class SlideController {
     slide.on(SLIDE_EVENTS.renderEnd, this.resolveReady);
 
     slide.on(SLIDE_EVENTS.animateStart, () => {
-      (slide as any).player.app.ticker.minFPS = 25;
+      (slide as any).player.app.ticker.minFPS = 15;
       (slide as any).player.app.ticker.maxFPS = 40;
     });
     slide.on(SLIDE_EVENTS.animateEnd, () => {
       (slide as any).player.app.ticker.minFPS = 5;
-      (slide as any).player.app.ticker.maxFPS = 15;
+      (slide as any).player.app.ticker.maxFPS = 5;
     });
 
     this.sideEffect.add(() => {

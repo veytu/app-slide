@@ -37750,7 +37750,7 @@ class SlideController {
     }));
     slide.on(Slide.SLIDE_EVENTS.renderStart, () => {
       var _a2;
-      slide.player.app.ticker.minFPS = 25;
+      slide.player.app.ticker.minFPS = 15;
       slide.player.app.ticker.maxFPS = 40;
       (_a2 = this.onRenderStart) == null ? void 0 : _a2.call(this);
     });
@@ -37758,7 +37758,7 @@ class SlideController {
     slide.on(Slide.SLIDE_EVENTS.renderEnd, () => {
       var _a2;
       slide.player.app.ticker.minFPS = 5;
-      slide.player.app.ticker.maxFPS = 15;
+      slide.player.app.ticker.maxFPS = 5;
       (_a2 = this.onTransitionEnd) == null ? void 0 : _a2.call(this);
     });
     slide.on(Slide.SLIDE_EVENTS.mainSeqStepStart, this.onTransitionStart);
@@ -37768,12 +37768,12 @@ class SlideController {
     slide.on(Slide.SLIDE_EVENTS.syncDispatch, this.onSyncDispatch);
     slide.on(Slide.SLIDE_EVENTS.renderEnd, this.resolveReady);
     slide.on(Slide.SLIDE_EVENTS.animateStart, () => {
-      slide.player.app.ticker.minFPS = 25;
+      slide.player.app.ticker.minFPS = 15;
       slide.player.app.ticker.maxFPS = 40;
     });
     slide.on(Slide.SLIDE_EVENTS.animateEnd, () => {
       slide.player.app.ticker.minFPS = 5;
-      slide.player.app.ticker.maxFPS = 15;
+      slide.player.app.ticker.maxFPS = 5;
     });
     this.sideEffect.add(() => {
       document.addEventListener("visibilitychange", this.onVisibilityChange);
