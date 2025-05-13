@@ -370,15 +370,17 @@ export class SlideController {
             this.slide.slideState.currentSlideIndex + 1,
             this.slide.slideState.currentSlideIndex + 2,
             this.slide.slideState.currentSlideIndex + 3,
-            this.slide.slideState.currentSlideIndex + 4,
-            this.slide.slideState.currentSlideIndex + 5,
           ],
           sessionId: "3456",
         },
         "*"
       );
 
-      for (let i = 2; i < this.slide.slideCount + 1; i++) {
+      for (
+        let i = this.slide.slideState.currentSlideIndex + 4;
+        i < this.slide.slideCount + 1;
+        i++
+      ) {
         await this.slide.preloadResource(i);
       }
       console.log("slide first load done");

@@ -37852,13 +37852,11 @@ class SlideController {
         pages: [
           this.slide.slideState.currentSlideIndex + 1,
           this.slide.slideState.currentSlideIndex + 2,
-          this.slide.slideState.currentSlideIndex + 3,
-          this.slide.slideState.currentSlideIndex + 4,
-          this.slide.slideState.currentSlideIndex + 5
+          this.slide.slideState.currentSlideIndex + 3
         ],
         sessionId: "3456"
       }, "*");
-      for (let i = 2; i < this.slide.slideCount + 1; i++) {
+      for (let i = this.slide.slideState.currentSlideIndex + 4; i < this.slide.slideCount + 1; i++) {
         await this.slide.preloadResource(i);
       }
       console.log("slide first load done");
@@ -39626,7 +39624,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.114";
+const version = "0.2.115";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
