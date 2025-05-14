@@ -370,8 +370,6 @@ export class SlideController {
       //       this.slide.slideState.currentSlideIndex + 1,
       //       this.slide.slideState.currentSlideIndex + 2,
       //       this.slide.slideState.currentSlideIndex + 3,
-      //       this.slide.slideState.currentSlideIndex + 4,
-      //       this.slide.slideState.currentSlideIndex + 5,
       //     ],
       //     sessionId: "3456",
       //   },

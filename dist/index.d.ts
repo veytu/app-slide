@@ -1,8 +1,8 @@
-import { ReadonlyTeleBox, RegisterParams, AppContext, View, NetlessApp } from '@netless/window-manager';
+import { RegisterParams, ReadonlyTeleBox, AppContext, View, NetlessApp } from '@netless/window-manager';
 import { Slide, SLIDE_EVENTS, SyncEvent, ISlideConfig } from '@netless/slide';
 export { Slide } from '@netless/slide';
 
-declare type SlideState = Slide["slideState"];
+type SlideState = Slide["slideState"];
 interface Attributes {
     /** convert task id */
     taskId: string;
@@ -14,11 +14,11 @@ interface Attributes {
     previewList: string[];
     note?: string;
 }
-declare type MagixPayload = {
+type MagixPayload = {
     type: typeof SLIDE_EVENTS.syncDispatch;
     payload: SyncEvent;
 };
-declare type MagixEvents = {
+type MagixEvents = {
     [SLIDE_EVENTS.syncDispatch]: MagixPayload;
 };
 
@@ -41,7 +41,7 @@ declare const apps: {
 };
 declare function onCreated(callback: (appId: string) => void): () => boolean;
 declare function onDestroyed(callback: (appId: string) => void): () => boolean;
-declare type AddHooks = NonNullable<RegisterParams["addHooks"]>;
+type AddHooks = NonNullable<RegisterParams["addHooks"]>;
 /**
  * Put this function in your register code:
  * `WindowManager.register({ kind: 'Slide', src: SlideApp, addHooks })`
@@ -49,7 +49,7 @@ declare type AddHooks = NonNullable<RegisterParams["addHooks"]>;
  */
 declare const addHooks: AddHooks;
 
-declare type SideEffectDisposer = () => any;
+type SideEffectDisposer = () => any;
 declare class SideEffectManager {
     /**
      * Add a disposer directly.
@@ -123,7 +123,7 @@ declare class SideEffectManager {
     genUID(): string;
 }
 
-declare type Run = {
+type Run = {
     wordSpace: number;
     baseline: number;
     bold: boolean;
@@ -131,7 +131,7 @@ declare type Run = {
     text: string;
     runType: string;
 };
-declare type Paragraph = {
+type Paragraph = {
     align: string;
     indent: number;
     marginLeft: number;
@@ -154,7 +154,7 @@ interface DocsViewerConfig {
     onPagesReady?: (pages: DocsViewerPage[]) => void;
     context?: AppContext<Attributes, MagixEvents, AppOptions>;
 }
-declare type NotesType = Record<string, Paragraph[]>;
+type NotesType = Record<string, Paragraph[]>;
 declare class DocsViewer {
     constructor({ readonly, onNewPageIndex, onPlay, onPagesReady, urlInterrupter, box, context, }: DocsViewerConfig);
     protected readonly: boolean;
@@ -287,7 +287,7 @@ declare class SlideController {
     private onVisibilityChange;
 }
 
-declare type MountSlideOptions = Omit<SlideControllerOptions, "context" | "onPageChanged"> & {
+type MountSlideOptions = Omit<SlideControllerOptions, "context" | "onPageChanged"> & {
     onReady: () => void;
 };
 interface SlideDocsViewerConfig {
@@ -461,4 +461,5 @@ interface AppResult {
 }
 declare const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult>;
 
-export { type AddHooks, type AppOptions, type AppResult, type Attributes, DefaultUrl, type FreezableSlide, FreezerLength, type ILogger, type PreviewParams, SlidePreviewer, addHooks, apps, SlideApp as default, getFreezerLength, onCreated, onDestroyed, previewSlide, setFreezerLength, usePlugin, version };
+export { DefaultUrl, FreezerLength, SlidePreviewer, addHooks, apps, SlideApp as default, getFreezerLength, onCreated, onDestroyed, previewSlide, setFreezerLength, usePlugin, version };
+export type { AddHooks, AppOptions, AppResult, Attributes, FreezableSlide, ILogger, PreviewParams };
