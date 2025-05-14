@@ -359,22 +359,24 @@ export class SlideController {
 
   private async preloadFirstRender() {
     try {
-      const { taskId, url } = this.context.storage.state;
+      // const { taskId, url } = this.context.storage.state;
 
-      window.postMessage(
-        {
-          type: "@slide/_preload_slide_",
-          taskId,
-          prefix: url,
-          pages: [
-            this.slide.slideState.currentSlideIndex + 1,
-            this.slide.slideState.currentSlideIndex + 2,
-            this.slide.slideState.currentSlideIndex + 3,
-          ],
-          sessionId: "3456",
-        },
-        "*"
-      );
+      // window.postMessage(
+      //   {
+      //     type: "@slide/_preload_slide_",
+      //     taskId,
+      //     prefix: url,
+      //     pages: [
+      //       this.slide.slideState.currentSlideIndex + 1,
+      //       this.slide.slideState.currentSlideIndex + 2,
+      //       this.slide.slideState.currentSlideIndex + 3,
+      //       this.slide.slideState.currentSlideIndex + 4,
+      //       this.slide.slideState.currentSlideIndex + 5,
+      //     ],
+      //     sessionId: "3456",
+      //   },
+      //   "*"
+      // );
 
       for (
         let i = this.slide.slideState.currentSlideIndex + 4;
