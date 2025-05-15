@@ -320,6 +320,7 @@ export class SlideController {
       mode: "sync",
       controller: logger.enable,
       enableGlobalClick: options.enableGlobalClick ?? true,
+      enableAutoForward: true,
       renderOptions: {
         minFPS: options.minFPS || 5,
         maxFPS: options.maxFPS || 15,
