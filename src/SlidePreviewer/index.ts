@@ -130,6 +130,7 @@ export class SlidePreviewer {
       controller: this.debug,
       enableGlobalClick: true,
       enableAutoForward: true,
+      skipActionWhenFrozen: true,
       renderOptions: {
         minFPS: 25,
         maxFPS: 30,

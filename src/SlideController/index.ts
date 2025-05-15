@@ -321,6 +321,7 @@ export class SlideController {
       controller: logger.enable,
       enableGlobalClick: options.enableGlobalClick ?? true,
       enableAutoForward: true,
+      skipActionWhenFrozen: true,
       renderOptions: {
         minFPS: options.minFPS || 5,
         maxFPS: options.maxFPS || 15,

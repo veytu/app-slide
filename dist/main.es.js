@@ -37861,6 +37861,7 @@ class SlideController {
       controller: logger.enable,
       enableGlobalClick: (_a2 = options.enableGlobalClick) != null ? _a2 : true,
       enableAutoForward: true,
+      skipActionWhenFrozen: true,
       renderOptions: {
         minFPS: options.minFPS || 5,
         maxFPS: options.maxFPS || 15,
@@ -39634,6 +39635,7 @@ class SlidePreviewer {
       controller: this.debug,
       enableGlobalClick: true,
       enableAutoForward: true,
+      skipActionWhenFrozen: true,
       renderOptions: {
         minFPS: 25,
         maxFPS: 30,
