@@ -31151,7 +31151,7 @@ void main(void){
         var t3, e2;
         null === (t3 = this.strokeGraphics) || void 0 === t3 || t3.render(), null === (e2 = this.backgroundGraphics) || void 0 === e2 || e2.render(), this.createBackground(), yield this.subClassRender(), this.createFilledPathMask(), this.createPathFill(), this.createArrow();
       }), "@ShapeImpl[render]"), this.text && this.text.render(t2), t2.addSubMTask(() => Qv(this, void 0, void 0, function* () {
-        var t3, e2, i2, n2, r2, o2, s2, a2, l2, h2, u2, c2, d2, p2, f2, m2, g2;
+        var t3, e2, i2, n2, r2, o2, s2, a2, l2, h2, u2, c2, d2, p2, f2, m2, g2, v2, _2;
         if ("wd" === (null === (t3 = this.json.textBody) || void 0 === t3 ? void 0 : t3.iterateType) || "lt" === (null === (e2 = this.json.textBody) || void 0 === e2 ? void 0 : e2.iterateType)) {
           if (this.renderContainer.addChild(this.container), this.text) {
             const { x: t4, y: e3 } = null !== (i2 = this.json.scale) && void 0 !== i2 ? i2 : { x: 1, y: 1 };
@@ -31190,7 +31190,7 @@ void main(void){
         }(this.json) && this.effectObject.setFrameCount(-1), this.effectObject.on("ready", () => {
           var t4;
           this.effectContainer.visible = false, this.effectObject.container.zIndex = 10, this.container.addChild(this.effectObject.container), null === (t4 = this.effectObject) || void 0 === t4 || t4.updateFrame(1), this.applyEffectCacheAsBitMap(true);
-        })), this.json.scene3d)
+        })), null === (_2 = null === (v2 = this.json.scene3d) || void 0 === v2 ? void 0 : v2.camera) || void 0 === _2 ? void 0 : _2.rotation)
           try {
             const { latitude: t4, longitude: e3, revolution: i3 } = this.json.scene3d.camera.rotation, n3 = function(t5, e4) {
               if (0 === t5 || 0 === e4)
@@ -31500,7 +31500,11 @@ void main(void){
   class d_ extends Za.a {
     constructor(t2, e2, i2, n2) {
       var r2, o2;
-      super(), this.isGlobalPause = false, this.lastTime = -1, this.howl = null, this.rctClient = null, this.isHowlEnd = false, this.isHowlLoadEmit = false, this.staticEventId = 1001, this._catParams = void 0, this.url = t2, this.runningAudio = e2, i2 && (this._catParams = i2), Yy.RtcAudioClazz ? (this.rctClient = new Yy.RtcAudioClazz(t2, null === (r2 = this._catParams) || void 0 === r2 ? void 0 : r2.start, null === (o2 = this._catParams) || void 0 === o2 ? void 0 : o2.end), this.rctClient.on("load", () => this.emit("load")), this.rctClient.on("pause", () => this.emit("pause")), this.rctClient.on("play", () => {
+      super(), this.isGlobalPause = false, this.lastTime = -1, this.howl = null, this.rctClient = null, this.domAudio = null, this.pcmSource = null, this.isHowlEnd = false, this.isHowlLoadEmit = false, this.staticEventId = 1001, this._catParams = void 0, this.url = t2, this.runningAudio = e2, i2 && (this._catParams = i2), Yy.RtcAudioClazz ? window.__pcmProxy ? (this.domAudio = document.createElement("audio"), this.domAudio.addEventListener("pause", () => {
+        this.emit("pause");
+      }), this.domAudio.addEventListener("playing", () => {
+        this.emit("load"), this.startTimeChangeEmit(), this.emit("play"), console.log("connect pcm proxy"), this.pcmSource = window.__pcmProxy.connect(this.domAudio);
+      }), console.log("use pcm proxy")) : (this.rctClient = new Yy.RtcAudioClazz(t2, null === (r2 = this._catParams) || void 0 === r2 ? void 0 : r2.start, null === (o2 = this._catParams) || void 0 === o2 ? void 0 : o2.end), this.rctClient.on("load", () => this.emit("load")), this.rctClient.on("pause", () => this.emit("pause")), this.rctClient.on("play", () => {
         this.startTimeChangeEmit(), this.emit("play");
       }), this.rctClient.on("resumeAllAudioInterruptByAudioSessionChanged", () => {
         this.emit("resumeAllAudioInterruptByAudioSessionChanged");
@@ -31540,7 +31544,7 @@ void main(void){
     }
     destroy() {
       var t2, e2, i2, n2, r2, o2, s2, a2;
-      null === (t2 = this.howl) || void 0 === t2 || t2.stop(this.staticEventId), null === (e2 = this.howl) || void 0 === e2 || e2.unload(), null === (i2 = this.rctClient) || void 0 === i2 || i2.pause(), null === (n2 = this.rctClient) || void 0 === n2 || n2.destroy(), null === (r2 = this.rctClient) || void 0 === r2 || r2.removeAllListeners("load"), null === (o2 = this.rctClient) || void 0 === o2 || o2.removeAllListeners("play"), null === (s2 = this.rctClient) || void 0 === s2 || s2.removeAllListeners("pause"), null === (a2 = this.rctClient) || void 0 === a2 || a2.removeAllListeners("resumeAllAudioInterruptByAudioSessionChanged"), this.runningAudio.has(this.url) && this.runningAudio.delete(this.url);
+      null === (t2 = this.howl) || void 0 === t2 || t2.stop(this.staticEventId), null === (e2 = this.howl) || void 0 === e2 || e2.unload(), null === (i2 = this.rctClient) || void 0 === i2 || i2.pause(), null === (n2 = this.rctClient) || void 0 === n2 || n2.destroy(), null === (r2 = this.rctClient) || void 0 === r2 || r2.removeAllListeners("load"), null === (o2 = this.rctClient) || void 0 === o2 || o2.removeAllListeners("play"), null === (s2 = this.rctClient) || void 0 === s2 || s2.removeAllListeners("pause"), null === (a2 = this.rctClient) || void 0 === a2 || a2.removeAllListeners("resumeAllAudioInterruptByAudioSessionChanged"), this.pcmSource.disconnect(), this.runningAudio.has(this.url) && this.runningAudio.delete(this.url);
     }
     get currentTime() {
       return this.rctClient ? this.rctClient.currentTime : this.howl ? this.howl.seek(this.staticEventId) : -1;
@@ -31592,7 +31596,7 @@ void main(void){
       return null !== (e2 = null === (t2 = this.videoElement) || void 0 === t2 ? void 0 : t2.currentTime) && void 0 !== e2 ? e2 : 0;
     }
     set currentTime(t2) {
-      this.rtcAudio.currentTime = t2, this.videoElement && (this.videoElement.currentTime = t2);
+      this.videoElement && (this.videoElement.currentTime = t2), this.rtcAudio && (this.rtcAudio.currentTime = t2);
     }
     get paused() {
       var t2, e2;
@@ -31607,12 +31611,13 @@ void main(void){
     }
     constructor(t2) {
       var e2, i2, n2, r2, o2, s2, a2;
-      super(), this.type = "video", this.sprite = new ep(), this.isPlaying = false, this.isGlobalPause = false, this.fullscreen = false, this.url = "", this.isLoaded = false, this.onVideoResourceLoaded = () => {
+      super(), this.type = "video", this.sprite = new ep(), this.rtcAudio = null, this.pcmSource = null, this.isPlaying = false, this.isGlobalPause = false, this.fullscreen = false, this.url = "", this.isLoaded = false, this.onVideoResourceLoaded = () => {
         this.isLoaded = true;
       }, this.onVideoStalled = () => {
         this.ctx.logger.warn(this.url + ", Failed to fetch data, but trying.", this.ctx.taskId);
       }, this.updateVolume = (t3) => {
-        this.rtcAudio.volume(t3);
+        var e3;
+        null === (e3 = this.rtcAudio) || void 0 === e3 || e3.volume(t3), this.videoElement && (this.videoElement.volume = t3);
       }, this.syncFullscreenVideoState = (t3) => {
         const { targetId: e3, state: i3, slideIndex: n3 } = t3;
         n3 === this.ctx.slideIndex && e3 === this.id && (i3 ? (this.requestFullscreen(), this.ctx.latestChangeFullscreenTargetId = e3) : this.requestCancelFullscreen());
@@ -31620,7 +31625,7 @@ void main(void){
       const l2 = t2.video.src;
       this.videoResource = new Vh.w(l2, { autoLoad: true, autoPlay: false, updateFPS: 30, crossorigin: true }), null === (r2 = this.videoElement) || void 0 === r2 || r2.addEventListener("stalled", this.onVideoStalled), null === (o2 = this.videoElement) || void 0 === o2 || o2.addEventListener("loadedmetadata", this.onVideoResourceLoaded), this.url = t2.video.src;
       let h2 = t2.video.src.replace(/4$/, "3");
-      this.ctx.loaderDelegate && (h2 = this.ctx.loaderDelegate.redirectMedia(h2), this.ctx.logger.info(`redirect media url from ${t2.video.src.replace(/4$/, "3")} to ${h2} by delegate.`, t2.ctx.taskId)), this.rtcAudio = new d_(h2, t2.ctx.runningAudio, { start: null === (s2 = t2.video.cut) || void 0 === s2 ? void 0 : s2.start, end: null === (a2 = t2.video.cut) || void 0 === a2 ? void 0 : a2.end }, { enableWebAudio: t2.ctx.enableWebAudio }), this.rtcAudio.on("timeupdate", (t3) => {
+      this.ctx.loaderDelegate && (h2 = this.ctx.loaderDelegate.redirectMedia(h2), this.ctx.logger.info(`redirect media url from ${t2.video.src.replace(/4$/, "3")} to ${h2} by delegate.`, t2.ctx.taskId)), window.__pcmProxy ? (this.pcmSource = window.__pcmProxy.connect(this.videoElement), console.log("connect pcm proxy")) : (this.rtcAudio = new d_(h2, t2.ctx.runningAudio, { start: null === (s2 = t2.video.cut) || void 0 === s2 ? void 0 : s2.start, end: null === (a2 = t2.video.cut) || void 0 === a2 ? void 0 : a2.end }, { enableWebAudio: t2.ctx.enableWebAudio }), this.rtcAudio.on("timeupdate", (t3) => {
         if (this.videoElement) {
           const e3 = this.videoElement.currentTime;
           Math.abs(e3 - t3) > 0.5 && (this.videoElement.currentTime = t3);
@@ -31628,10 +31633,10 @@ void main(void){
       }), this.rtcAudio.on("resumeAllAudioInterruptByAudioSessionChanged", () => {
         var t3;
         null === (t3 = this.videoElement) || void 0 === t3 || t3.pause(), setTimeout(() => {
-          var t4;
-          this.rtcAudio.isPaused || null === (t4 = this.videoElement) || void 0 === t4 || t4.play();
+          var t4, e3;
+          (null === (t4 = this.rtcAudio) || void 0 === t4 ? void 0 : t4.isPaused) || null === (e3 = this.videoElement) || void 0 === e3 || e3.play();
         }, 200);
-      });
+      }));
       const { video: u2, width: c2, height: d2, target: p2 } = t2;
       this.controller = new u_({ targetId: t2.id, shapeId: t2.shapeId, ctx: t2.ctx, width: c2, height: d2, target: p2, media: this, info: u2, canvasElement: t2.canvasElement }), this.controller.addPlayCallBack(() => {
         this.sprite.width = c2, this.sprite.height = d2, this.ctx.clock.setTimeout(() => {
@@ -31663,10 +31668,12 @@ void main(void){
           return !!(t3 && t3.videoWidth > 0);
         }, 3e3);
         const t2 = this.videoElement;
-        t2 && t2.videoWidth <= 0 || (this.videoElement && (this.videoElement.volume = 0, this.videoElement.muted = true), this.rtcAudio.on("play", () => {
+        t2 && t2.videoWidth <= 0 || (this.videoElement && (this.videoElement.volume = 0, this.videoElement.muted = true), this.rtcAudio ? (this.rtcAudio.on("play", () => {
           var t3;
           null === (t3 = this.videoElement) || void 0 === t3 || t3.play(), this.fullscreen && this.controller.fullscreenPlay();
-        }), this.rtcAudio.play());
+        }), this.rtcAudio.play()) : this.videoElement && (this.videoElement.addEventListener("playing", () => {
+          this.fullscreen && this.controller.fullscreenPlay();
+        }), this.videoElement.play()));
       });
     }
     load() {
@@ -31674,10 +31681,10 @@ void main(void){
     }
     pause() {
       var t2;
-      this.isPlaying = false, this.ctx.logger.warn(this.url + ", pause video manual.", this.ctx.taskId), this.ctx.logger.warn(this.url + ", pause rtc audio manual.", this.ctx.taskId), this.rtcAudio.once("pause", () => {
+      this.isPlaying = false, this.ctx.logger.warn(this.url + ", pause video manual.", this.ctx.taskId), this.ctx.logger.warn(this.url + ", pause rtc audio manual.", this.ctx.taskId), this.rtcAudio && (this.rtcAudio.once("pause", () => {
         var t3;
         null === (t3 = this.videoElement) || void 0 === t3 || t3.pause();
-      }), this.rtcAudio.pause(), null === (t2 = this.videoElement) || void 0 === t2 || t2.pause();
+      }), this.rtcAudio.pause()), null === (t2 = this.videoElement) || void 0 === t2 || t2.pause();
     }
     globalPause() {
       this.isPlaying && (this.isGlobalPause = true, this.pause());
@@ -31692,7 +31699,8 @@ void main(void){
       this.controller.jumpToTime(t2);
     }
     stop() {
-      this.rtcAudio.stop(), this.seek(0), this.pause(), this.ctx.eventHub.emit(Xy.mediaStop, { id: this.id });
+      var t2;
+      null === (t2 = this.rtcAudio) || void 0 === t2 || t2.stop(), this.seek(0), this.pause(), this.ctx.eventHub.emit(Xy.mediaStop, { id: this.id });
     }
     requestFullscreen() {
       return p_(this, void 0, void 0, function* () {
@@ -31705,14 +31713,16 @@ void main(void){
       this.ctx.globalEventHub.emit("requestCancelFullscreen", { targetId: this.id, index: this.ctx.slideIndex });
     }
     destroy() {
-      var t2, e2, i2;
-      this.ctx.volumeAdjuster.removeListener("update", this.updateVolume), this.ctx.globalEventHub.removeListener("syncFullscreenVideoState", this.syncFullscreenVideoState), null === (t2 = this.videoElement) || void 0 === t2 || t2.removeEventListener("stalled", this.onVideoStalled), null === (e2 = this.videoElement) || void 0 === e2 || e2.removeEventListener("loadedmetadata", this.onVideoResourceLoaded), this.sprite.interactive = false, this.sprite.destroy({ texture: true, baseTexture: true }), null === (i2 = this.videoResource) || void 0 === i2 || i2.destroy(), this.rtcAudio.destroy(), this.stop(), this.controller.destroy(), this.ctx.activeMedia.delete(this);
+      var t2, e2, i2, n2, r2;
+      this.ctx.volumeAdjuster.removeListener("update", this.updateVolume), this.ctx.globalEventHub.removeListener("syncFullscreenVideoState", this.syncFullscreenVideoState), null === (t2 = this.videoElement) || void 0 === t2 || t2.removeEventListener("stalled", this.onVideoStalled), null === (e2 = this.videoElement) || void 0 === e2 || e2.removeEventListener("loadedmetadata", this.onVideoResourceLoaded), this.sprite.interactive = false, this.sprite.destroy({ texture: true, baseTexture: true }), null === (i2 = this.videoResource) || void 0 === i2 || i2.destroy(), null === (n2 = this.rtcAudio) || void 0 === n2 || n2.destroy(), this.stop(), this.controller.destroy(), this.ctx.activeMedia.delete(this), null === (r2 = this.pcmSource) || void 0 === r2 || r2.disconnect();
     }
     fadeIn(t2, e2) {
-      this.rtcAudio.fade(t2, this.ctx.volumeAdjuster.volume, e2);
+      var i2;
+      null === (i2 = this.rtcAudio) || void 0 === i2 || i2.fade(t2, this.ctx.volumeAdjuster.volume, e2);
     }
     fadeOut(t2, e2) {
-      this.rtcAudio.fade(this.ctx.volumeAdjuster.volume, t2, e2);
+      var i2;
+      null === (i2 = this.rtcAudio) || void 0 === i2 || i2.fade(this.ctx.volumeAdjuster.volume, t2, e2);
     }
   }
   var m_ = function(t2, e2, i2, n2) {
@@ -32708,7 +32718,7 @@ void main(void){
       super(t2), this.isConflict = false, this.activeWhenConflict = "next", this.isApplied = false, this.onTimeUpdate = () => {
         var t3, e2;
         const { cmd: i2, cmdType: n2 } = this.json;
-        !this.isApplied && i2 && n2 && (this.isApplied = true, null === (e2 = null === (t3 = this.timingTarget) || void 0 === t3 ? void 0 : t3.cmd) || void 0 === e2 || e2.applyCommand(i2, n2), this.commonTimeNode.seekToEnd(false));
+        !this.isApplied && i2 && n2 && (this.isApplied = true, null === (e2 = null === (t3 = this.timingTarget) || void 0 === t3 ? void 0 : t3.cmd) || void 0 === e2 || e2.applyCommand(i2, n2));
       }, this.onSeekToStart = () => {
         var t3, e2;
         this.commonTimeNode.isInInteractiveSeq || null === (e2 = null === (t3 = this.timingTarget) || void 0 === t3 ? void 0 : t3.cmd) || void 0 === e2 || e2.applyCommand("custom-pause", "call");
@@ -34017,7 +34027,7 @@ void main(void){
       } catch (t3) {
         /Error creating WebGL context/.test(t3.message) ? this.errorChannel.emit("error", new Tm(gm.CanvasCrash, "webgl context lost.")) : this.errorChannel.emit("error", new Tm(gm.RuntimeWarn, t3.message));
       }
-      this.globalEventHub.on("requestFullscreen", this.onRequestFullscreenVideo), this.globalEventHub.on("requestCancelFullscreen", this.onRequestCancelFullscreenVideo), this.enableAutoForward && this.on("mainSeqStepEnd", () => {
+      this.globalEventHub.on("requestFullscreen", this.onRequestFullscreenVideo), this.globalEventHub.on("requestCancelFullscreen", this.onRequestCancelFullscreenVideo), this.enableAutoForward && this.on(Xy.mainSeqStepEnd, () => {
         this.startAutoForwardTimer(this.currentStage);
       });
     }
@@ -36203,7 +36213,7 @@ void main(void){
   }
   var vT = { syncDispatch: "syncDispatch", syncReceive: "syncReceive", syncEventLag: "syncEventLag", renderStart: "renderStart", renderEnd: "renderEnd", renderError: "renderError", slideChange: "slideChange", mainSeqStepStart: "mainSeqStepStart", mainSeqStepEnd: "mainSeqStepEnd", animateStart: "animateStart", animateEnd: "animateEnd", stateChange: "stateChange", slideStepEnd: "slideEnd", slideStepStart: "slideStart" }, _T = { taskId: "", url: "", currentSlideIndex: -1, mainSeqStep: -1, mainSeqState: null, mediaState: /* @__PURE__ */ Object.create(null), interactiveSeqState: /* @__PURE__ */ Object.create(null) }, yT = "";
   try {
-    yT = "1.4.26";
+    yT = "1.4.28";
   } catch (t2) {
     yT = "dev";
   }
