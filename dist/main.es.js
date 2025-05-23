@@ -39738,7 +39738,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.116";
+const version = "0.2.118";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
