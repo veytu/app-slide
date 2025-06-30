@@ -38667,24 +38667,25 @@ function convertToHTML(paragraphs) {
   let hasLink = false;
   let link = void 0;
   const res = paragraphs.map((paragraph) => {
-    var _a2, _b, _c;
+    var _a2, _b, _c, _d, _e, _f;
     const style = `
       text-align: ${paragraph.align === "l" ? "left" : paragraph.align == "r" ? "right" : paragraph.align};
       text-indent: ${paragraph.indent}px;
       margin-left: ${paragraph.marginLeft}px;
       margin-right: ${paragraph.marginRight}px;
     `;
+    const subjectiveMatch = /@~@(https?:\/\/[^\s@]+)@~@/;
     const paragraphHasLink = paragraph.runs.some(
-      (run) => /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text)
+      (run) => /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text) || subjectiveMatch.test(run.text)
     );
     hasLink = hasLink || paragraphHasLink;
-    const linkRun = paragraph.runs.find((run) => /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text));
+    const linkRun = paragraph.runs.find((run) => /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text) || subjectiveMatch.test(run.text));
     if (linkRun) {
-      link = ((_c = (_b = (_a2 = linkRun == null ? void 0 : linkRun.text) == null ? void 0 : _a2.match) == null ? void 0 : _b.call(_a2, /@@@(https?:\/\/[^\s@]+)@@@/)) == null ? void 0 : _c[1]) || void 0;
+      link = ((_c = (_b = (_a2 = linkRun == null ? void 0 : linkRun.text) == null ? void 0 : _a2.match) == null ? void 0 : _b.call(_a2, /@@@(https?:\/\/[^\s@]+)@@@/)) == null ? void 0 : _c[1]) || ((_f = (_e = (_d = linkRun == null ? void 0 : linkRun.text) == null ? void 0 : _d.match) == null ? void 0 : _e.call(_d, subjectiveMatch)) == null ? void 0 : _f[1]) || void 0;
     }
     const runsHTML = paragraph.runs.map((run) => {
       const runStyle = `word-spacing: ${run.wordSpace}px; baseline-shift: ${run.baseline}px;`;
-      const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@/g, "");
+      const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@/g, "").replace(subjectiveMatch, "");
       let finalText = processedText;
       if (run.bold) {
         finalText = `<strong>${finalText}</strong>`;
@@ -39738,7 +39739,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.118";
+const version = "0.2.119";
 const SlideApp = {
   kind: "Slide",
   setup(context) {

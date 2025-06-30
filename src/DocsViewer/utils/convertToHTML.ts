@@ -22,7 +22,6 @@ export function convertToHTML(paragraphs: Paragraph[]): {
 } {
   let hasLink = false;
   let link = undefined;
-
   const res = paragraphs
     .map(paragraph => {
       // Set up styles based on paragraph properties
@@ -35,16 +34,22 @@ export function convertToHTML(paragraphs: Paragraph[]): {
       margin-right: ${paragraph.marginRight}px;
     `;
 
+    //主观题
+    //@~@http://localhost:3000/subjective/b46a6266-b8e2-4895-b766-a812b39772f8@~@E1-A-1###互动1
+    const subjectiveMatch = /@~@(https?:\/\/[^\s@]+)@~@/;//主观题正则
+    
+
+
       // Check if the paragraph has a link
       const paragraphHasLink = paragraph.runs.some(run =>
-        /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text)
+        /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text) ||
+        subjectiveMatch.test(run.text)
       );
       hasLink = hasLink || paragraphHasLink;
-
       // Get link from the runs
-      const linkRun = paragraph.runs.find(run => /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text));
+      const linkRun = paragraph.runs.find(run => /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text) || subjectiveMatch.test(run.text));
       if (linkRun) {
-        link = linkRun?.text?.match?.(/@@@(https?:\/\/[^\s@]+)@@@/)?.[1] || undefined;
+        link = linkRun?.text?.match?.(/@@@(https?:\/\/[^\s@]+)@@@/)?.[1] || linkRun?.text?.match?.(subjectiveMatch)?.[1] || undefined;
       }
 
       const runsHTML = paragraph.runs
@@ -52,7 +57,7 @@ export function convertToHTML(paragraphs: Paragraph[]): {
           const runStyle = `word-spacing: ${run.wordSpace}px; baseline-shift: ${run.baseline}px;`;
 
           // Use regular expression to find links wrapped with @@@ and replace
-          const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@/g, "");
+          const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@/g, "").replace(subjectiveMatch, "");
 
           // Apply bold and italic styles if needed
           let finalText = processedText;

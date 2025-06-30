@@ -28,7 +28,7 @@ const options: PlaygroundConfigs<Attributes> = [
     "星空2",
     "051c49a7b2da4a2dacc019a10e3a0ca4",
     "https://convertcdn.netless.link/dynamicConvert",
-    "https://convertcdn.netless.link/dynamicConvert/051c49a7b2da4a2dacc019a10e3a0ca4/jsonOutput/note.json"
+    "https://solutions-apaas.agora.io/cloud-disk/dynamicConvert/0fb9e2a3c65445e79a8da06cd388733b/jsonOutput/note.json"
   ),
   definePPT("星空3", "9abed6605bbc11ec88a83b917638a00c"),
 ];
