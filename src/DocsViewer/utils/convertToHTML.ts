@@ -26,20 +26,16 @@ export function convertToHTML(paragraphs: Paragraph[]): {
     .map(paragraph => {
       // Set up styles based on paragraph properties
       const style = `
-      text-align: ${
-        paragraph.align === "l" ? "left" : paragraph.align == "r" ? "right" : paragraph.align
-      };
+      text-align: ${paragraph.align === "l" ? "left" : paragraph.align == "r" ? "right" : paragraph.align
+        };
       text-indent: ${paragraph.indent}px;
       margin-left: ${paragraph.marginLeft}px;
       margin-right: ${paragraph.marginRight}px;
     `;
 
-    //主观题
-    //@~@http://localhost:3000/subjective/b46a6266-b8e2-4895-b766-a812b39772f8@~@E1-A-1###互动1
-    const subjectiveMatch = /@~@(https?:\/\/[^\s@]+)@~@/;//主观题正则
-    
-
-
+      //主观题
+      //@~@http://localhost:3000/subjective/b46a6266-b8e2-4895-b766-a812b39772f8@~@E1-A-1###互动1
+      const subjectiveMatch = /@~@(https?:\/\/[^\s@]+)@~@/;//主观题正则
       // Check if the paragraph has a link
       const paragraphHasLink = paragraph.runs.some(run =>
         /@@@(https?:\/\/[^\s@]+)@@@/.test(run.text) ||
@@ -57,7 +53,7 @@ export function convertToHTML(paragraphs: Paragraph[]): {
           const runStyle = `word-spacing: ${run.wordSpace}px; baseline-shift: ${run.baseline}px;`;
 
           // Use regular expression to find links wrapped with @@@ and replace
-          const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@/g, "").replace(subjectiveMatch, "");
+          const processedText = run.text;
 
           // Apply bold and italic styles if needed
           let finalText = processedText;

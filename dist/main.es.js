@@ -38685,7 +38685,7 @@ function convertToHTML(paragraphs) {
     }
     const runsHTML = paragraph.runs.map((run) => {
       const runStyle = `word-spacing: ${run.wordSpace}px; baseline-shift: ${run.baseline}px;`;
-      const processedText = run.text.replace(/@@@(https?:\/\/[^\s@]+)@@@/g, "").replace(subjectiveMatch, "");
+      const processedText = run.text;
       let finalText = processedText;
       if (run.bold) {
         finalText = `<strong>${finalText}</strong>`;
@@ -39739,7 +39739,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.119";
+const version = "0.2.120";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
