@@ -37917,12 +37917,13 @@ class SlideController {
       },
       fixedFrameSize: options.fixedFrameSize,
       loaderDelegate: options.loaderDelegate,
-      navigatorDelegate: options.navigatorDelegate || {
+      navigatorDelegate: {
         gotoPage: (index) => {
           if (!this.context.getIsAppReadonly()) {
             slide.renderSlide(index);
           }
-        }
+        },
+        ...options.navigatorDelegate
       },
       urlInterrupter: options.urlInterrupter,
       resourceTimeout: options.resourceTimeout,
@@ -39739,7 +39740,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.120";
+const version = "0.2.121";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
