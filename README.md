@@ -7,26 +7,13 @@ Netless App for viewing animated slides, in our new engine.
 ### Usage
 
 ```ts
-import type { Attributes as SlideAttributes } from "@netless/app-slide";
+import AppSlide, { addHooks } from "@netless/app-slide";
 
 // 1. register before joining room
 WindowManager.register({
   kind: "Slide",
-  appOptions: {
-    // turn on to show debug controller
-    debug: false,
-    urlInterrupter: async (url: string) => {
-      // There will be different implementations depending on different cloud storage services.
-      // Generally, signatures are added to the query parameters.
-      const { ak, expire } = await getSTSToken(); // Customer service side implementation.
-      return `${url}?expire=${expire}&ak=${ak}`;
-      // https://github.com/netless-io/netless-slide-demo#slide-%E9%85%8D%E7%BD%AE for more options
-    },
-  },
-  src: async () => {
-    const app = await import("@netless/app-slide");
-    return app.default ?? app;
-  },
+  src: AppSlide,
+  addHooks, // enables auto-freeze
 });
 
 // 2. when joined room, add ppt to whiteboard
@@ -39,26 +26,7 @@ manager.addApp({
   attributes: {
     taskId: "1234567...", // [2]
     url: "https://convertcdn.netless.link/dynamicConvert", // [3]
-    previewList: [
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/preview/1.png",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/preview/2.png",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/preview/3.png",
-    ],
-    resourceList: [
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/note.json",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/overview.json",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/sheet-1-0-color.json",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/sheet-1-0-color.png",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/sheet-2-0-color.json",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/sheet-2-0-color.png",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/sheet-3-0-color.json",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/sheet-3-0-color.png",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/slide-1.json",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/slide-2.json",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/slide-3.json",
-      "https://convertcdn.netless.group/test/dynamicConvert/8ed5cce449874494a9ca7894b39415fb/jsonOutput/title.json",
-    ],
-  } as SlideAttributes,
+  },
 });
 ```
 

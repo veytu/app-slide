@@ -1,336 +1,117 @@
 import type { NetlessApp } from "@netless/window-manager";
 import type { ISlideConfig } from "@netless/slide";
-import type { MountSlideOptions } from "./SlideDocsViewer";
-import type { Attributes, MagixEvents } from "./typings";
-import type { AddHooks, FreezableSlide } from "./utils/freezer";
+import type { SlideViewerOptions } from "./SlideViewer";
+import type { AddHooks, AppOptions, Attributes, MagixEvents, SlideState } from "./typings";
+
+export type { SlideState, AddHooks, AppOptions, Attributes, MagixEvents, SlideViewerOptions };
 
 import { Slide } from "@netless/slide";
 import { SideEffectManager } from "side-effect-manager";
-import {
-  DefaultUrl,
-  EmptyAttributes,
-  syncSceneWithSlide,
-  SlideController,
-} from "./SlideController";
-import { SlideDocsViewer } from "./SlideDocsViewer";
-import { apps, FreezerLength, addHooks, useFreezer } from "./utils/freezer";
-import { log, logger } from "./utils/logger";
-import styles from "./style.scss?inline";
-import type { NotesType } from "./DocsViewer";
 
-export type { PreviewParams } from "./SlidePreviewer";
-export { SlidePreviewer, default as previewSlide } from "./SlidePreviewer";
+import { DefaultUrl } from "./constants";
+import { addHooks, refrigerator } from "./Refrigerator";
+import { SlideViewer } from "./SlideViewer";
+import { Logger } from "./Logger";
+import { connect } from "./connect";
+import { previewSlide } from "./preview";
+import { make_bg_color, make_timestamp } from "./utils";
 
-export type { Attributes, AddHooks, FreezableSlide };
-export { Slide };
+export { Slide, SlideViewer, refrigerator, addHooks, DefaultUrl, previewSlide };
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const usePlugin: (plugin: any) => any = /* @__PURE__ */ Slide.usePlugin.bind(Slide);
+export const usePlugin = /* @__PURE__ */ Slide.usePlugin.bind(Slide) as (plugin: any) => void;
 
 export const version = __APP_VERSION__;
 
-export { DefaultUrl, apps, FreezerLength, addHooks };
-
-export { setFreezerLength, getFreezerLength, onCreated, onDestroyed } from "./utils/freezer";
-
-export interface AppOptions
-  extends Pick<
-    ISlideConfig,
-    | "rtcAudio"
-    | "useLocalCache"
-    | "resourceTimeout"
-    | "loaderDelegate"
-    | "urlInterrupter"
-    | "navigatorDelegate"
-    | "fixedFrameSize"
-    | "logger"
-    | "enableGlobalClick"
-  > {
-  /** show debug controller */
-  debug?: boolean;
-  /** scale */
-  resolution?: number;
-  /** background color for slide animations */
-  bgColor?: string;
-  /** minimal fps @default 25 */
-  minFPS?: number;
-  /** maximal fps @default 30 */
-  maxFPS?: number;
-  /** automatically decrease fps @default true */
-  autoFPS?: boolean;
-  /** whether to re-scale automatically @default true */
-  autoResolution?: boolean;
-  /** 0~4, default: 3 */
-  maxResolutionLevel?: number;
-  /** use canvas2d mode, downside: some 3d effects are lost */
-  forceCanvas?: boolean;
-  /** fix windows 11 nvidia rendering bug, downside: render next page slows down */
-  enableNvidiaDetect?: boolean;
-  /** custom error handler */
-  onRenderError?: (error: Error, pageIndex: number) => void;
-  /** whether to show an overlay of error message @default: true */
-  showRenderError?: boolean;
-  /** Specify the behavior after hiding the slide; Freeze will destroy the slide and replace it with a snapshot, while Pause simply pauses the slide @default: 'frozen' */
-  invisibleBehavior?: "frozen" | "pause";
-}
-
-export interface ILogger {
-  info?(msg: string): void;
-  error?(msg: string): void;
-  warn?(msg: string): void;
-}
-
-export interface AppResult {
-  viewer: () => SlideDocsViewer | null;
-  controller: () => SlideController | null | undefined;
-  slide: () => Slide | undefined;
-  position: () => [page: number, pageCount: number] | undefined;
-  nextStep: () => boolean;
-  prevStep: () => boolean;
-  nextPage: () => boolean;
-  prevPage: () => boolean;
-  jumpToPage: (page: number) => boolean;
-  togglePreview: (visible?: boolean) => void;
-  getNoteHasLink: () => boolean;
-  getNoteLink: () => string | undefined;
-  getNotes: () => NotesType | undefined;
-}
-const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
+const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, void> = {
   kind: "Slide",
+  config: { enableShadowDOM: false },
   setup(context) {
-    console.log("[Slide] setup @ " + version);
+    console.log("[Slide] setup @ " + __APP_VERSION__ + " (" + context.appId + ")");
 
-    if (context.getIsWritable()) {
-      context.storage.ensureState(EmptyAttributes);
-    }
+    const logger = new Logger(context);
+    logger.info("[Slide] setup @ " + __APP_VERSION__);
 
-    if (!context.storage.state.taskId) {
+    if (!context.attributes.taskId) {
       throw new Error("[Slide] no taskId");
     }
 
-    const view = context.getView();
-    if (!view) {
-      throw new Error("[Slide] no view, please set scenePath on addApp()");
-    }
-    view.disableCameraTransform = true;
+    const storage = context.createStorage("slide", context.attributes);
 
-    const box = context.getBox();
-    box.mountStyles(styles);
-    try {
-      box.$content.dataset.appSlideVersion = version;
-    } catch {
-      // ignore
-    }
+    const appOptions = context.getAppOptions() || {};
+    const renderOptions = appOptions.renderOptions || {};
 
-    // must exist because of view
-    const baseScenePath = context.getInitScenePath() as string;
+    const sideEffect = new SideEffectManager();
+    const hasTracker = context.displayer as unknown as { tracker: ISlideConfig["whiteTracker"] };
 
-    let docsViewer: SlideDocsViewer | null = null;
-
-    const onPageChanged = (page: number) => {
-      const room = context.getRoom();
-      if (docsViewer && docsViewer.slideController) {
-        let synced = false;
-        if (room && context.getIsWritable()) {
-          syncSceneWithSlide(room, context, docsViewer.slideController.slide, baseScenePath);
-          synced = true;
-        }
-        log("[Slide] page to", page, synced ? "(synced)" : "");
-        docsViewer.viewer.setPageIndex(page - 1);
-        docsViewer.viewer.setPaused();
-        docsViewer.onPageChanged();
-        const length = docsViewer.viewer.pages.length;
-        if (length) {
-          context.dispatchAppEvent("pageStateChange", { index: page - 1, length });
-        }
-      }
-    };
-
-    const mountSlideController = (options: MountSlideOptions): SlideController => {
-      const appOptions = context.getAppOptions() || {};
-
-      const slideController = new SlideController({
-        context,
-        ...options,
-        onPageChanged,
-        onNavigate: options.onNavigate,
-        onRenderError: appOptions.onRenderError,
-        showRenderError: appOptions.showRenderError,
-        invisibleBehavior: appOptions.invisibleBehavior,
-      });
-      if (useFreezer) apps.set(context.appId, slideController, box);
-      logger.setAppController(context.appId, slideController);
-      if (import.meta.env.DEV) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).slideController = slideController;
-      }
-      slideController.readyPromise.then(options.onReady).then(() => {
-        const room = context.getRoom();
-        let synced = false;
-        if (room && context.getIsWritable()) {
-          syncSceneWithSlide(room, context, slideController.slide, baseScenePath);
-          synced = true;
-        }
-        const page = slideController.slide.slideState.currentSlideIndex;
-        log("[Slide] page to", page, synced ? "(synced)" : "", "(on ready)");
-        slideController.slide.on("renderEnd", options.onRenderEnd);
-      });
-      return slideController;
-    };
-
-    docsViewer = new SlideDocsViewer({
-      context,
-      box,
-      view,
-      mountSlideController,
-      mountWhiteboard: context.mountView.bind(context),
-      baseScenePath,
-      appId: context.appId,
-      urlInterrupter: context.getAppOptions()?.urlInterrupter,
-      onPagesReady: ({ length }) => {
-        const index = docsViewer?.viewer.pageIndex || 0;
-        context.dispatchAppEvent("pageStateChange", { index, length });
+    // Create UI
+    const viewer = new SlideViewer({
+      interactive: true,
+      mode: "interactive",
+      enableGlobalClick: true,
+      timestamp: make_timestamp(context),
+      logger: appOptions.logger || logger,
+      whiteTracker: hasTracker.tracker,
+      renderOptions: {
+        minFPS: renderOptions.minFPS || 25,
+        maxFPS: renderOptions.maxFPS || 30,
+        autoFPS: renderOptions.autoFPS ?? true,
+        autoResolution: renderOptions.autoResolution ?? true,
+        resolution: renderOptions.resolution,
+        maxResolutionLevel: renderOptions.maxResolutionLevel,
+        transactionBgColor: renderOptions.transactionBgColor || make_bg_color(context.box.$content),
       },
-      onNavigate: (page, origin) => {
-        log("[Slide] user navigate to", page, origin ? `(${origin})` : "");
-      },
+      rtcAudio: appOptions.rtcAudio,
+      useLocalCache: appOptions.useLocalCache,
+      resourceTimeout: appOptions.resourceTimeout,
+      loaderDelegate: appOptions.loaderDelegate,
+      navigatorDelegate: appOptions.navigatorDelegate,
+      fixedFrameSize: appOptions.fixedFrameSize,
+      taskId: storage.state.taskId,
+      url: storage.state.url,
     });
+
+    // For debugging.
+    Object.assign(viewer, { context, logger });
+
+    sideEffect.push(refrigerator.set(context.appId, viewer, context.box));
 
     if (import.meta.env.DEV) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).slideDoc = docsViewer;
+      (window as any).slideViewer = viewer;
     }
 
-    const room = context.getRoom();
-    const sideEffect = new SideEffectManager();
+    // Log more
+    sideEffect.push(viewer.events.on("freeze", () => logger.info("[Slide] freeze")));
+    sideEffect.push(viewer.events.on("unfreeze", () => logger.info("[Slide] unfreeze")));
+    sideEffect.push(
+      viewer.events.on("prepareError", error =>
+        logger.info("[Slide] fetch slide info failed: " + error.message)
+      )
+    );
+    sideEffect.push(
+      viewer.events.on("renderError", ({ error, index }) =>
+        logger.info("[Slide] render failed " + `[${index}]: ${error.message}`)
+      )
+    );
 
-    sideEffect.add(() => {
-      logger.setAppContext(context.appId, context);
-      logger.enable = context.getAppOptions()?.debug || import.meta.env.DEV;
-      logger.level = import.meta.env.DEV ? "verbose" : "debug";
-      return () => logger.deleteApp(context.appId);
-    });
+    // Mount UI
+    context.box.mountStyles(SlideViewer.styles);
+    context.box.mountStage(viewer.$slide);
+    context.box.mountFooter(viewer.$footer);
+    context.box.mountContent(viewer.$content);
+    sideEffect.push(() => viewer.destroy());
 
-    if (room) {
-      docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName);
-      sideEffect.add(() => {
-        const onRoomStateChanged = () => {
-          if (docsViewer) {
-            docsViewer.toggleClickThrough(room.state.memberState.currentApplianceName);
-          }
-        };
-
-        room.callbacks.on("onRoomStateChanged", onRoomStateChanged);
-
-        return () => {
-          room.callbacks.off("onRoomStateChanged", onRoomStateChanged);
-        };
-      });
-    }
+    // Connect UI with Netless App
+    connect({ context, storage, viewer, sideEffect, logger });
 
     context.emitter.on("destroy", () => {
-      log("[Slide] destroy", context.appId);
-      if (useFreezer) apps.delete(context.appId);
+      logger.info("[Slide] destroy");
+      logger.destroy();
       sideEffect.flushAll();
-      if (docsViewer) {
-        docsViewer.destroy();
-        docsViewer = null;
-      }
     });
 
-    docsViewer.mount();
-
-    return {
-      viewer: () => {
-        return docsViewer;
-      },
-      controller: () => {
-        return docsViewer?.slideController;
-      },
-      slide: () => {
-        return docsViewer?.slideController?.slide;
-      },
-      nextStep: () => {
-        if (docsViewer) {
-          if (docsViewer?.slideController?.slide.hasNextStep()) {
-            docsViewer.slideController.slide.nextStep();
-          } else {
-            const controller = docsViewer?.slideController;
-            if (controller) {
-              const { page, pageCount } = controller;
-              if (pageCount > 0 && page < pageCount) {
-                controller.jumpToPage(page + 1);
-              }
-            }
-          }
-          return true;
-        }
-        return false;
-      },
-      prevStep: () => {
-        if (docsViewer && docsViewer.slideController) {
-          docsViewer?.slideController?.slide.prevStep();
-          return true;
-        }
-        return false;
-      },
-      position: () => {
-        const controller = docsViewer?.slideController;
-        if (controller) {
-          return [controller.page, controller.pageCount] as [page: number, pageCount: number];
-        }
-      },
-      nextPage: () => {
-        const controller = docsViewer?.slideController;
-        if (controller) {
-          const { page, pageCount } = controller;
-          if (pageCount > 0 && page < pageCount) {
-            controller.jumpToPage(page + 1);
-            return true;
-          }
-        }
-        return false;
-      },
-      prevPage: () => {
-        const controller = docsViewer?.slideController;
-        if (controller) {
-          const { page, pageCount } = controller;
-          if (pageCount > 0 && page > 1) {
-            controller.jumpToPage(page - 1);
-            return true;
-          }
-        }
-        return false;
-      },
-      jumpToPage: (newPage: number) => {
-        const controller = docsViewer?.slideController;
-        if (controller) {
-          const { page, pageCount } = controller;
-          if (pageCount > 0 && page > 0 && page <= pageCount) {
-            controller.jumpToPage(newPage);
-            return true;
-          }
-        }
-        return false;
-      },
-      togglePreview: visible => {
-        docsViewer?.viewer.togglePreview(visible);
-      },
-      getNoteHasLink: () => {
-        return docsViewer?.viewer.getNoteHasLink() ?? false;
-      },
-      getNoteLink: () => {
-        return docsViewer?.viewer.getNoteLink();
-      },
-      toggleNoteVisible: (visible: boolean) => {
-        return docsViewer?.viewer.toggleNoteVisible(visible);
-      },
-      getNoteVisible: () => {
-        return docsViewer?.viewer.getNoteVisible();
-      },
-      getNotes: () => {
-        return docsViewer?.viewer.getNotes();
-      },
-    };
+    return viewer;
   },
 };
 
