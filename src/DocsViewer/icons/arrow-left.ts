@@ -3,16 +3,16 @@ export function arrowLeftSVG(namespace: string): SVGElement {
 
   const $svg = document.createElementNS(NS, "svg");
   $svg.setAttribute("class", `${namespace}-footer-icon-arrow-left`);
-  $svg.setAttribute("viewBox", "0 0 500 500");
+  $svg.setAttribute("viewBox", "0 0 20 20");
 
-  const $path = document.createElementNS(NS, "path");
-  $path.setAttribute("fill", "currentColor");
-  $path.setAttribute(
-    "d",
-    "M177.81 249.959L337.473 90.295c2.722-2.865 2.651-7.378-.143-10.1-2.793-2.65-7.163-2.65-9.956 0l-164.75 164.75c-2.793 2.793-2.793 7.306 0 10.1l164.75 164.75c2.865 2.722 7.378 2.65 10.099-.143 2.651-2.794 2.651-7.163 0-9.957L177.809 249.959z"
-  );
-
-  $svg.appendChild($path);
+  $svg.innerHTML = `<g clip-path="url(#clip0_11800_99864)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11.5283 4.86182L12.4711 5.80463L8.22849 10.0473L12.4711 14.2899L11.5283 15.2327L6.34287 10.0473L11.5283 4.86182Z" class="arrow" />
+</g>
+<defs>
+<clipPath id="clip0_11800_99864">
+<rect width="16" height="16" fill="white" transform="translate(2 2)"/>
+</clipPath>
+</defs>`;
 
   return $svg;
 }

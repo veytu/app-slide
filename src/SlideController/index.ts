@@ -13,7 +13,7 @@ import type { ISlideConfig, SyncEvent } from "@netless/slide";
 import type { Attributes, MagixEvents, MagixPayload, SlideState } from "../typings";
 import type { AppOptions } from "..";
 
-import { SideEffectManager } from "side-effect-manager";
+import { genUID, SideEffectManager } from "side-effect-manager";
 import { Slide, SLIDE_EVENTS } from "@netless/slide";
 import { clamp } from "../utils/helpers";
 import { cachedGetBgColor } from "../utils/bgcolor";
@@ -82,6 +82,8 @@ export class SlideController {
   // 签名后的预览图
   public previewList: string[] = [];
 
+  private clientId: string;
+
   public constructor({
     context,
     anchor,
@@ -95,6 +97,7 @@ export class SlideController {
     showRenderError,
     invisibleBehavior,
   }: SlideControllerOptions) {
+    this.clientId = context?.getRoom()?.uid || genUID();
     this.invisibleBehavior = invisibleBehavior ?? "frozen";
     this.onRenderStart = onRenderStart;
     this.onPageChanged = onPageChanged;
@@ -203,16 +206,32 @@ export class SlideController {
       })
     );
 
-    slide.on(SLIDE_EVENTS.renderStart, this.onRenderStart);
+    slide.on(SLIDE_EVENTS.renderStart, () => {
+      (slide as any).player.app.ticker.minFPS = 15;
+      (slide as any).player.app.ticker.maxFPS = 40;
+      this.onRenderStart?.();
+    });
     slide.on(SLIDE_EVENTS.slideChange, this.onPageChanged);
-    slide.on(SLIDE_EVENTS.renderEnd, this.onTransitionEnd);
+    slide.on(SLIDE_EVENTS.renderEnd, () => {
+      (slide as any).player.app.ticker.minFPS = 5;
+      (slide as any).player.app.ticker.maxFPS = 5;
+      this.onTransitionEnd?.();
+    });
     slide.on(SLIDE_EVENTS.mainSeqStepStart, this.onTransitionStart);
     slide.on(SLIDE_EVENTS.mainSeqStepEnd, this.onTransitionEnd);
     slide.on(SLIDE_EVENTS.renderError, this.onError);
     slide.on(SLIDE_EVENTS.stateChange, this.onStateChange);
     slide.on(SLIDE_EVENTS.syncDispatch, this.onSyncDispatch);
-
     slide.on(SLIDE_EVENTS.renderEnd, this.resolveReady);
+
+    slide.on(SLIDE_EVENTS.animateStart, () => {
+      (slide as any).player.app.ticker.minFPS = 15;
+      (slide as any).player.app.ticker.maxFPS = 40;
+    });
+    slide.on(SLIDE_EVENTS.animateEnd, () => {
+      (slide as any).player.app.ticker.minFPS = 5;
+      (slide as any).player.app.ticker.maxFPS = 5;
+    });
 
     this.sideEffect.add(() => {
       document.addEventListener("visibilitychange", this.onVisibilityChange);
@@ -270,6 +289,7 @@ export class SlideController {
       } else if (this._toFreeze === -1) {
         this.unfreeze();
       }
+      this.preloadFirstRender();
     } else if (this.pollCount < MaxPollCount) {
       this.pollCount++;
       setTimeout(this.pollReadyState, 500);
@@ -297,39 +317,87 @@ export class SlideController {
     const attribute = this.context.storage.state;
     const slide = new Slide({
       anchor,
+      clientId: this.clientId,
       interactive: true,
-      mode: "interactive",
+      mode: "sync",
       controller: logger.enable,
       enableGlobalClick: options.enableGlobalClick ?? true,
+      enableAutoForward: true,
+      //skipActionWhenFrozen: true,
       renderOptions: {
-        minFPS: options.minFPS || 25,
-        maxFPS: options.maxFPS || 30,
+        minFPS: options.minFPS || 5,
+        maxFPS: options.maxFPS || 15,
         autoFPS: options.autoFPS ?? true,
-        autoResolution: options.autoResolution ?? true,
-        resolution: options.resolution,
+        autoResolution: true,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
-        maxResolutionLevel: options.maxResolutionLevel,
-        forceCanvas: options.forceCanvas,
+        resolution: options.resolution,
+        maxResolutionLevel: 2,
+      	forceCanvas: options.forceCanvas,
         enableNvidiaDetect: options.enableNvidiaDetect,
+        transitionResolutionLevel: 1,
       },
       fixedFrameSize: options.fixedFrameSize,
       loaderDelegate: options.loaderDelegate,
-      navigatorDelegate: options.navigatorDelegate,
+      navigatorDelegate: {
+        gotoPage: (index: number) => {
+          if (!this.context.getIsAppReadonly()) {
+            slide.renderSlide(index);
+          }
+        },
+        ...options.navigatorDelegate
+      },
       urlInterrupter: options.urlInterrupter,
       resourceTimeout: options.resourceTimeout,
       rtcAudio: options.rtcAudio,
-      useLocalCache: options.useLocalCache,
+      useLocalCache: true,
       logger: options.logger,
       whiteTracker: defaults.whiteTracker,
       timestamp: this.timestamp,
       customLinks: attribute.customLinks,
       skipActionWhenFrozen: options.skipActionWhenFrozen ?? true,
+      antialias:false,
     });
     if (import.meta.env.DEV) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).slide = slide;
     }
+
     return slide;
+  }
+
+  private async preloadFirstRender() {
+    try {
+      // const { taskId, url } = this.context.storage.state;
+
+      // window.postMessage(
+      //   {
+      //     type: "@slide/_preload_slide_",
+      //     taskId,
+      //     prefix: url,
+      //     pages: [
+      //       this.slide.slideState.currentSlideIndex + 1,
+      //       this.slide.slideState.currentSlideIndex + 2,
+      //       this.slide.slideState.currentSlideIndex + 3,
+      //     ],
+      //     sessionId: "3456",
+      //   },
+      //   "*"
+      // );
+
+      for (
+        let i = this.slide.slideState.currentSlideIndex + 4;
+        i < this.slide.slideCount + 1;
+        i++
+      ) {
+        await this.slide.preloadResource(i);
+      }
+      console.log("slide first load done");
+    } catch (e) {
+      console.error(e);
+      window.postMessage({
+        type: "@slide/_preload_slide_first_finish_",
+      });
+    }
   }
 
   private destroyed = false;

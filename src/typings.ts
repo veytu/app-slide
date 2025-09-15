@@ -12,6 +12,7 @@ export interface Attributes {
   resourceList: string[];
   previewList: string[];
   customLinks: CustomLink[];
+  note?: string;
 }
 
 export type MagixPayload = {

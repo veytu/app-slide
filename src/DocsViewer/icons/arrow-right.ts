@@ -3,16 +3,16 @@ export function arrowRightSVG(namespace: string): SVGElement {
 
   const $svg = document.createElementNS(NS, "svg");
   $svg.setAttribute("class", `${namespace}-footer-icon-arrow-right`);
-  $svg.setAttribute("viewBox", "0 0 500 500");
+  $svg.setAttribute("viewBox", "0 0 20 20");
 
-  const $path = document.createElementNS(NS, "path");
-  $path.setAttribute("fill", "currentColor");
-  $path.setAttribute(
-    "d",
-    "M322.19 250.041L162.527 409.705c-2.722 2.865-2.651 7.378.143 10.1 2.793 2.65 7.163 2.65 9.956 0l164.75-164.75c2.793-2.793 2.793-7.306 0-10.1l-164.75-164.75c-2.865-2.722-7.378-2.65-10.099.143-2.651 2.794-2.651 7.163 0 9.957l159.664 159.736z"
-  );
-
-  $svg.appendChild($path);
+  $svg.innerHTML = `<g clip-path="url(#clip0_11800_99870)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8.1377 4.86182L7.19489 5.80463L11.4375 10.0473L7.19489 14.2899L8.1377 15.2327L13.3231 10.0473L8.1377 4.86182Z" class="arrow" />
+</g>
+<defs>
+<clipPath id="clip0_11800_99870">
+<rect width="16" height="16" fill="white" transform="translate(2 2)"/>
+</clipPath>
+</defs>`;
 
   return $svg;
 }

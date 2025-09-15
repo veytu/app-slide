@@ -5,6 +5,7 @@ import { createDocsViewerPages, DefaultUrl } from "../SlideController";
 import { cachedGetBgColor } from "../utils/bgcolor";
 import { clamp } from "../utils/helpers";
 import style from "../style.scss?inline";
+import type { ReadonlyTeleBox } from "@netless/window-manager";
 
 export interface PreviewParams {
   container: HTMLElement;
@@ -12,6 +13,7 @@ export interface PreviewParams {
   url?: string;
   debug?: boolean;
   resourceList?: string[];
+  box: ReadonlyTeleBox;
 }
 
 export default function previewSlide({
@@ -20,13 +22,14 @@ export default function previewSlide({
   resourceList = [],
   url = DefaultUrl,
   debug = import.meta.env.DEV,
+  box,
 }: PreviewParams) {
   if (!taskId) {
     throw new Error("[Slide] taskId is required");
   }
 
   container.style.cssText += `display:flex;flex-direction:column`;
-  const previewer = new SlidePreviewer({ target: container });
+  const previewer = new SlidePreviewer({ target: container, box });
   previewer.debug = !!debug;
 
   previewer.mount(taskId, url, resourceList);
@@ -61,13 +64,14 @@ export class SlidePreviewer {
     };
   });
 
-  public constructor(config: { target: HTMLElement }) {
+  public constructor(config: { target: HTMLElement; box: ReadonlyTeleBox }) {
     this.target = config.target;
     this.bgColor = cachedGetBgColor(this.target);
     this.viewer = new DocsViewer({
       readonly: false,
       onNewPageIndex: this.onNewPageIndex,
       onPlay: this.onPlay,
+      box: config.box,
     });
     this.render();
   }
@@ -125,13 +129,18 @@ export class SlidePreviewer {
       mode: "local",
       controller: this.debug,
       enableGlobalClick: true,
+      enableAutoForward: true,
+      skipActionWhenFrozen: true,
       renderOptions: {
-        minFPS: 25,
-        maxFPS: 30,
+        minFPS: 5,
+        maxFPS: 15,
         autoFPS: true,
         autoResolution: true,
         transactionBgColor: this.bgColor,
+        transitionResolutionLevel: 1,
+        maxResolutionLevel: 2,
       },
+      antialias: false,
     });
 
     this.registerEventListeners();
@@ -171,15 +180,15 @@ export class SlidePreviewer {
   };
 
   protected onTransitionStart = () => {
-    this.viewer.setPlaying();
+    // this.viewer.setPlaying();
   };
 
   protected onTransitionEnd = () => {
-    this.viewer.setPaused();
+    // this.viewer.setPaused();
   };
 
   protected onError = ({ error }: { error: Error }) => {
-    this.viewer.setPaused();
+    // this.viewer.setPaused();
     console.warn("[Slide] render error", error);
   };
 

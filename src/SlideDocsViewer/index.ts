@@ -8,7 +8,7 @@ import { DocsViewer, type DocsViewerPage } from "../DocsViewer";
 import { logger } from "../utils/logger";
 import { isEditable } from "../utils/helpers";
 import type { Attributes, MagixEvents } from "../typings";
-import type { AppOptions } from "..";
+import { type AppOptions } from "..";
 
 export const ClickThroughAppliances = new Set(["clicker"]);
 
@@ -52,6 +52,7 @@ export class SlideDocsViewer {
   private readonly appId: string;
   private isViewMounted = false;
   private justSildeReadonly = false;
+  //private visible = true;
 
   public constructor({
     context,
@@ -79,6 +80,8 @@ export class SlideDocsViewer {
       onPlay: this.onPlay,
       urlInterrupter,
       onPagesReady,
+      box: box,
+      context,
     });
 
     this.sideEffect.add(() => {
@@ -110,6 +113,14 @@ export class SlideDocsViewer {
   public setJustSildeReadonly(justSildeReadonly: boolean) {
     this.justSildeReadonly = justSildeReadonly;
     this.slideController?.slide.setInteractive(!this.justSildeReadonly);
+  }
+  
+  public getNoteHasLink() {
+    return this.viewer?.getNoteHasLink();
+  }
+
+  public getNoteLink() {
+    return this.viewer?.getNoteLink();
   }
 
   public render() {
@@ -190,11 +201,12 @@ export class SlideDocsViewer {
       return () => this.whiteboardView.callbacks.off("onSizeUpdated", this.scaleDocsToFit);
     });
 
+
     return this;
   }
 
   protected onError = ({ error, index }: { error: Error; index: number }) => {
-    this.viewer.setPaused();
+    // this.viewer.setPaused();
     if (this.slideController?.showRenderError) {
       this.$overlay.textContent = `Error on slide[page=${this.slideController.page}]: ${error.message}`;
       this.$overlay.style.opacity = "1";
@@ -206,8 +218,10 @@ export class SlideDocsViewer {
   };
 
   protected onRenderStart = () => {
-    this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
-    this.viewer.setPlaying();
+    //if (this.visible) {
+    //  this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
+    // }
+    // this.viewer.setPlaying();
   };
 
   protected onRenderEnd = () => {

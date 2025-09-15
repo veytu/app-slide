@@ -17,6 +17,7 @@ import { SlideDocsViewer } from "./SlideDocsViewer";
 import { apps, FreezerLength, addHooks, useFreezer } from "./utils/freezer";
 import { log, logger } from "./utils/logger";
 import styles from "./style.scss?inline";
+import type { NotesType } from "./DocsViewer";
 
 export type { PreviewParams } from "./SlidePreviewer";
 export { SlidePreviewer, default as previewSlide } from "./SlidePreviewer";
@@ -93,8 +94,11 @@ export interface AppResult {
   prevPage: () => boolean;
   jumpToPage: (page: number) => boolean;
   setSildeReadonly: (bol: boolean) => void;
+  togglePreview: (visible?: boolean) => void;
+  getNoteHasLink: () => boolean;
+  getNoteLink: () => string | undefined;
+  getNotes: () => NotesType | undefined;
 }
-
 const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
   kind: "Slide",
   setup(context) {
@@ -137,7 +141,7 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
         }
         log("[Slide] page to", page, synced ? "(synced)" : "");
         docsViewer.viewer.setPageIndex(page - 1);
-        docsViewer.viewer.setPaused();
+        // docsViewer.viewer.setPaused();
         docsViewer.onPageChanged();
         const length = docsViewer.viewer.pages.length;
         if (length > 0) {
@@ -254,8 +258,18 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
         return docsViewer?.slideController?.slide;
       },
       nextStep: () => {
-        if (docsViewer && docsViewer.slideController) {
-          docsViewer?.slideController?.slide.nextStep();
+        if (docsViewer) {
+          if (docsViewer?.slideController?.slide.hasNextStep()) {
+            docsViewer.slideController.slide.nextStep();
+          } else {
+            const controller = docsViewer?.slideController;
+            if (controller) {
+              const { page, pageCount } = controller;
+              if (pageCount > 0 && page < pageCount) {
+                controller.jumpToPage(page + 1);
+              }
+            }
+          }
           return true;
         }
         return false;
@@ -305,6 +319,24 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
           }
         }
         return false;
+      },
+      togglePreview: visible => {
+        docsViewer?.viewer.togglePreview(visible);
+      },
+      getNoteHasLink: () => {
+        return docsViewer?.viewer.getNoteHasLink() ?? false;
+      },
+      getNoteLink: () => {
+        return docsViewer?.viewer.getNoteLink();
+      },
+      toggleNoteVisible: (visible: boolean) => {
+        return docsViewer?.viewer.toggleNoteVisible(visible);
+      },
+      getNoteVisible: () => {
+        return docsViewer?.viewer.getNoteVisible();
+      },
+      getNotes: () => {
+        return docsViewer?.viewer.getNotes();
       },
     };
   },
