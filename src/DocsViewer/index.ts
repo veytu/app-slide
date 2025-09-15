@@ -1,4 +1,4 @@
-// import { sidebarSVG } from "./icons/sidebar";
+import { sidebarSVG } from "./icons/sidebar";
 import { arrowLeftSVG } from "./icons/arrow-left";
 import { arrowRightSVG } from "./icons/arrow-right";
 // import { playSVG } from "./icons/play";
