@@ -103,6 +103,7 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
   kind: "Slide",
   setup(context) {
     console.log("[Slide] setup @ " + version);
+    console.log("[Slide] setup @111 " + version);
 
     if (context.getIsWritable()) {
       context.storage.ensureState(EmptyAttributes);

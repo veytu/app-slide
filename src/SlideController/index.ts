@@ -450,12 +450,17 @@ export class SlideController {
       } else {
         this.slide.resume();
       }
-      if (isNeedSyncState) {
-        const state = this.context.storage.state.state;
-        if (state) {
-          log("[Slide] sync storage", JSON.stringify(state));
-          this.slide.setSlideState(state);
-        }
+      const currentSlideIndex = this.context.storage.state.state?.currentSlideIndex;
+      if (currentSlideIndex) {
+        log("[Slide] sync storage", currentSlideIndex);
+        this.slide.setSlideState({ currentSlideIndex });
+
+      // if (isNeedSyncState) {
+      //   const state = this.context.storage.state.state;
+      //   if (state) {
+      //     log("[Slide] sync storage", JSON.stringify(state));
+      //     this.slide.setSlideState(state);
+      //   }
       }
     } else {
       this._toFreeze = -1;

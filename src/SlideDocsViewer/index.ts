@@ -238,7 +238,7 @@ export class SlideDocsViewer {
   private _onPageChangedTimer = 0;
   private _onPageChanged = () => {
     this.$overlay.style.opacity = "";
-    this.$whiteboardView.classList.remove(this.wrapClassName("wb-view-hidden"));
+    // this.$whiteboardView.classList.remove(this.wrapClassName("wb-view-hidden"));
   };
 
   protected refreshPages = () => {
