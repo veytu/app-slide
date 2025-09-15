@@ -215,10 +215,10 @@ export class SlideController {
     slide.on(SLIDE_EVENTS.renderEnd, () => {
       (slide as any).player.app.ticker.minFPS = 5;
       (slide as any).player.app.ticker.maxFPS = 5;
-      this.onTransitionEnd?.();
+      // this.onTransitionEnd?.();
     });
-    slide.on(SLIDE_EVENTS.mainSeqStepStart, this.onTransitionStart);
-    slide.on(SLIDE_EVENTS.mainSeqStepEnd, this.onTransitionEnd);
+    // slide.on(SLIDE_EVENTS.mainSeqStepStart, this.onTransitionStart);
+    // slide.on(SLIDE_EVENTS.mainSeqStepEnd, this.onTransitionEnd);
     slide.on(SLIDE_EVENTS.renderError, this.onError);
     slide.on(SLIDE_EVENTS.stateChange, this.onStateChange);
     slide.on(SLIDE_EVENTS.syncDispatch, this.onSyncDispatch);

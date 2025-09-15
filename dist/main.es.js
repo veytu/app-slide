@@ -38086,13 +38086,9 @@ class SlideController {
     });
     slide.on(Slide.SLIDE_EVENTS.slideChange, this.onPageChanged);
     slide.on(Slide.SLIDE_EVENTS.renderEnd, () => {
-      var _a2;
       slide.player.app.ticker.minFPS = 5;
       slide.player.app.ticker.maxFPS = 5;
-      (_a2 = this.onTransitionEnd) == null ? void 0 : _a2.call(this);
     });
-    slide.on(Slide.SLIDE_EVENTS.mainSeqStepStart, this.onTransitionStart);
-    slide.on(Slide.SLIDE_EVENTS.mainSeqStepEnd, this.onTransitionEnd);
     slide.on(Slide.SLIDE_EVENTS.renderError, this.onError);
     slide.on(Slide.SLIDE_EVENTS.stateChange, this.onStateChange);
     slide.on(Slide.SLIDE_EVENTS.syncDispatch, this.onSyncDispatch);
@@ -38984,11 +38980,9 @@ class DocsViewer {
     this.noteVisible = false;
     this.pageIndex = 0;
     this.setPaused = () => {
-      console.log("555555");
       this.$btnPlay.classList.toggle(this.wrapClassName("footer-btn-playing"), false);
     };
     this.setPlaying = () => {
-      console.log("444444");
       this.$btnPlay.classList.toggle(this.wrapClassName("footer-btn-playing"), true);
     };
     this.namespace = "netless-app-slide";
@@ -39023,14 +39017,12 @@ class DocsViewer {
   }
   setReadonly(readonly) {
     this.readonly = readonly;
-    console.log("ccccccc");
     this.$content.classList.toggle(this.wrapClassName("readonly"), readonly);
     this.$footer.classList.toggle(this.wrapClassName("readonly"), readonly);
   }
   setAppReadonly(readonly) {
     var _a2;
     this.appReadonly = readonly;
-    console.log("bbbbbb");
     (_a2 = this.note$) == null ? void 0 : _a2.classList.toggle(this.wrapClassName("note-hide"), readonly);
   }
   destroy() {
@@ -39044,7 +39036,6 @@ class DocsViewer {
       this.scrollPreview(pageIndex);
       this.pageIndex = pageIndex;
       this.$pageNumberInput.textContent = String(pageIndex + 1);
-      console.log("aaaaaa");
       this.$btnPageBack.classList.toggle(this.wrapClassName("footer-btn-disable"), pageIndex == 0);
       this.$btnPageNext.classList.toggle(
         this.wrapClassName("footer-btn-disable"),
@@ -39088,7 +39079,6 @@ class DocsViewer {
   setSmallBox(isSmallBox) {
     if (this.isSmallBox !== isSmallBox) {
       this.isSmallBox = isSmallBox;
-      console.log("888888");
       this.$footer.classList.toggle(this.wrapClassName("float-footer"), isSmallBox);
     }
   }
@@ -39275,7 +39265,6 @@ class DocsViewer {
         $img.dataset.src = previewSRC;
       }
       $img.dataset.pageIndex = pageIndex;
-      console.log("777777");
       $img.classList.toggle(this.wrapClassName("active"), this.pageIndex == i);
       $page.appendChild($name);
       $page.appendChild($img);
@@ -39299,7 +39288,6 @@ class DocsViewer {
     return this.$previewMask;
   }
   refreshBtnSidebar() {
-    console.log("666666");
     this.$btnSidebar.style.display = this.pages.length > 0 ? "" : "none";
   }
   renderFooter() {
@@ -39307,7 +39295,6 @@ class DocsViewer {
       const $footer = document.createElement("div");
       $footer.className = this.wrapClassName("footer");
       this.$footer = $footer;
-      console.log("333333");
       if (this.readonly) {
         $footer.classList.add(this.wrapClassName("readonly"));
       }
@@ -39367,7 +39354,6 @@ class DocsViewer {
         this.$footer.appendChild($pageJumps);
       }
       this.box.events.on("maximized", (max) => {
-        console.log("222222");
         this.$footer.classList.toggle(this.wrapClassName("hide"), max);
       });
     }
@@ -39385,7 +39371,6 @@ class DocsViewer {
   togglePreview(isShowPreview) {
     var _a2, _b, _c, _d, _e, _f;
     this.isShowPreview = isShowPreview != null ? isShowPreview : !this.isShowPreview;
-    console.log("111111");
     this.$content.classList.toggle(this.wrapClassName("preview-active"), this.isShowPreview);
     if (this.isShowPreview) {
       (_b = (_a2 = this.context) == null ? void 0 : _a2.extendWrapper) == null ? void 0 : _b.appendChild(this.renderPreviewMask());
@@ -40014,7 +39999,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.81-wukongBeta.2";
+const version = "0.2.81-wukongBeta.3";
 const SlideApp = {
   kind: "Slide",
   setup(context) {

@@ -104,7 +104,6 @@ export class DocsViewer {
 
   public setReadonly(readonly: boolean): void {
     this.readonly = readonly;
-    console.log("ccccccc");
     this.$content.classList.toggle(this.wrapClassName("readonly"), readonly);
     this.$footer.classList.toggle(this.wrapClassName("readonly"), readonly);
     // this.$pageNumberInput.disabled = readonly;
@@ -112,7 +111,6 @@ export class DocsViewer {
 
   public setAppReadonly(readonly: boolean): void {
     this.appReadonly = readonly;
-    console.log("bbbbbb");
     this.note$?.classList.toggle(this.wrapClassName("note-hide"), readonly);
   }
 
@@ -127,7 +125,6 @@ export class DocsViewer {
       this.scrollPreview(pageIndex);
       this.pageIndex = pageIndex;
       this.$pageNumberInput.textContent = String(pageIndex + 1);
-      console.log("aaaaaa");
       this.$btnPageBack.classList.toggle(this.wrapClassName("footer-btn-disable"), pageIndex == 0);
       this.$btnPageNext.classList.toggle(
         this.wrapClassName("footer-btn-disable"),
@@ -178,7 +175,6 @@ export class DocsViewer {
   public setSmallBox(isSmallBox: boolean): void {
     if (this.isSmallBox !== isSmallBox) {
       this.isSmallBox = isSmallBox;
-      console.log("888888");
       this.$footer.classList.toggle(this.wrapClassName("float-footer"), isSmallBox);
     }
   }
@@ -404,7 +400,6 @@ export class DocsViewer {
         $img.dataset.src = previewSRC;
       }
       $img.dataset.pageIndex = pageIndex;
-      console.log("777777");
       $img.classList.toggle(this.wrapClassName("active"), this.pageIndex == i);
 
       $page.appendChild($name);
@@ -432,17 +427,14 @@ export class DocsViewer {
   }
 
   public setPaused = () => {
-    console.log("555555");
     this.$btnPlay.classList.toggle(this.wrapClassName("footer-btn-playing"), false);
   };
 
   public setPlaying = () => {
-    console.log("444444");
     this.$btnPlay.classList.toggle(this.wrapClassName("footer-btn-playing"), true);
   };
 
   public refreshBtnSidebar() {
-    console.log("666666");
     this.$btnSidebar.style.display = this.pages.length > 0 ? "" : "none";
   }
 
@@ -451,7 +443,7 @@ export class DocsViewer {
       const $footer = document.createElement("div");
       $footer.className = this.wrapClassName("footer");
       this.$footer = $footer;
-      console.log("333333");
+
       if (this.readonly) {
         $footer.classList.add(this.wrapClassName("readonly"));
       }
@@ -563,7 +555,6 @@ export class DocsViewer {
         this.$footer.appendChild($pageJumps);
       }
       this.box.events.on("maximized", max => {
-        console.log("222222");
         this.$footer.classList.toggle(this.wrapClassName("hide"), max);
       });
     }
@@ -589,7 +580,6 @@ export class DocsViewer {
 
   public togglePreview(isShowPreview?: boolean): void {
     this.isShowPreview = isShowPreview ?? !this.isShowPreview;
-    console.log("111111");
     this.$content.classList.toggle(this.wrapClassName("preview-active"), this.isShowPreview);
 
     if (this.isShowPreview) {
