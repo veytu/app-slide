@@ -3,6 +3,7 @@ import type { ScenePathType } from "white-web-sdk";
 import type { Slide } from "@netless/slide";
 import type { DocsViewerPage } from "../DocsViewer";
 import type { Attributes } from "../typings";
+import { log } from "../utils/logger";
 
 export function createDocsViewerPages(slide: Slide, previewUrls: string[] = []): DocsViewerPage[] {
   const { width, height, slideCount, slideState } = slide;
@@ -51,6 +52,7 @@ export function syncSceneWithSlide(
     currentScenePath !== scenePath &&
     room.scenePathType(scenePath) === ("page" as ScenePathType.Page)
   ) {
+    log("[Slide] xxxxxxxxxxxxxxxxxxxxxx333333333 " ,scenePath);
     context.setScenePath(scenePath);
   }
 }

@@ -137,6 +137,7 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
       if (docsViewer && docsViewer.slideController) {
         let synced = false;
         if (room && context.getIsWritable()) {
+          log("[Slide] xxxxxxxxxxxx1111111111 " ,page);
           syncSceneWithSlide(room, context, docsViewer.slideController.slide, baseScenePath);
           synced = true;
         }
@@ -173,6 +174,7 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
         const room = context.getRoom();
         let synced = false;
         if (room && context.getIsWritable()) {
+          log("[Slide] xxxxxxxxxxxxxxxxxxxxxx444444444 " ,baseScenePath);
           syncSceneWithSlide(room, context, slideController.slide, baseScenePath);
           synced = true;
         }

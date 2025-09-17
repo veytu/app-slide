@@ -138,7 +138,7 @@ export class SlidePreviewer {
         autoResolution: true,
         transactionBgColor: this.bgColor,
         transitionResolutionLevel: 1,
-        maxResolutionLevel: 2,
+        maxResolutionLevel: 1,
       },
       antialias: false,
     });
