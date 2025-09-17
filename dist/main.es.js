@@ -1,5 +1,4 @@
 var _a;
-import { WindowManager } from "@netless/window-manager";
 var Slide = function(t) {
   var e = {};
   function i(n) {
@@ -37982,11 +37981,9 @@ class SlideController {
         return;
       this.isFrozen = false;
       if (this.ready) {
-        let isNeedSyncState = false;
         log("[Slide] unfreeze", this.context.appId);
         if (this.invisibleBehavior === "frozen") {
           this.slide.release();
-          isNeedSyncState = true;
         } else {
           this.slide.resume();
         }
@@ -37994,13 +37991,6 @@ class SlideController {
         if (currentSlideIndex) {
           log("[Slide] sync storage", currentSlideIndex);
           this.slide.setSlideState({ currentSlideIndex });
-          if (isNeedSyncState) {
-            const state = this.context.storage.state.state;
-            if (state) {
-              log("[Slide] sync storage", JSON.stringify(state));
-              this.slide.setSlideState(state);
-            }
-          }
         }
       } else {
         this._toFreeze = -1;
@@ -38166,7 +38156,7 @@ class SlideController {
       loaderDelegate: options.loaderDelegate,
       navigatorDelegate: {
         gotoPage: (index) => {
-          if (WindowManager.wukongRoleManager.wukongCanOperate()) {
+          if (!this.context.getIsAppReadonly()) {
             slide.renderSlide(index);
           }
         },
@@ -39006,6 +38996,7 @@ class DocsViewer {
     this.urlInterrupter = urlInterrupter || ((url) => url);
     this.box = box;
     this.context = context;
+    this.appReadonly = context == null ? void 0 : context.getIsAppReadonly();
     this.render();
   }
   set pages(value) {
@@ -39028,6 +39019,11 @@ class DocsViewer {
     this.readonly = readonly;
     this.$content.classList.toggle(this.wrapClassName("readonly"), readonly);
     this.$footer.classList.toggle(this.wrapClassName("readonly"), readonly);
+  }
+  setAppReadonly(readonly) {
+    var _a2;
+    this.appReadonly = readonly;
+    (_a2 = this.note$) == null ? void 0 : _a2.classList.toggle(this.wrapClassName("note-hide"), readonly);
   }
   destroy() {
     var _a2;
@@ -39130,7 +39126,7 @@ class DocsViewer {
     if (this.readonly) {
       return;
     }
-    if (!WindowManager.wukongRoleManager.wukongCanOperate()) {
+    if (this.appReadonly) {
       return;
     }
     if (isIOS() || isAndroid())
@@ -40003,12 +39999,13 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.81-wukongBetaT.0";
+const version = "0.2.81-wukongBeta.3";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
     var _a2, _b;
     console.log("[Slide] setup @ " + version);
+    console.log("[Slide] setup @111 " + version);
     if (context.getIsWritable()) {
       context.storage.ensureState(EmptyAttributes);
     }
