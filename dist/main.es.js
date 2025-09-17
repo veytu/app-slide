@@ -39437,7 +39437,6 @@ class SlideDocsViewer {
     this.onRenderStart = () => {
       log("[Slide] xxxxxxxxxxxxxxxxxxxxxx666666666 onRenderStart");
       this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
-      this.viewer.setPlaying();
     };
     this.onRenderEnd = () => {
     };
@@ -40005,7 +40004,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.81-wukongBeta.4";
+const version = "0.2.81-wukongBeta.5";
 const SlideApp = {
   kind: "Slide",
   setup(context) {

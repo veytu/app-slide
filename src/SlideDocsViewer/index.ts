@@ -222,7 +222,7 @@ export class SlideDocsViewer {
     // if (this.visible) {
      this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
     // }
-    this.viewer.setPlaying();
+    // this.viewer.setPlaying();
   };
 
   protected onRenderEnd = () => {
