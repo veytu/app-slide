@@ -891,7 +891,6 @@ type NotesType = Record<string, Paragraph[]>;
 declare class DocsViewer {
     constructor({ readonly, onNewPageIndex, onPlay, onPagesReady, urlInterrupter, box, context, }: DocsViewerConfig);
     protected readonly: boolean;
-    protected appReadonly?: boolean;
     protected box: ReadonlyTeleBox;
     protected onNewPageIndex: (index: number, origin?: string) => void;
     protected onPlay?: () => void;
@@ -917,7 +916,6 @@ declare class DocsViewer {
     pageIndex: number;
     unmount(): void;
     setReadonly(readonly: boolean): void;
-    setAppReadonly(readonly: boolean): void;
     destroy(): void;
     setPageIndex(pageIndex: number): void;
     private scrollPreview;

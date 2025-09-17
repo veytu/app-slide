@@ -8,7 +8,7 @@
 // 4. automatically re-create scenes to sync strokes, a view must be existing
 // 5. pages information are loaded dynamically by the slide package
 
-import type { AppContext, Player, Room, Displayer } from "@netless/window-manager";
+import { type AppContext, type Player, type Room, type Displayer, WindowManager } from "@netless/window-manager";
 import type { ISlideConfig, SyncEvent } from "@netless/slide";
 import type { Attributes, MagixEvents, MagixPayload, SlideState } from "../typings";
 import type { AppOptions } from "..";
@@ -340,7 +340,7 @@ export class SlideController {
       loaderDelegate: options.loaderDelegate,
       navigatorDelegate: {
         gotoPage: (index: number) => {
-          if (!this.context.getIsAppReadonly()) {
+          if (WindowManager.wukongRoleManager.wukongCanOperate()) {
             slide.renderSlide(index);
           }
         },
@@ -455,12 +455,13 @@ export class SlideController {
         log("[Slide] sync storage", currentSlideIndex);
         this.slide.setSlideState({ currentSlideIndex });
 
-      // if (isNeedSyncState) {
-      //   const state = this.context.storage.state.state;
-      //   if (state) {
-      //     log("[Slide] sync storage", JSON.stringify(state));
-      //     this.slide.setSlideState(state);
-      //   }
+        if (isNeedSyncState) {
+          const state = this.context.storage.state.state;
+          if (state) {
+            log("[Slide] sync storage", JSON.stringify(state));
+            this.slide.setSlideState(state);
+          }
+        }
       }
     } else {
       this._toFreeze = -1;

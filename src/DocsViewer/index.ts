@@ -7,7 +7,7 @@ import { arrowRightSVG } from "./icons/arrow-right";
 import type { ILazyLoadInstance } from "vanilla-lazyload";
 import LazyLoad from "vanilla-lazyload";
 import { SideEffectManager } from "side-effect-manager";
-import { type AppContext, type ReadonlyTeleBox } from "@netless/window-manager";
+import { WindowManager, type AppContext, type ReadonlyTeleBox } from "@netless/window-manager";
 import type { Attributes, MagixEvents } from "../typings";
 import type { AppOptions } from "..";
 import type { Paragraph } from "./utils/convertToHTML";
@@ -50,12 +50,10 @@ export class DocsViewer {
     this.urlInterrupter = urlInterrupter || (url => url);
     this.box = box;
     this.context = context;
-    this.appReadonly = context?.getIsAppReadonly();
     this.render();
   }
 
   protected readonly: boolean;
-  protected appReadonly?: boolean;
   protected box: ReadonlyTeleBox;
   protected onNewPageIndex: (index: number, origin?: string) => void;
   protected onPlay?: () => void;
@@ -109,10 +107,6 @@ export class DocsViewer {
     // this.$pageNumberInput.disabled = readonly;
   }
 
-  public setAppReadonly(readonly: boolean): void {
-    this.appReadonly = readonly;
-    this.note$?.classList.toggle(this.wrapClassName("note-hide"), readonly);
-  }
 
   public destroy(): void {
     this.previewLazyLoad?.destroy();
@@ -238,7 +232,7 @@ export class DocsViewer {
       return;
     }
 
-    if (this.appReadonly) {
+    if (!WindowManager.wukongRoleManager.wukongCanOperate()) {
       return;
     }
 
