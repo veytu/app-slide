@@ -991,8 +991,7 @@ declare class SlideController {
     private invisibleBehavior;
     previewList: string[];
     private clientId;
-    private onFreezeEffect;
-    constructor({ context, anchor, onRenderStart, onPageChanged, onTransitionStart, onTransitionEnd, onNavigate, onError, onRenderError, showRenderError, invisibleBehavior, }: SlideControllerOptions, onFreezeEffect: () => void);
+    constructor({ context, anchor, onRenderStart, onPageChanged, onTransitionStart, onTransitionEnd, onNavigate, onError, onRenderError, showRenderError, invisibleBehavior, }: SlideControllerOptions);
     ready: boolean;
     private resolveReady;
     readonly readyPromise: Promise<void>;

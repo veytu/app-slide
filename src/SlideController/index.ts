@@ -84,8 +84,6 @@ export class SlideController {
 
   private clientId: string;
 
-  private onFreezeEffect: () => void;
-
   public constructor({
     context,
     anchor,
@@ -98,10 +96,9 @@ export class SlideController {
     onRenderError,
     showRenderError,
     invisibleBehavior,
-  }: SlideControllerOptions, onFreezeEffect: () => void) {
+  }: SlideControllerOptions) {
     this.clientId = context?.getRoom()?.uid || genUID();
     this.invisibleBehavior = invisibleBehavior ?? "frozen";
-    this.onFreezeEffect = onFreezeEffect;
     this.onRenderStart = onRenderStart;
     this.onPageChanged = onPageChanged;
     this.onTransitionStart = onTransitionStart;
@@ -453,17 +450,13 @@ export class SlideController {
       } else {
         this.slide.resume();
       }
-      const currentSlideIndex = this.context.storage.state.state?.currentSlideIndex;
-      if (currentSlideIndex) {
-        log("[Slide] sync storage", currentSlideIndex);
-        this.slide.setSlideState({ currentSlideIndex });
-
-      // if (isNeedSyncState) {
-      //   const state = this.context.storage.state.state;
-      //   if (state) {
-      //     log("[Slide] sync storage", JSON.stringify(state));
-      //     this.slide.setSlideState(state);
-      //   }
+      //动画同步使用
+      if (isNeedSyncState) {
+        const state = this.context.storage.state.state;
+        if (state) {
+          log("[Slide] sync storage", JSON.stringify(state));
+          this.slide.setSlideState(state);
+        }
       }
     } else {
       this._toFreeze = -1;
@@ -475,7 +468,6 @@ export class SlideController {
       this.savedIsFrozen = this.isFrozen;
       log("[Slide] freeze because tab becomes invisible");
       this.freeze();
-      this.onFreezeEffect();
     } else {
       log("[Slide] unfreeze because tab becomes visible", { savedIsFrozen: this.savedIsFrozen });
       if (!this.savedIsFrozen) {
