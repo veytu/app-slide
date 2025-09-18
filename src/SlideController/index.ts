@@ -331,7 +331,7 @@ export class SlideController {
         autoResolution: true,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
         resolution: options.resolution,
-        maxResolutionLevel: 2,
+        maxResolutionLevel: 1,
       	forceCanvas: options.forceCanvas,
         enableNvidiaDetect: options.enableNvidiaDetect,
         transitionResolutionLevel: 1,

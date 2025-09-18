@@ -37863,6 +37863,7 @@ function syncSceneWithSlide(room, context, slide, baseScenePath) {
     currentScenePath = ((_a2 = context.getView()) == null ? void 0 : _a2.focusScenePath) || "";
   }
   if (currentScenePath !== scenePath && room.scenePathType(scenePath) === "page") {
+    log("[Slide] xxxxxxxxxxxxxxxxxxxxxx333333333 ", scenePath);
     context.setScenePath(scenePath);
   }
 }
@@ -38147,7 +38148,7 @@ class SlideController {
         autoResolution: true,
         transactionBgColor: options.bgColor || cachedGetBgColor(anchor),
         resolution: options.resolution,
-        maxResolutionLevel: 2,
+        maxResolutionLevel: 1,
         forceCanvas: options.forceCanvas,
         enableNvidiaDetect: options.enableNvidiaDetect,
         transitionResolutionLevel: 1
@@ -39434,6 +39435,8 @@ class SlideDocsViewer {
       logger.warn("[Slide] render error", error);
     };
     this.onRenderStart = () => {
+      log("[Slide] xxxxxxxxxxxxxxxxxxxxxx666666666 onRenderStart");
+      this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
     };
     this.onRenderEnd = () => {
     };
@@ -39444,6 +39447,8 @@ class SlideDocsViewer {
     this._onPageChangedTimer = 0;
     this._onPageChanged = () => {
       this.$overlay.style.opacity = "";
+      log("[Slide] xxxxxxxxxxxxxxxxxxxxxx555555555 onPageChanged");
+      this.$whiteboardView.classList.remove(this.wrapClassName("wb-view-hidden"));
     };
     this.refreshPages = () => {
       if (this.slideController) {
@@ -39943,7 +39948,7 @@ class SlidePreviewer {
         autoResolution: true,
         transactionBgColor: this.bgColor,
         transitionResolutionLevel: 1,
-        maxResolutionLevel: 2
+        maxResolutionLevel: 1
       },
       antialias: false
     });
@@ -39999,7 +40004,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.81-wukongBeta.3";
+const version = "0.2.81-wukongBeta.6";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -40030,6 +40035,7 @@ const SlideApp = {
       if (docsViewer && docsViewer.slideController) {
         let synced = false;
         if (room2 && context.getIsWritable()) {
+          log("[Slide] xxxxxxxxxxxx1111111111 ", page);
           syncSceneWithSlide(room2, context, docsViewer.slideController.slide, baseScenePath);
           synced = true;
         }
@@ -40060,6 +40066,7 @@ const SlideApp = {
         const room2 = context.getRoom();
         let synced = false;
         if (room2 && context.getIsWritable()) {
+          log("[Slide] xxxxxxxxxxxxxxxxxxxxxx444444444 ", baseScenePath);
           syncSceneWithSlide(room2, context, slideController.slide, baseScenePath);
           synced = true;
         }

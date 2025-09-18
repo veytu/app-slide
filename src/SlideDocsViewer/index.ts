@@ -5,7 +5,7 @@ import type { SlideController, SlideControllerOptions } from "../SlideController
 import { SideEffectManager } from "side-effect-manager";
 import { createDocsViewerPages } from "../SlideController";
 import { DocsViewer, type DocsViewerPage } from "../DocsViewer";
-import { logger } from "../utils/logger";
+import { logger, log } from "../utils/logger";
 import { isEditable } from "../utils/helpers";
 import type { Attributes, MagixEvents } from "../typings";
 import { type AppOptions } from "..";
@@ -52,7 +52,7 @@ export class SlideDocsViewer {
   private readonly appId: string;
   private isViewMounted = false;
   private justSildeReadonly = false;
-  //private visible = true;
+  // private visible = true;
 
   public constructor({
     context,
@@ -218,8 +218,9 @@ export class SlideDocsViewer {
   };
 
   protected onRenderStart = () => {
-    //if (this.visible) {
-    //  this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
+    log("[Slide] xxxxxxxxxxxxxxxxxxxxxx666666666 onRenderStart");
+    // if (this.visible) {
+     this.$whiteboardView.classList.add(this.wrapClassName("wb-view-hidden"));
     // }
     // this.viewer.setPlaying();
   };
@@ -238,7 +239,8 @@ export class SlideDocsViewer {
   private _onPageChangedTimer = 0;
   private _onPageChanged = () => {
     this.$overlay.style.opacity = "";
-    // this.$whiteboardView.classList.remove(this.wrapClassName("wb-view-hidden"));
+    log("[Slide] xxxxxxxxxxxxxxxxxxxxxx555555555 onPageChanged");
+    this.$whiteboardView.classList.remove(this.wrapClassName("wb-view-hidden"));
   };
 
   protected refreshPages = () => {
