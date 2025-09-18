@@ -37892,7 +37892,7 @@ class SlideController {
     onRenderError,
     showRenderError,
     invisibleBehavior
-  }) {
+  }, onFreezeEffect) {
     var _a2;
     this.sideEffect = new SideEffectManager();
     this.previewList = [];
@@ -38005,6 +38005,7 @@ class SlideController {
         this.savedIsFrozen = this.isFrozen;
         log("[Slide] freeze because tab becomes invisible");
         this.freeze();
+        this.onFreezeEffect();
       } else {
         log("[Slide] unfreeze because tab becomes visible", { savedIsFrozen: this.savedIsFrozen });
         if (!this.savedIsFrozen) {
@@ -38014,6 +38015,7 @@ class SlideController {
     };
     this.clientId = ((_a2 = context == null ? void 0 : context.getRoom()) == null ? void 0 : _a2.uid) || genUID();
     this.invisibleBehavior = invisibleBehavior != null ? invisibleBehavior : "frozen";
+    this.onFreezeEffect = onFreezeEffect;
     this.onRenderStart = onRenderStart;
     this.onPageChanged = onPageChanged;
     this.onTransitionStart = onTransitionStart;
@@ -40007,7 +40009,7 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.81-wukongBeta.8";
+const version = "0.2.81-wukongBeta.9";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
@@ -40033,12 +40035,17 @@ const SlideApp = {
     }
     const baseScenePath = context.getInitScenePath();
     let docsViewer = null;
+    let tmpFreezeWillSync = true;
+    const onFreezeEffect = () => {
+      tmpFreezeWillSync = false;
+    };
     const onPageChanged = (page) => {
       const room2 = context.getRoom();
       if (docsViewer && docsViewer.slideController) {
         let synced = false;
-        if (room2 && context.getIsWritable()) {
+        if (room2 && context.getIsWritable() && tmpFreezeWillSync) {
           log("[Slide] xxxxxxxxxxxx1111111111 ", page);
+          tmpFreezeWillSync = true;
           syncSceneWithSlide(room2, context, docsViewer.slideController.slide, baseScenePath);
           synced = true;
         }
@@ -40061,7 +40068,7 @@ const SlideApp = {
         onRenderError: appOptions.onRenderError,
         showRenderError: appOptions.showRenderError,
         invisibleBehavior: appOptions.invisibleBehavior
-      });
+      }, onFreezeEffect);
       if (useFreezer)
         apps.set(context.appId, slideController, box);
       logger.setAppController(context.appId, slideController);
