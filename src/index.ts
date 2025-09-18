@@ -132,12 +132,19 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
 
     let docsViewer: SlideDocsViewer | null = null;
 
+    let tmpFreezeWillSync = true;
+
+    const onFreezeEffect=()=>{
+      tmpFreezeWillSync = false;
+    }
+
     const onPageChanged = (page: number) => {
       const room = context.getRoom();
       if (docsViewer && docsViewer.slideController) {
         let synced = false;
-        if (room && context.getIsWritable()) {
+        if (room && context.getIsWritable() && tmpFreezeWillSync) {
           log("[Slide] xxxxxxxxxxxx1111111111 " ,page);
+          tmpFreezeWillSync = true;
           syncSceneWithSlide(room, context, docsViewer.slideController.slide, baseScenePath);
           synced = true;
         }
@@ -163,7 +170,7 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
         onRenderError: appOptions.onRenderError,
         showRenderError: appOptions.showRenderError,
         invisibleBehavior: appOptions.invisibleBehavior,
-      });
+      }, onFreezeEffect);
       if (useFreezer) apps.set(context.appId, slideController, box);
       logger.setAppController(context.appId, slideController);
       if (import.meta.env.DEV) {

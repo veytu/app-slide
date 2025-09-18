@@ -84,6 +84,8 @@ export class SlideController {
 
   private clientId: string;
 
+  private onFreezeEffect: () => void;
+
   public constructor({
     context,
     anchor,
@@ -96,9 +98,10 @@ export class SlideController {
     onRenderError,
     showRenderError,
     invisibleBehavior,
-  }: SlideControllerOptions) {
+  }: SlideControllerOptions, onFreezeEffect: () => void) {
     this.clientId = context?.getRoom()?.uid || genUID();
     this.invisibleBehavior = invisibleBehavior ?? "frozen";
+    this.onFreezeEffect = onFreezeEffect;
     this.onRenderStart = onRenderStart;
     this.onPageChanged = onPageChanged;
     this.onTransitionStart = onTransitionStart;
@@ -472,6 +475,7 @@ export class SlideController {
       this.savedIsFrozen = this.isFrozen;
       log("[Slide] freeze because tab becomes invisible");
       this.freeze();
+      this.onFreezeEffect();
     } else {
       log("[Slide] unfreeze because tab becomes visible", { savedIsFrozen: this.savedIsFrozen });
       if (!this.savedIsFrozen) {
