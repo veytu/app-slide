@@ -102,6 +102,18 @@ export interface AppResult {
 const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
   kind: "Slide",
   setup(context) {
+    log("SDK 版本信息-App App Slide " + version);
+    //todo 测试代码，打印版本信息到根节点上显示,后面要注释掉，方便调试，当前的显示左上角垂直便宜230
+    const versionElement = document.createElement("div");
+    versionElement.style.position = "absolute";
+    versionElement.style.top = "230px";
+    versionElement.style.left = "0";
+    versionElement.style.color = "red";
+    versionElement.style.fontSize = "12px";
+    versionElement.style.zIndex = "99999";
+    versionElement.innerHTML = `SDK 版本信息-App App Slide ${version}`;
+    document.body.appendChild(versionElement);
+    
     console.log("[Slide] setup @ " + version);
     console.log("[Slide] setup @111 " + version);
 
@@ -142,11 +154,14 @@ const SlideApp: NetlessApp<Attributes, MagixEvents, AppOptions, AppResult> = {
       const room = context.getRoom();
       if (docsViewer && docsViewer.slideController) {
         let synced = false;
-        if (room && context.getIsWritable() && tmpFreezeWillSync) {
+        if (room && context.getIsWritable()) {
           log("[Slide] xxxxxxxxxxxx1111111111 " ,page);
-          tmpFreezeWillSync = true;
-          syncSceneWithSlide(room, context, docsViewer.slideController.slide, baseScenePath);
-          synced = true;
+          if (tmpFreezeWillSync) {
+            syncSceneWithSlide(room, context, docsViewer.slideController.slide, baseScenePath);
+            synced = true;
+          } else {
+            tmpFreezeWillSync = true;
+          }
         }
         log("[Slide] page to", page, synced ? "(synced)" : "");
         docsViewer.viewer.setPageIndex(page - 1);

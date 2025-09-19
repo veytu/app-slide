@@ -40009,11 +40009,21 @@ class SlidePreviewer {
   }
 }
 const usePlugin = /* @__PURE__ */ Slide.Slide.usePlugin.bind(Slide.Slide);
-const version = "0.2.81-wukongBeta.9";
+const version = "0.2.81-wukongBeta.11";
 const SlideApp = {
   kind: "Slide",
   setup(context) {
     var _a2, _b;
+    log("SDK \u7248\u672C\u4FE1\u606F-App App Slide " + version);
+    const versionElement = document.createElement("div");
+    versionElement.style.position = "absolute";
+    versionElement.style.top = "230px";
+    versionElement.style.left = "0";
+    versionElement.style.color = "red";
+    versionElement.style.fontSize = "12px";
+    versionElement.style.zIndex = "99999";
+    versionElement.innerHTML = `SDK \u7248\u672C\u4FE1\u606F-App App Slide ${version}`;
+    document.body.appendChild(versionElement);
     console.log("[Slide] setup @ " + version);
     console.log("[Slide] setup @111 " + version);
     if (context.getIsWritable()) {
@@ -40043,11 +40053,14 @@ const SlideApp = {
       const room2 = context.getRoom();
       if (docsViewer && docsViewer.slideController) {
         let synced = false;
-        if (room2 && context.getIsWritable() && tmpFreezeWillSync) {
+        if (room2 && context.getIsWritable()) {
           log("[Slide] xxxxxxxxxxxx1111111111 ", page);
-          tmpFreezeWillSync = true;
-          syncSceneWithSlide(room2, context, docsViewer.slideController.slide, baseScenePath);
-          synced = true;
+          if (tmpFreezeWillSync) {
+            syncSceneWithSlide(room2, context, docsViewer.slideController.slide, baseScenePath);
+            synced = true;
+          } else {
+            tmpFreezeWillSync = true;
+          }
         }
         log("[Slide] page to", page, synced ? "(synced)" : "");
         docsViewer.viewer.setPageIndex(page - 1);

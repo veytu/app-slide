@@ -1,6 +1,6 @@
 {
   "name": "@netless/app-slide",
-  "version": "0.2.81-wukongBeta.9",
+  "version": "0.2.81-wukongBeta.11",
   "main": "dist/main.cjs.js",
   "module": "dist/main.es.js",
   "types": "dist/index.d.ts",
